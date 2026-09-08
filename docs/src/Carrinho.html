@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho de Compras - Livros pra Vida</title>
+
+    <link rel="icon" type="image/png" href="../imagens/icone.png">
+    
+    <!-- Estilos Globais e Especificos -->
+    <link rel="stylesheet" href="../css/StyleHome.css">
+    <link rel="stylesheet" href="../css/StyleCarrinho.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- CABEÇALHO COMPLETO -->
+    <header class="header-carrinho">
+        <a href="../index.html" class="brand-logo">
+            <img src="../imagens/icone.png" alt="Logo Livros pra Vida">
+            <span>Livros pra Vida</span>
+        </a>
+        <nav class="nav-links">
+            <a href="../index.html">Home</a>
+            <a href="Catalogo.html">Catálogo</a>
+        </nav>
+    </header>
+
+    <!-- CONTEÚDO PRINCIPAL DO CARRINHO -->
+    <main class="carrinho-main">
+        <h2 class="carrinho-titulo">Meu Carrinho de Compras</h2>
+
+        <!-- Os itens serão injetados dinamicamente via JS -->
+        <div id="listaCarrinho"></div>
+
+        <!-- Bloco de Endereço de Entrega Vinculado ao Perfil -->
+        <div id="blocoEnderecoCarrinho" style="background: #faf8f5; border: 1px solid #e0d7cd; padding: 15px; border-radius: 8px; margin: 20px 0;">
+            <h4 style="color: #8c533e; margin-bottom: 8px; font-size: 1rem;">📍 Endereço de Entrega (Cadastrado no Perfil)</h4>
+            <p id="textoEnderecoCarrinho" style="font-size: 0.9rem; color: #444; margin-bottom: 8px;">Carregando endereço...</p>
+            <a href="MeuPerfil.html" style="font-size: 0.8rem; color: #8c533e; text-decoration: underline;">Alterar endereço no perfil</a>
+        </div>
+
+        <div class="resumo-total">
+            <span class="label-total">Total a pagar (com frete):</span>
+            <span id="valorTotal" class="valor-total">R$ 0,00</span>
+        </div>
+
+        <div class="carrinho-acoes">
+            <a href="Catalogo.html" class="btn-continuar">Continuar Comprando</a>
+            <button onclick="finalizarCompra()" class="btn-pagamento">Finalizar Pedido</button>
+        </div>
+    </main>
+
+    <!-- Script com controle de quantidade e persistência -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            carregarCarrinho();
+            carregarEnderecoPerfil();
+        });
+
+        function carregarEnderecoPerfil() {
+            const rua = localStorage.getItem("usuarioRua");
+            const numero = localStorage.getItem("usuarioNumero");
+            const bairro = localStorage.getItem("usuarioBairro");
+            const cidade = localStorage.getItem("usuarioCidade");
+            const cep = localStorage.getItem("usuarioCep");
+
+            const txt = document.getElementById("textoEnderecoCarrinho");
+            if (rua && cep) {
+                txt.textContent = `${rua}, nº ${numero || 'S/N'} - ${bairro}, ${cidade} (CEP: ${cep})`;
+            } else {
+                txt.innerHTML = `⚠️ Você ainda não cadastrou um endereço completo. <a href="MeuPerfil.html" style="color: #8c533e; font-weight: bold;">Cadastrar agora</a>`;
+            }
+        }
+
+        function carregarCarrinho() {
+            const lista = document.getElementById("listaCarrinho");
+            let carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
+
+            // Garante que cada item tenha a propriedade 'quantidade'
+            carrinho = carrinho.map(item => ({
+                ...item,
+                quantidade: item.quantidade || 1
+            }));
+            localStorage.setItem("carrinhoLivros", JSON.stringify(carrinho));
+
+            if (carrinho.length === 0) {
+                lista.innerHTML = `<p style="text-align: center; color: #666; padding: 20px;">Seu carrinho está vazio.</p>`;
+                document.getElementById("valorTotal").textContent = "R$ 0,00";
+                return;
+            }
+
+            let total = 0;
+            lista.innerHTML = carrinho.map((item, index) => {
+                const subtotal = Number(item.preco) * item.quantidade;
+                total += subtotal;
+                return `
+                    <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e0d7cd; padding: 12px 0; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <img src="${item.imagem}" alt="${item.titulo}" style="width: 50px; height: 70px; object-fit: cover; border-radius: 4px;">
+                            <div>
+                                <h4 style="font-size: 0.95rem; margin-bottom: 4px;">${item.titulo}</h4>
+                                <span style="font-size: 0.85rem; color: #8c533e; font-weight: bold;">R$ ${Number(item.preco).toFixed(2)} un.</span>
+                            </div>
+                        </div>
+
+                        <!-- Seletor de Quantidade -->
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <button onclick="alterarQuantidade(${index}, -1)" style="background: #f0ebe0; border: 1px solid #d9d4c9; width: 26px; height: 26px; border-radius: 4px; cursor: pointer; font-weight: bold;">-</button>
+                            <span style="font-size: 0.9rem; font-weight: 600; min-width: 20px; text-align: center;">${item.quantidade}</span>
+                            <button onclick="alterarQuantidade(${index}, 1)" style="background: #f0ebe0; border: 1px solid #d9d4c9; width: 26px; height: 26px; border-radius: 4px; cursor: pointer; font-weight: bold;">+</button>
+                        </div>
+
+                        <div style="text-align: right;">
+                            <div style="font-size: 0.9rem; font-weight: bold; color: #1c1a16; margin-bottom: 4px;">R$ ${subtotal.toFixed(2)}</div>
+                            <button onclick="removerItem(${index})" style="background: none; border: none; color: #c5221f; cursor: pointer; font-size: 0.8rem; text-decoration: underline;">Remover</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            const totalComFrete = total > 0 ? total + 10.00 : 0;
+            document.getElementById("valorTotal").textContent = `R$ ${totalComFrete.toFixed(2)} (Frete R$ 10,00)`;
+        }
+
+        function alterarQuantidade(index, delta) {
+            let carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
+            if (carrinho[index]) {
+                carrinho[index].quantidade = (carrinho[index].quantidade || 1) + delta;
+                
+                // Se a quantidade chegar a 0 ou menos, remove o item
+                if (carrinho[index].quantidade <= 0) {
+                    carrinho.splice(index, 1);
+                }
+                
+                localStorage.setItem("carrinhoLivros", JSON.stringify(carrinho));
+                carregarCarrinho();
+            }
+        }
+
+        function removerItem(index) {
+            let carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
+            carrinho.splice(index, 1);
+            localStorage.setItem("carrinhoLivros", JSON.stringify(carrinho));
+            carregarCarrinho();
+        }
+
+        function finalizarCompra() {
+            const rua = localStorage.getItem("usuarioRua");
+            if (!rua) {
+                alert("Por favor, preencha seu endereço de entrega no Perfil antes de finalizar o pedido!");
+                window.location.href = "MeuPerfil.html";
+                return;
+            }
+
+            const carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
+            if (carrinho.length === 0) {
+                alert("Seu carrinho está vazio!");
+                return;
+            }
+
+            const pagamento = localStorage.getItem("usuarioPagamento") || "Pix";
+            let totalSubtotal = carrinho.reduce((acc, item) => acc + (Number(item.preco) * (item.quantidade || 1)), 0);
+            let totalComFrete = totalSubtotal + 10.00;
+            
+            let descricaoItens = carrinho.map(i => `${i.quantidade}x ${i.titulo}`).join(", ");
+
+            // Salvar no Histórico de Pedidos do Perfil
+            let historico = JSON.parse(localStorage.getItem("historicoPedidos")) || [];
+            const novoPedido = {
+                id: Math.floor(100000 + Math.random() * 900000),
+                itens: descricaoItens,
+                total: `R$ ${totalComFrete.toFixed(2)}`,
+                pagamento: pagamento,
+                status: "Em separação"
+            };
+
+            historico.unshift(novoPedido);
+            localStorage.setItem("historicoPedidos", JSON.stringify(historico));
+            localStorage.removeItem("carrinhoLivros");
+
+            alert(`🎉 Pedido #${novoPedido.id} realizado com sucesso via ${pagamento}! Acompanhe o envio no seu Perfil.`);
+            window.location.href = "MeuPerfil.html";
+        }
+    </script>
+</body>
+
+</html>

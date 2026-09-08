@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil - Livros pra Vida</title>
+
+    <link rel="icon" type="image/png" href="../imagens/icone.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/StyleMeuPerfil.css">
+</head>
+
+<body>
+
+    <!-- CABEÇALHO / MENU DE NAVEGAÇÃO -->
+    <header class="header">
+        <div class="logo">
+            <a href="../index.html">
+                <img src="../imagens/icone.png" alt="Logo Livros pra Vida">
+            </a>
+            <span>Livros pra Vida</span>
+        </div>
+
+        <nav class="menu">
+            <a href="../index.html">Início</a>
+            <a href="#" onclick="sair()" class="btn-sair-top">Sair</a>
+        </nav>
+    </header>
+
+    <!-- CONTAINER PRINCIPAL DO PERFIL -->
+    <main class="profile-container">
+
+        <!-- CARTÃO LATERAL: PERFIL E REPUTAÇÃO -->
+        <aside class="profile-card">
+            <div class="avatar-wrapper">
+                <img src="../imagens/Background.png" alt="Foto do Usuário" id="userAvatar" class="avatar-img">
+                <button class="btn-change-avatar" onclick="document.getElementById('avatarUpload').click()" title="Alterar foto">📷</button>
+                <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="uploadFotoPerfil(event)">
+            </div>
+
+            <h2 id="profileName">Leitor Colaborador</h2>
+            <span id="badgePlano" class="role-badge">Membro Colaborador</span>
+
+            <!-- Status de Maioridade -->
+            <div id="statusIdade" style="margin-top: 10px; font-size: 0.8rem; padding: 4px 8px; border-radius: 4px; display: inline-block; background: #e0d7cd; color: #2d251e;">
+                Verificando idade...
+            </div>
+
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="statTrocas">4</span>
+                    <span class="stat-label">Trocas</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="statDoacoes">2</span>
+                    <span class="stat-label">Doações</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">4.9 ★</span>
+                    <span class="stat-label">Reputação</span>
+                </div>
+            </div>
+
+            <button class="btn-logout" onclick="sair()">Encerrar Sessão</button>
+        </aside>
+
+        <!-- ÁREA CENTRAL DE CONTEÚDO E GERENCIAMENTO -->
+        <div class="profile-details">
+
+            <!-- FORMULÁRIO DE DADOS PESSOAIS, ENDEREÇO E PAGAMENTO -->
+            <section class="card-box">
+                <div class="card-header">
+                    <h3>Informações Cadastrais & Entrega</h3>
+                    <p>Mantenha seus dados atualizados para envios, segurança e compras na comunidade.</p>
+                </div>
+
+                <form id="formPerfil" onsubmit="salvarPerfil(event)">
+                    
+                    <!-- Bloco 1: Dados Pessoais -->
+                    <h4 style="margin-bottom: 12px; color: #8c533e; font-size: 1rem; border-bottom: 1px solid #e0d7cd; padding-bottom: 6px;">1. Dados Pessoais</h4>
+                    <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label for="nomeInput">Nome Completo</label>
+                            <input type="text" id="nomeInput" required placeholder="Seu nome completo" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="emailInput">E-mail Cadastrado</label>
+                            <input type="email" id="emailInput" required placeholder="seuemail@dominio.com" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="telefoneInput">Telefone / WhatsApp</label>
+                            <input type="tel" id="telefoneInput" placeholder="(00) 00000-0000" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="nascimentoInput">Data de Nascimento (Verificação de Idade)</label>
+                            <input type="date" id="nascimentoInput" required style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cpfInput">CPF</label>
+                            <input type="text" id="cpfInput" placeholder="000.000.000-00" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                        </div>
+
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label for="rgInput">RG</label>
+                            <input type="text" id="rgInput" placeholder="Número do RG ou Órgão Emissor" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                        </div>
+                    </div>
+
+                    <!-- Bloco 2: Endereço de Entrega -->
+                    <h4 style="margin-bottom: 12px; color: #8c533e; font-size: 1rem; border-bottom: 1px solid #e0d7cd; padding-bottom: 6px;">2. Endereço de Entrega</h4>
+                    <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label for="cepInput">CEP</label>
+                            <input type="text" id="cepInput" placeholder="00000-000" maxlength="9" onblur="consultarCep(this.value)" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                        </div>
+
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label for="ruaInput">Endereço (Rua, Avenida...)</label>
+                            <input type="text" id="ruaInput" placeholder="Nome da rua ou logradouro" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="numeroInput">Número</label>
+                            <input type="text" id="numeroInput" placeholder="Ex: 101" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bairroInput">Bairro</label>
+                            <input type="text" id="bairroInput" placeholder="Bairro" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cidadeInput">Cidade / UF</label>
+                            <input type="text" id="cidadeInput" placeholder="Ex: Brasília - DF" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                        </div>
+                    </div>
+
+                    <!-- Bloco 3: Formas de Pagamento Preferidas -->
+                    <h4 style="margin-bottom: 12px; color: #8c533e; font-size: 1rem; border-bottom: 1px solid #e0d7cd; padding-bottom: 6px;">3. Forma de Pagamento Principal</h4>
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label for="pagamentoSelect">Método Favorito</label>
+                        <select id="pagamentoSelect" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px; background: #fff;">
+                            <option value="Pix">Pix (Instantâneo)</option>
+                            <option value="Cartão de Crédito">Cartão de Crédito</option>
+                            <option value="Boleto Bancário">Boleto Bancário</option>
+                        </select>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save" style="background: #8c533e; color: #fff; padding: 10px 20px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Salvar Alterações</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- HISTÓRICO DE PEDIDOS / COMPRAS ANTERIORES -->
+            <section class="card-box" style="margin-top: 30px;">
+                <div class="card-header">
+                    <h3>Meus Pedidos & Compras Anteriores</h3>
+                    <p>Acompanhe o status de envio dos livros adquiridos na plataforma.</p>
+                </div>
+                <div id="listaHistoricoPedidos" style="margin-top: 15px;">
+                    <!-- Preenchido via JavaScript -->
+                </div>
+            </section>
+
+            <!-- LIVROS ANUNCIADOS -->
+            <section class="card-box" style="margin-top: 30px;">
+                <div class="card-header">
+                    <h3>Meus Livros Anunciados</h3>
+                    <p>Obras que você disponibilizou para a comunidade leitora.</p>
+                </div>
+
+                <div class="books-mini-grid" style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px;">
+                    <div class="mini-book-card" style="border: 1px solid #e0d7cd; padding: 10px; border-radius: 6px; width: 140px; text-align: center;">
+                        <span class="tag-negocio tag-troca" style="font-size: 0.75rem; background: #e6f4ea; color: #137333; padding: 2px 6px; border-radius: 4px;">Troca</span>
+                        <img src="../imagens/midnight-library.jpg" alt="A Biblioteca da Meia-Noite" style="width: 100%; height: 100px; object-fit: cover; margin: 8px 0;">
+                        <h4 style="font-size: 0.85rem; margin-bottom: 8px;">A Biblioteca da Meia-Noite</h4>
+                        <button class="btn-action-card" style="font-size: 0.75rem; padding: 4px 8px; background: #8c533e; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Gerenciar</button>
+                    </div>
+
+                    <div class="mini-book-card" style="border: 1px solid #e0d7cd; padding: 10px; border-radius: 6px; width: 140px; text-align: center;">
+                        <span class="tag-negocio tag-doacao" style="font-size: 0.75rem; background: #e8f0fe; color: #1a73e8; padding: 2px 6px; border-radius: 4px;">Doação</span>
+                        <img src="../imagens/sapiens.jpg" alt="Sapiens" style="width: 100%; height: 100px; object-fit: cover; margin: 8px 0;">
+                        <h4 style="font-size: 0.85rem; margin-bottom: 8px;">Sapiens</h4>
+                        <button class="btn-action-card" style="font-size: 0.75rem; padding: 4px 8px; background: #8c533e; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Gerenciar</button>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+    <!-- SCRIPT DE PERFIL E VIACEP -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("nomeInput").value = localStorage.getItem("usuarioNome") || "Leitor Colaborador";
+            document.getElementById("emailInput").value = localStorage.getItem("usuarioEmail") || "leitor@livrospravida.com";
+            document.getElementById("telefoneInput").value = localStorage.getItem("usuarioTelefone") || "";
+            document.getElementById("nascimentoInput").value = localStorage.getItem("usuarioNascimento") || "";
+            document.getElementById("cpfInput").value = localStorage.getItem("usuarioCpf") || "";
+            document.getElementById("rgInput").value = localStorage.getItem("usuarioRg") || "";
+            
+            document.getElementById("cepInput").value = localStorage.getItem("usuarioCep") || "";
+            document.getElementById("ruaInput").value = localStorage.getItem("usuarioRua") || "";
+            document.getElementById("numeroInput").value = localStorage.getItem("usuarioNumero") || "";
+            document.getElementById("bairroInput").value = localStorage.getItem("usuarioBairro") || "";
+            document.getElementById("cidadeInput").value = localStorage.getItem("usuarioCidade") || "";
+            document.getElementById("pagamentoSelect").value = localStorage.getItem("usuarioPagamento") || "Pix";
+
+            const fotoSalva = localStorage.getItem("usuarioFoto");
+            if (fotoSalva) {
+                document.getElementById("userAvatar").src = fotoSalva;
+            }
+
+            document.getElementById("profileName").textContent = document.getElementById("nomeInput").value;
+            verificarMaioridade();
+            carregarHistoricoPedidos();
+        });
+
+        // Integração com API ViaCEP
+        function consultarCep(cep) {
+            const cepLimpo = cep.replace(/\D/g, '');
+            if (cepLimpo.length !== 8) return;
+
+            fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.erro) {
+                        document.getElementById("ruaInput").value = data.logradouro;
+                        document.getElementById("bairroInput").value = data.bairro;
+                        document.getElementById("cidadeInput").value = `${data.localidade} - ${data.uf}`;
+                        document.getElementById("numeroInput").focus();
+                    } else {
+                        alert("CEP não encontrado.");
+                    }
+                })
+                .catch(() => alert("Erro ao buscar o CEP. Verifique sua conexão."));
+        }
+
+        function carregarHistoricoPedidos() {
+            const container = document.getElementById("listaHistoricoPedidos");
+            const pedidos = JSON.parse(localStorage.getItem("historicoPedidos")) || [];
+
+            if (pedidos.length === 0) {
+                container.innerHTML = `<p style="color: #666; font-size: 0.9rem;">Nenhum pedido realizado ainda.</p>`;
+                return;
+            }
+
+            container.innerHTML = pedidos.map(p => `
+                <div style="border: 1px solid #e0d7cd; padding: 12px; border-radius: 6px; margin-bottom: 10px; background: #faf8f5;">
+                    <div style="display: flex; justify-content: space-between; font-weight: 600; font-size: 0.9rem; color: #8c533e;">
+                        <span>Pedido #${p.id}</span>
+                        <span style="color: #137333; background: #e6f4ea; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">${p.status}</span>
+                    </div>
+                    <p style="font-size: 0.85rem; color: #444; margin: 6px 0;">Itens: ${p.itens}</p>
+                    <p style="font-size: 0.8rem; color: #666;">Total: ${p.total} | Pagamento: ${p.pagamento}</p>
+                </div>
+            `).join('');
+        }
+
+        function uploadFotoPerfil(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const base64Image = e.target.result;
+                    document.getElementById("userAvatar").src = base64Image;
+                    localStorage.setItem("usuarioFoto", base64Image);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function verificarMaioridade() {
+            const dataNasc = document.getElementById("nascimentoInput").value;
+            const badgeIdade = document.getElementById("statusIdade");
+
+            if (!dataNasc) {
+                badgeIdade.textContent = "⚠️ Data de nascimento não informada";
+                badgeIdade.style.background = "#fce8e6";
+                badgeIdade.style.color = "#c5221f";
+                return;
+            }
+
+            const hoje = new Date();
+            const nascimento = new Date(dataNasc);
+            let idade = hoje.getFullYear() - nascimento.getFullYear();
+            const m = hoje.getMonth() - nascimento.getMonth();
+            if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) {
+                idade--;
+            }
+
+            if (idade >= 18) {
+                badgeIdade.textContent = `✔ Maior de idade (${idade} anos)`;
+                badgeIdade.style.background = "#e6f4ea";
+                badgeIdade.style.color = "#137333";
+            } else {
+                badgeIdade.textContent = `⚠️ Menor de idade (${idade} anos)`;
+                badgeIdade.style.background = "#fef7e0";
+                badgeIdade.style.color = "#b06000";
+            }
+        }
+
+        document.getElementById("nascimentoInput").addEventListener("change", verificarMaioridade);
+
+        function salvarPerfil(event) {
+            event.preventDefault();
+            localStorage.setItem("usuarioNome", document.getElementById("nomeInput").value);
+            localStorage.setItem("usuarioEmail", document.getElementById("emailInput").value);
+            localStorage.setItem("usuarioTelefone", document.getElementById("telefoneInput").value);
+            localStorage.setItem("usuarioNascimento", document.getElementById("nascimentoInput").value);
+            localStorage.setItem("usuarioCpf", document.getElementById("cpfInput").value);
+            localStorage.setItem("usuarioRg", document.getElementById("rgInput").value);
+
+            localStorage.setItem("usuarioCep", document.getElementById("cepInput").value);
+            localStorage.setItem("usuarioRua", document.getElementById("ruaInput").value);
+            localStorage.setItem("usuarioNumero", document.getElementById("numeroInput").value);
+            localStorage.setItem("usuarioBairro", document.getElementById("bairroInput").value);
+            localStorage.setItem("usuarioCidade", document.getElementById("cidadeInput").value);
+            localStorage.setItem("usuarioPagamento", document.getElementById("pagamentoSelect").value);
+
+            document.getElementById("profileName").textContent = document.getElementById("nomeInput").value;
+            verificarMaioridade();
+            alert("✨ Perfil, dados de entrega e pagamento atualizados com sucesso!");
+        }
+
+        function sair() {
+            localStorage.removeItem("logado");
+            window.location.href = "../index.html";
+        }
+    </script>
+</body>
+
+</html>

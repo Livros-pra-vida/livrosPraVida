@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo Completo - Livros pra Vida</title>
+
+    <link rel="stylesheet" href="../css/StyleCatalogo.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <header style="display: flex; flex-direction: column; background: #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.06); position: sticky; top: 0; z-index: 100; width: 100%; padding: 12px 16px; gap: 12px;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <a href="../index.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #2d251e; font-weight: 700; font-size: 1.15rem;">
+                <img src="../imagens/icone.png" alt="Logo Livros pra Vida" style="width: 32px; height: 32px; border-radius: 6px; object-fit: cover;">
+                <span>Livros pra Vida</span>
+            </a>
+
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <a href="Carrinho.html" title="Ver Carrinho" style="position: relative; color: #2d251e; display: flex; align-items: center; text-decoration: none;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span id="contadorCarrinhoHeader" style="position: absolute; top: -4px; right: -6px; background-color: #8c533e; color: #fff; font-size: 0.65rem; font-weight: 700; padding: 2px 5px; border-radius: 10px; display: none;">0</span>
+                </a>
+
+                <div id="areaAuthHeader" style="display: flex; align-items: center; gap: 8px;">
+                    </div>
+            </div>
+        </div>
+
+        <div style="width: 100%;">
+            <input type="text" id="inputBuscaHeader" placeholder="Buscar título ou autor..." style="width: 100%; padding: 8px 14px; border: 1px solid #e0d7cd; border-radius: 20px; font-size: 0.85rem; outline: none; background-color: #faf8f5; text-align: center;" oninput="filtrarPorTexto(this.value)">
+        </div>
+
+        <nav style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px 16px; width: 100%; padding-top: 2px;">
+            <a href="Catalogo.html" style="text-decoration: none; color: #8c533e; font-weight: 700; font-size: 0.88rem;">Catálogo</a>
+            <a href="ComprarTrocar.html" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.88rem;">Comprar & Trocar</a>
+            <a href="Novidades.html" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.88rem;">Novidades</a>
+            <a href="Chat.html" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.88rem;">Chat & Comunidade</a>
+            <a href="SobreNos.html" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.88rem;">Sobre Nós</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div style="margin-bottom: 25px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 10px;">
+            <div>
+                <h2 style="font-size: 1.8rem; margin-bottom: 5px; color: #2d251e;">Catálogo Geral</h2>
+                <p style="color: #6e655f; margin: 0;">Clique em qualquer livro para ver detalhes, descrição e opções de compra.</p>
+            </div>
+            <div id="contadorLivros" style="font-size: 0.85rem; color: #8c533e; font-weight: 600; background: #f5efe9; padding: 6px 12px; border-radius: 20px;">
+                Exibindo 10 livros
+            </div>
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn active" onclick="filtrarPorGenero('Todos', this)">Todos</button>
+            <button class="filter-btn" onclick="filtrarPorGenero('Ação/Aventura', this)">Ação & Aventura</button>
+            <button class="filter-btn" onclick="filtrarPorGenero('Romance', this)">Romance</button>
+            <button class="filter-btn" onclick="filtrarPorGenero('Drama', this)">Drama</button>
+            <button class="filter-btn" onclick="filtrarPorGenero('Ficção Científica', this)">Ficção Científica</button>
+            <button class="filter-btn" onclick="filtrarPorGenero('Fantasia', this)">Fantasia</button>
+            <button class="filter-btn" onclick="filtrarPorGenero('Terror/Mistério', this)">Terror & Mistério</button>
+            <button class="filter-btn" onclick="filtrarPorGenero('Desenvolvimento/Filosofia', this)">Desenvolvimento & Filosofia</button>
+            <button class="filter-btn" onclick="filtrarPorGenero('História/Biografia', this)">História & Biografia</button>
+        </div>
+
+        <div class="grid-livros" id="gridLivros">
+            </div>
+
+        <div id="mensagemVazio" style="display: none; text-align: center; padding: 40px 20px; color: #6e655f;">
+            <p style="font-size: 1.2rem; margin-bottom: 8px;">Nenhum livro encontrado para sua busca.</p>
+            <button onclick="limparFiltros()" style="background: #8c533e; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600;">Limpar Filtros</button>
+        </div>
+    </main>
+
+    <div id="modalLivro" class="modal-overlay" onclick="fecharModalFora(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="fecharModal()" aria-label="Fechar modal">✕</button>
+
+            <div id="etapaDetalhes">
+                <div class="modal-body-detalhes">
+                    <img id="modalImg" class="modal-capa" src="" alt="Capa do livro">
+                    <div class="modal-info">
+                        <span id="modalGeneroTag" style="display: inline-block; background: #f5efe9; color: #8c533e; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 12px; margin-bottom: 8px;"></span>
+                        <h3 id="modalTitulo" style="margin-top: 0; color: #2d251e; font-size: 1.4rem;"></h3>
+                        <p id="modalAutor" class="autor" style="color: #6e655f; font-weight: 500; margin-bottom: 12px;"></p>
+                        <p id="modalSinopse" class="sinopse" style="line-height: 1.5; color: #4a423a; margin-bottom: 15px; font-size: 0.9rem;"></p>
+                        <div id="modalPreco" class="preco" style="font-size: 1.4rem; font-weight: 700; color: #8c533e; margin-bottom: 15px;"></div>
+                        <button class="btn-comprar-modal" onclick="irParaPagamento()" style="width: 100%; padding: 12px; background-color: #8c533e; color: #fff; border: none; border-radius: 6px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: background 0.2s;">Comprar Agora</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="etapaPagamento" style="display: none;">
+                <h3 style="margin-top: 0; color: #2d251e;">Opções de Pagamento</h3>
+                <p id="modalResumoCompra" style="font-weight: 600; margin-bottom: 15px; color: #8c533e; padding: 10px; background: #faf8f5; border-radius: 6px; border-left: 4px solid #8c533e;"></p>
+
+                <form id="formPagamento" onsubmit="confirmarPagamento(event)">
+                    <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+                        <label class="payment-option" style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 1px solid #e0d7cd; border-radius: 6px; cursor: pointer;">
+                            <input type="radio" name="pagamento" value="PIX" required>
+                            <span><strong>PIX</strong> (Aprovação Instantânea)</span>
+                        </label>
+
+                        <label class="payment-option" style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 1px solid #e0d7cd; border-radius: 6px; cursor: pointer;">
+                            <input type="radio" name="pagamento" value="Cartão de Crédito">
+                            <span><strong>Cartão de Crédito</strong> (Até 3x sem juros)</span>
+                        </label>
+
+                        <label class="payment-option" style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 1px solid #e0d7cd; border-radius: 6px; cursor: pointer;">
+                            <input type="radio" name="pagamento" value="Cartão de Débito">
+                            <span><strong>Cartão de Débito</strong></span>
+                        </label>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button type="button" onclick="voltarParaDetalhes()" style="flex: 1; padding: 12px; background-color: #e2d9cf; color: #2d251e; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Voltar</button>
+                        <button type="submit" style="flex: 2; padding: 12px; background-color: #8c533e; color: #fff; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Confirmar Pedido</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const acervoLivros = [
+            { id: 1, titulo: "O Código Da Vinci", autor: "Dan Brown", genero: "Ação/Aventura", preco: 42.90, nota: "4.8", imagem: "https://covers.openlibrary.org/b/isbn/9780307474278-L.jpg", sinopse: "Um assassinato no Museu do Louvre traz à tona uma conspiração para ocultar um segredo sagrado protegido por uma sociedade secreta durante séculos." },
+            { id: 2, titulo: "Anjos e Demônios", autor: "Dan Brown", genero: "Ação/Aventura", preco: 39.90, nota: "4.7", imagem: "https://covers.openlibrary.org/b/isbn/9780743493468-L.jpg", sinopse: "Robert Langdon tenta deter uma antiga fraternidade secreta que ameaça destruir a Cidade do Vaticano usando uma nova arma devastadora." },
+            { id: 3, titulo: "A Ilha do Tesouro", autor: "R. L. Stevenson", genero: "Ação/Aventura", preco: 29.90, nota: "4.5", imagem: "https://covers.openlibrary.org/b/isbn/9780451527042-L.jpg", sinopse: "O jovem Jim Hawkins encontra um mapa do tesouro e embarca em uma aventura inesquecível enfrentando piratas e o temível Long John Silver." },
+            { id: 4, titulo: "Orgulho e Preconceito", autor: "Jane Austen", genero: "Romance", preco: 34.90, nota: "4.9", imagem: "https://covers.openlibrary.org/b/isbn/9780141439518-L.jpg", sinopse: "Uma história clássica sobre a relação entre a perspicaz Elizabeth Bennet e o orgulhoso Sr. Darcy na Inglaterra do século XIX." },
+            { id: 5, titulo: "É Assim que Começa", autor: "Colleen Hoover", genero: "Romance", preco: 49.90, nota: "4.6", imagem: "https://covers.openlibrary.org/b/isbn/9781668001226-L.jpg", sinopse: "Lily Bloom continua navegando pelos desafios da vida após se separar, descobrindo novos caminhos e reencontrando o seu primeiro amor." },
+            { id: 6, titulo: "A Menina que Roubava Livros", autor: "Markus Zusak", genero: "Drama", preco: 42.00, nota: "4.9", imagem: "https://covers.openlibrary.org/b/isbn/9780375842207-L.jpg", sinopse: "Narrado pela Morte, acompanha a história da jovem Liesel Meminger durante a Segunda Guerra Mundial, encontrando alento nos livros que rouba." },
+            { id: 7, titulo: "Duna", autor: "Frank Herbert", genero: "Ficção Científica", preco: 69.90, nota: "4.8", imagem: "https://covers.openlibrary.org/b/isbn/9780441172719-L.jpg", sinopse: "Em um planeta desértico disputado por famílias nobres, o jovem Paul Atreides enfrenta política, religião e a natureza para cumprir seu destino." },
+            { id: 8, titulo: "O Hobbit", autor: "J.R.R. Tolkien", genero: "Fantasia", preco: 49.90, nota: "4.9", imagem: "https://covers.openlibrary.org/b/isbn/9780547928227-L.jpg", sinopse: "Bilbo Bolseiro é arrastado para uma jornada épica com anões e o mago Gandalf para reconquistar o tesouro guardado pelo dragão Smaug." },
+            { id: 9, titulo: "O Iluminado", autor: "Stephen King", genero: "Terror/Mistério", preco: 54.90, nota: "4.7", imagem: "https://covers.openlibrary.org/b/isbn/9780307743657-L.jpg", sinopse: "Jack Torrance aceita o emprego de caseiro num hotel isolado durante o inverno, mas forças misteriosas começam a afetar sua sanidade." },
+            { id: 10, titulo: "O Alquimista", autor: "Paulo Coelho", genero: "Desenvolvimento/Filosofia", preco: 34.90, nota: "4.6", imagem: "https://covers.openlibrary.org/b/isbn/9780062315007-L.jpg", sinopse: "A jornada do jovem pastor Santiago em busca de um tesouro nas pirâmides do Egito, aprendendo a escutar o seu coração e seguir seus sonhos." }
+        ];
+
+        let generoAtual = "Todos";
+        let textoBuscaAtual = "";
+        let livroAtual = null;
+        let carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
+
+        function formatarMoeda(valor) {
+            return Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        // CORREÇÃO DO BUG DE LOGIN: Verifica se o usuário está logado em qualquer um dos padrões comuns salvos no projeto
+        function verificarLogin() {
+            const usuarioLogado = localStorage.getItem("usuarioLogado");
+            const logadoUniversal = localStorage.getItem("logado"); 
+            
+            if (!usuarioLogado && logadoUniversal !== "true") {
+                alert("⚠️ Você precisa estar logado no site para realizar uma compra!");
+                window.location.href = "Login.html";
+                return false;
+            }
+            return true;
+        }
+
+        function atualizarCabecalhoAuth() {
+            const areaAuth = document.getElementById("areaAuthHeader");
+            const usuarioLogado = localStorage.getItem("usuarioLogado");
+            const logadoUniversal = localStorage.getItem("logado");
+            const fotoSalva = localStorage.getItem("usuarioFoto") || "../imagens/Background.png";
+
+            if (usuarioLogado || logadoUniversal === "true") {
+                areaAuth.innerHTML = `
+                    <a href="Login.html" onclick="realizarLogout()" style="text-decoration: none; color: #6e655f; font-size: 0.85rem; font-weight: 500;">Sair</a>
+                    <a href="MeuPerfil.html" title="Meu Perfil">
+                        <img src="${fotoSalva}" alt="Foto do Perfil" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid #8c533e;">
+                    </a>
+                `;
+            } else {
+                areaAuth.innerHTML = `
+                    <a href="Login.html" style="text-decoration: none; color: #8c533e; font-size: 0.85rem; font-weight: 600; padding: 4px 8px;">Entrar</a>
+                    <a href="Cadastro.html" style="text-decoration: none; background-color: #8c533e; color: #fff; padding: 5px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">Cadastrar</a>
+                `;
+            }
+        }
+
+        function realizarLogout() {
+            localStorage.removeItem("usuarioLogado");
+            localStorage.removeItem("logado");
+        }
+
+        function atualizarContadorCarrinho() {
+            const contador = document.getElementById("contadorCarrinhoHeader");
+            if (!contador) return;
+
+            if (carrinho.length > 0) {
+                contador.innerText = carrinho.length;
+                contador.style.display = "inline-block";
+            } else {
+                contador.style.display = "none";
+            }
+        }
+
+        function renderizarLivros() {
+            const grid = document.getElementById("gridLivros");
+            const mensagemVazio = document.getElementById("mensagemVazio");
+            const contadorLivros = document.getElementById("contadorLivros");
+            grid.innerHTML = "";
+
+            const livrosFiltrados = acervoLivros.filter(livro => {
+                const combinaGenero = (generoAtual === "Todos") || (livro.genero === generoAtual);
+                const combinaTexto = livro.titulo.toLowerCase().includes(textoBuscaAtual.toLowerCase()) || 
+                                     livro.autor.toLowerCase().includes(textoBuscaAtual.toLowerCase());
+                return combinaGenero && combinaTexto;
+            });
+
+            contadorLivros.innerText = `Exibindo ${livrosFiltrados.length} livro(s)`;
+
+            if (livrosFiltrados.length === 0) {
+                mensagemVazio.style.display = "block";
+                return;
+            }
+
+            mensagemVazio.style.display = "none";
+
+            livrosFiltrados.forEach(livro => {
+                const card = document.createElement("div");
+                card.className = "card-livro";
+
+                card.innerHTML = `
+                    <div style="position: relative; cursor: pointer;" onclick="abrirModalDetalhes(${livro.id})">
+                        <img src="${livro.imagem}" alt="Capa do livro ${livro.titulo}">
+                        <span style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: #fff; font-size: 0.75rem; padding: 2px 8px; border-radius: 10px; font-weight: 600;">★ ${livro.nota}</span>
+                    </div>
+                    <div style="padding: 10px 0; cursor: pointer;" onclick="abrirModalDetalhes(${livro.id})">
+                        <span style="font-size: 0.75rem; color: #8c533e; font-weight: 600;">${livro.genero}</span>
+                        <h3 style="margin: 4px 0; font-size: 1rem; color: #2d251e;">${livro.titulo}</h3>
+                        <p class="autor" style="margin: 0; font-size: 0.85rem; color: #6e655f;">${livro.autor}</p>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 8px; gap: 6px;">
+                        <div class="preco" style="font-weight: 700; color: #8c533e; font-size: 0.95rem;">${formatarMoeda(livro.preco)}</div>
+                        <div style="display: flex; gap: 6px;">
+                            <button type="button" onclick="adicionarAoCarrinho(${livro.id}, event)" title="Adicionar ao Carrinho" style="padding: 6px 10px; background: #8c533e; border: none; border-radius: 4px; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="9" cy="21" r="1"></circle>
+                                    <circle cx="20" cy="21" r="1"></circle>
+                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                                </svg>
+                            </button>
+                            <button type="button" onclick="abrirModalDetalhes(${livro.id})" style="padding: 6px 10px; background: #faf8f5; border: 1px solid #e0d7cd; border-radius: 4px; font-size: 0.8rem; font-weight: 600; color: #2d251e; cursor: pointer;">Detalhes</button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function adicionarAoCarrinho(idLivro, event) {
+            if (event) event.stopPropagation();
+
+            const livro = acervoLivros.find(l => l.id === idLivro);
+            if (!livro) return;
+
+            carrinho.push(livro);
+            localStorage.setItem("carrinhoLivros", JSON.stringify(carrinho));
+            atualizarContadorCarrinho();
+
+            alert(`🛒 "${livro.titulo}" foi adicionado ao seu carrinho!`);
+        }
+
+        function filtrarPorGenero(genero, botao) {
+            generoAtual = genero;
+            document.querySelectorAll(".filter-btn").forEach(btn => btn.classList.remove("active"));
+            if (botao) botao.classList.add("active");
+            renderizarLivros();
+        }
+
+        function filtrarPorTexto(texto) {
+            textoBuscaAtual = texto;
+            renderizarLivros();
+        }
+
+        function limparFiltros() {
+            generoAtual = "Todos";
+            textoBuscaAtual = "";
+            document.getElementById("inputBuscaHeader").value = "";
+            const primeiroBotao = document.querySelector(".filter-btn");
+            if (primeiroBotao) filtrarPorGenero('Todos', primeiroBotao);
+        }
+
+        function abrirModalDetalhes(idLivro) {
+            livroAtual = acervoLivros.find(l => l.id === idLivro);
+            if (!livroAtual) return;
+
+            document.getElementById("modalImg").src = livroAtual.imagem;
+            document.getElementById("modalGeneroTag").innerText = livroAtual.genero.toUpperCase();
+            document.getElementById("modalTitulo").innerText = livroAtual.titulo;
+            document.getElementById("modalAutor").innerText = "Por " + livroAtual.autor;
+            document.getElementById("modalSinopse").innerText = livroAtual.sinopse;
+            document.getElementById("modalPreco").innerText = formatarMoeda(livroAtual.preco);
+
+            document.getElementById("etapaDetalhes").style.display = "block";
+            document.getElementById("etapaPagamento").style.display = "none";
+
+            document.getElementById("modalLivro").style.display = "flex";
+            document.body.style.overflow = "hidden";
+        }
+
+        function irParaPagamento() {
+            if (!verificarLogin()) return;
+
+            document.getElementById("modalResumoCompra").innerText = `Resumo: ${livroAtual.titulo} — ${formatarMoeda(livroAtual.preco)}`;
+            document.getElementById("etapaDetalhes").style.display = "none";
+            document.getElementById("etapaPagamento").style.display = "block";
+        }
+
+        function voltarParaDetalhes() {
+            document.getElementById("etapaPagamento").style.display = "none";
+            document.getElementById("etapaDetalhes").style.display = "block";
+        }
+
+        function fecharModal() {
+            document.getElementById("modalLivro").style.display = "none";
+            document.getElementById("formPagamento").reset();
+            document.body.style.overflow = "auto";
+        }
+
+        function fecharModalFora(event) {
+            if (event.target.id === "modalLivro") {
+                fecharModal();
+            }
+        }
+
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "Escape") {
+                fecharModal();
+            }
+        });
+
+        function confirmarPagamento(event) {
+            event.preventDefault();
+            if (!verificarLogin()) return;
+
+            const opcaoSelecionada = document.querySelector('input[name="pagamento"]:checked');
+            if (!opcaoSelecionada) return;
+
+            const pagamento = opcaoSelecionada.value;
+            alert(`🎉 Compra realizada com sucesso!\n\nLivro: ${livroAtual.titulo}\nForma de Pagamento: ${pagamento}\n\nObrigado por comprar na Livros pra Vida!`);
+            fecharModal();
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            atualizarCabecalhoAuth();
+            renderizarLivros();
+            atualizarContadorCarrinho();
+        });
+    </script>
+</body>
+
+</html>

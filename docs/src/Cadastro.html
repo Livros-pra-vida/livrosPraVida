@@ -1,0 +1,120 @@
+<!DOCTYPE html> <!-- Declara a versão do documento como HTML5 -->
+<html lang="pt-BR"> <!-- Define o idioma principal da página como Português do Brasil -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livros pra Vida - Criar conta</title>
+
+    <link rel="icon" href="../imagens/icone.png" type="image/png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/StyleCadLog.css">
+</head>
+<body> <!-- Início do corpo da página -->
+
+    <header> <!-- Cabeçalho simplificado da página de formulário -->
+        <a href="../index.html"> <!-- Link para voltar para a página home -->
+            <img src="../imagens/pngHome.png" alt="Logo Livros pra Vida"> <!-- Imagem da logo da loja -->
+        </a> <!-- Fim do link -->
+    </header> <!-- Fim do cabeçalho -->
+
+    <main> <!-- Conteúdo principal da página -->
+
+        <section> <!-- Seção do formulário de cadastro -->
+            <div class="title"> <!-- Container para títulos e links de navegação rápida -->
+                <h1>Criar conta</h1> <!-- Título principal do formulário -->
+                <p>Já tem uma conta? <a href="Login.html">Entrar</a></p> <!-- Link de navegação para a tela de login -->
+            </div> <!-- Fim da div de título -->
+
+            <!-- Form aciona a função em JS para validar e cadastrar o usuário -->
+            <form onsubmit="realizarCadastro(event)"> 
+
+                <label> <!-- Campo para o nome de usuário -->
+                    Nome de usuário
+                    <input type="text" id="cadUsuario" placeholder="ex: leitor_curioso" required> <!-- Entrada de texto obrigatória -->
+                </label> <!-- Fim da label do nome -->
+
+                <label> <!-- Campo para o e-mail -->
+                    E-mail
+                    <input type="email" id="cadEmail" placeholder="seunome@email.com" required> <!-- Entrada de e-mail obrigatória -->
+                </label> <!-- Fim da label do e-mail -->
+
+                <!-- CAMPO: Data de Nascimento -->
+                <label>
+                    Data de Nascimento
+                    <input type="date" id="cadNascimento" required>
+                </label>
+
+                <!-- CAMPO: CPF (Apenas números, máximo 11) -->
+                <label>
+                    CPF (somente números)
+                    <input type="text" id="cadCpf" placeholder="00000000000" maxlength="11" pattern="\d{11}" title="Digite exatamente 11 números" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 11)" required>
+                </label>
+
+                <!-- CAMPO: Telefone (Apenas números, máximo 11) -->
+                <label>
+                    Telefone (com DDD, somente números)
+                    <input type="tel" id="cadTelefone" placeholder="61999998888" maxlength="11" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 11)" required>
+                </label>
+
+                <label> <!-- Campo de senha -->
+                    Senha
+                    <div class="password"> <!-- Container para organizar o input e o botão de visibilidade -->
+                        <input type="password" id="cadSenha" placeholder="Mínimo 8 caracteres" required minlength="8"> <!-- Entrada de senha com mínimo de 8 caracteres -->
+                        <button type="button" onclick="alternarVisibilidade('cadSenha')"> <!-- Botão interativo em JS para ver/ocultar senha -->
+                            <img src="https://www.figma.com/api/mcp/asset/ea881bc4-4cca-463d-89fe-136bc6582d27.svg" alt="Mostrar Senha"> <!-- Ícone de olho -->
+                        </button> <!-- Fim do botão de visibilidade -->
+                    </div> <!-- Fim do container da senha -->
+                </label> <!-- Fim da label da senha -->
+
+                <label> <!-- Campo para confirmação de senha -->
+                    Confirmar senha
+                    <div class="password"> <!-- Container interno -->
+                        <input type="password" id="cadConfirmaSenha" placeholder="Repita a senha" required> <!-- Entrada para validar a senha inserida -->
+                        <button type="button" onclick="alternarVisibilidade('cadConfirmaSenha')"> <!-- Botão para alternar a exibição da confirmação -->
+                            <img src="https://www.figma.com/api/mcp/asset/ea881bc4-4cca-463d-89fe-136bc6582d27.svg" alt="Mostrar Senha"> <!-- Ícone -->
+                        </button> <!-- Fim do botão -->
+                    </div> <!-- Fim do container -->
+                </label> <!-- Fim da label de confirmação -->
+
+                <label class="terms"> <!-- Checkbox dos termos do serviço -->
+                    <input type="checkbox" id="aceitoTermos" required> <!-- Entrada do tipo caixa de seleção obrigatória -->
+                    <span>
+                        Li e concordo com os
+                        <a href="#">Termos de Uso</a> <!-- Link dos termos -->
+                        e a
+                        <a href="#">Política de Privacidade</a>. <!-- Link das políticas -->
+                    </span>
+                </label> <!-- Fim da caixa dos termos -->
+
+                <button class="register" type="submit"> <!-- Botão de submissão do formulário -->
+                    Concluir
+                </button> <!-- Fim do botão -->
+
+            </form> <!-- Fim do formulário -->
+
+            <!-- LINK PARA O ARQUIVO EXTERNO DE VALIDAÇÃO DE CPF -->
+            <script src="../js/validarCPF.js"></script>
+
+            <script src="../js/Cadastro.js"></script>
+
+        </section> 
+
+        <footer> 
+            <p>"Toda história começa com uma página."</p> 
+
+            <div class="benefits"> 
+                <span>✓ Acesso ilimitado ao catálogo</span> 
+                <span>✓ Recomendações personalizadas</span> 
+                <span>✓ Chat com outros leitores</span> 
+            </div> 
+
+            <small>© 2026 Livros pra Vida</small> 
+        </footer> 
+
+    </main> 
+
+</body> 
+
+</html>

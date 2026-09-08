@@ -1,0 +1,99 @@
+<!DOCTYPE html> <!-- Declaração do tipo de documento HTML5 -->
+<html lang="pt-BR"> <!-- Configura a língua oficial do site como Português do Brasil -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livros pra Vida - Criar conta</title>
+
+    <link rel="icon" href="../imagens/icone.png" type="image/png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/StyleCadLog.css">
+</head>
+
+<body> <!-- Início do corpo -->
+
+    <header> <!-- Cabeçalho minimalista com link para a home -->
+        <a href="../index.html"> <!-- Âncora para voltar ao menu inicial -->
+            <img src="../imagens/pngHome.png" alt="Logo Livros pra Vida"> <!-- Ícone da marca -->
+        </a> <!-- Fim do link -->
+    </header> <!-- Fim do cabeçalho -->
+
+    <main> <!-- Seção central da aplicação -->
+
+        <section> <!-- Cartão central do formulário de autenticação -->
+            <div class="title"> <!-- Container contendo título e alternador de página -->
+                <h1>Entrar</h1> <!-- Título principal do cartão -->
+                <p>Precisa criar uma conta? <a href="Cadastro.html">Criar conta</a></p> <!-- Link direto para a tela de cadastro -->
+            </div> <!-- Fim da div title -->
+
+            <!-- Formulário que executa o login via script JS -->
+            <form onsubmit="realizarLogin(event)">
+
+                <label> <!-- Campo do identificador do usuário -->
+                    Nome de usuário ou email
+                    <input type="text" id="loginUsuario" placeholder="Nome / Email" required> <!-- Entrada obrigatória -->
+                </label> <!-- Fim da label -->
+
+                <label> <!-- Campo da senha de acesso -->
+                    Senha
+                    <div class="password"> <!-- Container do input e do botão do olho -->
+                        <input type="password" id="loginSenha" placeholder="Senha" required> <!-- Campo para digitação de senha -->
+                        <button type="button" onclick="alternarVisibilidade('loginSenha')"> <!-- Botão para acionar a função que revela a senha -->
+                            <img src="https://www.figma.com/api/mcp/asset/ea881bc4-4cca-463d-89fe-136bc6582d27.svg" alt="Mostrar Senha"> <!-- Ícone -->
+                        </button> <!-- Fim do botão -->
+                    </div> <!-- Fim do container da senha -->
+                </label> <!-- Fim da label da senha -->
+
+                <button class="login" type="submit"> <!-- Botão de submissão do Login -->
+                    Entrar
+                </button> <!-- Fim do botão -->
+
+            </form> <!-- Fim do formulário -->
+
+            <!-- SCRIPT JAVASCRIPT DE LOGICA DO LOGIN -->
+            <script> // Início do bloco JS
+                
+                // Função para alternar o modo de exibição de senha entre texto e asteriscos
+                function alternarVisibilidade(inputId) {
+                    const campo = document.getElementById(inputId); // Seleciona o input correspondente
+                    if (campo.type === "password") { // Se estiver oculto
+                        campo.type = "text"; // Revela o texto digitado
+                    } else { // Caso contrário
+                        campo.type = "password"; // Oculta novamente os caracteres
+                    }
+                } // Fim da função alternarVisibilidade
+
+                // Função para processar a autenticação de login do usuário
+                function realizarLogin(event) {
+                    event.preventDefault(); // Impede o recarregamento automático da página pelo HTML
+
+                    const usuarioDigitado = document.getElementById("loginUsuario").value.trim(); // Resgata o usuário e remove espaços extras
+
+                    // Salva a indicação de estado logado no localStorage
+                    localStorage.setItem("logado", "true"); 
+                    
+                    // Salva o nome informado para personalizar o perfil e mensagens do chat
+                    localStorage.setItem("usuarioNome", usuarioDigitado); 
+
+                    // Configura a mensagem para ser exibida na modal da Home
+                    sessionStorage.setItem("mensagem", "Login realizado com sucesso! Bem-vindo(a) de volta.");
+
+                    // Redireciona o usuário autenticado de volta para a Home
+                    window.location.href = "../index.html"; 
+                } // Fim da função realizarLogin
+
+            </script> <!-- Fim do bloco JS -->
+        </section> <!-- Fim do cartão do formulário -->
+
+        <footer> <!-- Rodapé simplificado do Login -->
+            <p>"Toda história começa com uma página."</p> <!-- Frase temática -->
+            <small>© 2026 Livros pra Vida</small> <!-- Direitos autorais -->
+        </footer> <!-- Fim do rodapé -->
+
+    </main> <!-- Fim do conteúdo principal -->
+
+</body> <!-- Fim do corpo -->
+
+</html> <!-- Fim do arquivo HTML -->
