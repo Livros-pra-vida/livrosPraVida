@@ -1,0 +1,197 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #f5f0e8;
+    color: #1c1c1a;
+    font-family: Inter, sans-serif;
+}
+
+
+
+/* CABEÇALHO */
+.header {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 7%;
+    background-color: #fffdf8;
+    border-bottom: 1px solid #ddd6ca;
+}
+
+
+/* LOGO */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 22px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #29251f;
+}
+
+.logo img {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    background: transparent;
+    mix-blend-mode: multiply;
+}
+
+
+/* MENU */
+.menu {
+    display: flex;
+    gap: 30px;
+}
+
+.menu a {
+    text-decoration: none;
+    color: #29251f;
+    font-size: 15px;
+    transition: color 0.2s ease;
+}
+
+
+/* HOVER */
+.menu a:hover {
+    color: #9b633c;
+}
+
+
+/* APRESENTAÇÃO */
+.hero {
+    background: #2a4a25;
+    padding: 80px 32px;
+}
+
+.hero > div {
+    width: 100%;
+    max-width: 768px;
+    margin: auto;
+}
+
+.hero small {
+    color: #b8d4b2;
+    font-size: 12px;
+    letter-spacing: 1.2px;
+}
+
+h1 {
+    margin: 16px 0;
+    color: #f5f0e8;
+    font: 600 48px/60px "Lora", serif;
+}
+
+.hero p {
+    max-width: 608px;
+    color: #c8dfc8;
+    font-size: 16px;
+    line-height: 28.8px;
+}
+
+
+
+/* MAIN */
+main {
+    max-width: 768px;
+    margin: auto;
+}
+
+main section {
+    padding: 64px 32px;
+    border-bottom: 1px solid #ddd6c8;
+}
+
+h2 {
+    margin-bottom: 20px;
+    font: 600 24px/36px "Lora", serif;
+}
+
+main p {
+    margin-bottom: 15px;
+    color: #4a4a46;
+    font-size: 15px;
+    line-height: 27.75px;
+}
+
+
+
+/* VALORES */
+.values {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.values div {
+    display: grid;
+    grid-template-columns: 128px 1fr;
+    gap: 16px;
+}
+
+.values strong {
+    color: #2a4a25;
+    font: 600 15px/25.5px "Lora", serif;
+}
+
+.values span {
+    color: #4a4a46;
+    font-size: 15px;
+    line-height: 25.5px;
+}
+
+
+
+/* RODAPÉ */
+footer {
+    padding: 40px 32px;
+    background: #1c1c1a;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+footer a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+footer img {
+    width: 24px;
+    height: 24px;
+}
+
+footer span {
+    color: #f5f0e8;
+    font: 600 13px "Lora", serif;
+}
+
+footer small {
+    color: #6b6560;
+    font-size: 12px;
+}
+
+@media (max-width: 650px) {
+
+    .header {
+        height: auto;
+        padding: 20px;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .menu {
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+}

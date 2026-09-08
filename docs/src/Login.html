@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livros pra Vida - Criar conta</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/StyleCadLog.css">
+</head>
+
+<body>
+
+    <header>
+        <a href="../index.html">
+            <img src="../imagens/pngHome.png">
+        </a>
+    </header>
+
+    <main>
+
+        <section>
+            <div class="title">
+                <h1>Entrar</h1>
+                <p>Precisa criar uma conta? <a href="Cadastro.html">Criar conta</a></p>
+            </div>
+
+            <form onsubmit="enviarMensagem(); return false;">
+                <label>
+                    Nome de usuário ou email
+                    <input type="text" placeholder="Nome / Email" required>
+                </label>
+
+                <label>
+                    Senha
+                    <div class="password">
+                        <input type="password" placeholder="Senha" required>
+                        <button type="button">
+                            <img src="https://www.figma.com/api/mcp/asset/ea881bc4-4cca-463d-89fe-136bc6582d27.svg">
+                        </button>
+                    </div>
+                </label>
+
+
+                <button class="login" type="submit">
+                    Entrar
+                </button>
+
+            </form>
+            <script>
+                function enviarMensagem() {
+                    sessionStorage.setItem("mensagem", "Login realizado com sucesso!");
+                    localStorage.setItem("logado", "true");
+                    window.location.href = "../index.html";
+                }
+            </script>
+        </section>
+
+        <footer>
+            <p>"Toda história começa com uma página."</p>
+
+            <small>© 2026 Livros pra Vida</small>
+        </footer>
+
+    </main>
+
+</body>
+
+</html>
+```

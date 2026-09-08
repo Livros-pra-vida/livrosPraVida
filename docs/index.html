@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Livros pra Vida</title>
+
+    <link rel="icon" type="image/png" href="imagens/icone.png">
+    <link rel="stylesheet" href="css/StyleHome.css">
+</head>
+
+<body>
+
+
+    <!-- POPUP LOGADO -->
+    <div id="popup" class="popup-fundo">
+        <div class="popup">
+            <p id="mensagemPopup"></p>
+            <button onclick="fecharPopup()" class="popup button">OK</button>
+        </div>
+    </div>
+
+
+    <script>
+        const mensagem = sessionStorage.getItem("mensagem");
+
+        if (mensagem) {
+            document.getElementById("mensagemPopup").textContent = mensagem;
+            document.getElementById("popup").style.display = "flex";
+
+            sessionStorage.removeItem("mensagem");
+        }
+
+        function fecharPopup() {
+            document.getElementById("popup").style.display = "none";
+        }
+    </script>
+
+
+
+
+    <!-- CABEÇALHO -->
+    <header class="header">
+
+        <div class="logo">
+            <a href="index.html">
+                <img src="imagens/icone.png">
+            </a>
+            <span>Livros pra Vida</span>
+        </div>
+
+        <nav class="menu">
+            <a href="#categories">Catálogo</a>
+            <a href="#">Autores</a>
+            <a href="#novidades">Novidades</a>
+            <a href="#chat">Chat</a>
+            <a href="src/Login.html" class="login-button" id="entrar">Entrar</a>
+            <a href="src/Cadastro.html" class="signup-button" id="cadastrar">Cadastrar</a>
+            <a href="index.html" id="sair" onclick="sair()">Sair</a>
+            <a href="src/SobreNos.html">Sobre Nós</a>
+        </nav>
+    </header>
+
+
+    <!-- BANNER PRINCIPAL -->
+    <main>
+
+        <section class="hero">
+            <div class="hero-content">
+                <h1>
+                    Toda história<br>
+                    começa com uma<br>
+                    página.
+                </h1>
+
+                <p>
+                    Livros para todos os gostos, com frete grátis.
+                </p>
+
+                <a href="#destaques" class="button">
+                    Ver livros
+                </a>
+            </div>
+
+
+            <div class="hero-image">
+                <img src="imagens/pratileira.jpg" alt="Biblioteca com estantes de livros">
+
+            </div>
+        </section>
+
+
+        <!-- CATEGORIAS -->
+        <section class="categories" id="categories">
+
+            <a href="#">Ficção</a>
+            <a href="#">História</a>
+            <a href="#">Fantasia</a>
+            <a href="#">Ciência</a>
+            <a href="#">Filosofia</a>
+            <a href="#">Poesia</a>
+            <a href="#">Biografia</a>
+            <a href="#">Romance</a>
+
+        </section>
+
+
+        <!-- DESTAQUES -->
+        <section class="section" id="destaques">
+            <div class="section-title">
+
+                <h2>Destaques</h2>
+
+                <p>
+                    Livros selecionados para você.
+                </p>
+            </div>
+
+
+            <div class="books">
+                <article class="book">
+
+                    <img src="imagens/midnight-library.jpg" alt="Capa do livro The Midnight Library">
+
+                    <h3>The Midnight Library</h3>
+
+                    <p>Matt Haig</p>
+
+                    <strong>R$ 49,90</strong>
+                </article>
+
+
+                <article class="book">
+                    <img src="imagens/sapiens.jpg" alt="Capa do livro Sapiens">
+
+                    <h3>Sapiens</h3>
+
+                    <p>Yuval Noah Harari</p>
+
+                    <strong>R$ 54,90</strong>
+                </article>
+
+
+                <article class="book">
+                    <img src="imagens/nome-do-vento.jpg" alt="Capa do livro O Nome do Vento">
+
+                    <h3>O Nome do Vento</h3>
+
+                    <p>Patrick Rothfuss</p>
+
+                    <strong>R$ 59,90</strong>
+                </article>
+
+
+                <article class="book">
+                    <img src="imagens/cem-anos.jpg" alt="Capa do livro Cem Anos de Solidão">
+
+                    <h3>Cem Anos de Solidão</h3>
+
+                    <p>Gabriel García Márquez</p>
+
+                    <strong>R$ 44,90</strong>
+                </article>
+
+
+                <article class="book">
+                    <img src="imagens/duna.jpg" alt="Capa do livro Duna">
+
+                    <h3>Duna</h3>
+
+                    <p>Frank Herbert</p>
+
+                    <strong>R$ 62,90</strong>
+                </article>
+
+
+                <article class="book">
+                    <img src="imagens/beloved.jpg" alt="Capa do livro Beloved">
+
+                    <h3>Beloved</h3>
+
+                    <p>Toni Morrison</p>
+
+                    <strong>R$ 47,90</strong>
+
+                </article>
+            </div>
+        </section>
+
+
+        <!-- BENEFÍCIOS -->
+        <section class="benefits" id="benefits">
+
+            <div class="benefit">
+
+                <h3>Frete grátis</h3>
+
+                <p>
+                    Para todo o Brasil
+                </p>
+
+            </div>
+
+            <div class="benefit">
+
+                <h3>Compra garantida</h3>
+
+                <p>
+                    30 dias para troca ou devolução sem burocracia
+                </p>
+
+            </div>
+
+            <div class="benefit">
+
+                <h3>Clube de leitura</h3>
+
+                <p>
+                    Converse com outros leitores em tempo real no chat
+                </p>
+
+            </div>
+        </section>
+
+
+        <!-- NOVIDADES -->
+        <section class="section section-novidades" id="novidades">
+            <div class="section-title">
+
+                <h2>Novidades</h2>
+
+                <p>Títulos recém-chegados ao nosso acervo.</p>
+
+            </div>
+
+            <div class="novidades-list">
+
+                <article class="novidade-item">
+
+                    <img src="imagens/montanha-magica.jpg" alt="Capa do livro A Montanha Mágica">
+
+                    <div class="book-info">
+
+                        <h3>A Montanha Mágica</h3>
+
+                        <p>Thomas Mann</p>
+
+                    </div>
+
+                    <strong>R$ 68,90</strong>
+
+                </article>
+
+                <article class="novidade-item">
+
+                    <img src="imagens/pachinko.jpg" alt="Capa do livro Pachinko">
+
+                    <div class="book-info">
+
+                        <h3>Pachinko</h3>
+
+                        <p>Min Jin Lee</p>
+
+                    </div>
+
+                    <strong>R$ 52,90</strong>
+
+                </article>
+
+                <article class="novidade-item">
+
+                    <img src="imagens/morro-dos-ventos.jpg" alt="Capa do livro O Morro dos Ventos Uivantes">
+
+                    <div class="book-info">
+                        <h3>O Morro dos Ventos Uivantes</h3>
+
+                        <p>Emily Brontë</p>
+
+                    </div>
+
+                    <strong>R$ 38,90</strong>
+
+                </article>
+
+                <article class="novidade-item">
+
+                    <img src="imagens/kindred.jpg" alt="Capa do livro Kindred">
+
+                    <div class="book-info">
+
+                        <h3>Kindred</h3>
+
+                        <p>Octavia E. Butler</p>
+
+                    </div>
+
+                    <strong>R$ 46,90</strong>
+
+                </article>
+
+                <article class="novidade-item">
+
+                    <img src="imagens/correcoes.jpg" alt="Capa do livro As Correções">
+
+                    <div class="book-info">
+
+                        <h3>As Correções</h3>
+
+                        <p>Jonathan Franzen</p>
+
+                    </div>
+
+                    <strong>R$ 55,90</strong>
+
+                </article>
+            </div>
+        </section>
+
+
+        <!-- CHAT -->
+        <section class="chat" id="chat">
+            <div class="chat-header">
+
+                <h2>Chat de leitores</h2>
+
+                <p>Converse com quem está lendo os mesmos livros que você.</p>
+
+            </div>
+
+            <div class="messages">
+
+                <div class="message">
+
+                    <div class="message-user">
+
+                        <img src="imagens/Background.png" alt="CR" class="avatar">
+
+                        <strong style="color: #e2ddd5">Camila Rocha</strong>
+
+                        <span>14:12</span>
+
+                    </div>
+                    <p>Alguém já leu O Nome do Vento? Estou no segundo capítulo e já estou completamente viciada!</p>
+
+                </div>
+
+                <div class="message">
+
+                    <div class="message-user">
+
+                        <img src="imagens/Background-1.png" alt="TA" class="avatar">
+
+                        <strong style="color: #e2ddd5">Thiago Alves</strong>
+
+                        <span>14:14</span>
+
+                    </div>
+
+                    <p>Sim! Patrick Rothfuss é genial. O terceiro livro é aguardado há anos...</p>
+
+                </div>
+
+                <div class="message">
+
+                    <div class="message-user">
+
+                        <img src="imagens/Background-2.png" alt="FL" class="avatar">
+
+                        <strong style="color: #e2ddd5">Fernanda Lima</strong>
+
+                        <span>14:18</span>
+                    </div>
+
+                    <p>Acabei de terminar Sapiens pela segunda vez. Cada releitura traz perspectivas novas.</p>
+
+                </div>
+
+                <div class="message">
+
+                    <div class="message-user">
+
+                        <img src="imagens/Background-3.png" alt="RN" class="avatar">
+
+                        <strong style="color: #e2ddd5">Rafael Nunes</strong>
+
+                        <span>14:19</span>
+
+                    </div>
+
+                    <p>Fernanda, lê Homo Deus na sequência!</p>
+
+                </div>
+                <div class="message">
+
+                    <div class="message-user">
+
+                        <img src="imagens/Background-4.png" alt="MC" class="avatar">
+
+                        <strong style="color: #e2ddd5">Mariana Costa</strong>
+
+                        <span>14:23</span>
+
+                    </div>
+
+                    <p>Pessoal, qual é a opinião de vocês sobre Cem Anos de Solidão? Estou hesitando em começar.</p>
+
+                </div>
+                <div class="message">
+
+                    <div class="message-user">
+
+                        <img src="imagens/Background-5.png" alt="TA" class="avatar">
+
+                        <strong style="color: #e2ddd5">Thiago Alves</strong>
+
+                        <span>14:24</span>
+
+                    </div>
+
+                    <p>Mariana, é uma obra-prima absoluta. Os primeiros 50 páginas são desafiadoras, mas depois você não
+                        consegue parar. Vale muito a pena!</p>
+
+                </div>
+                <div class="message">
+
+                    <div class="message-user">
+
+                        <img src="imagens/Background-6.png" alt="CA" class="avatar">
+
+                        <strong style="color: #e2ddd5">Camila Rocha</strong>
+
+                        <span>14:26</span>
+
+                    </div>
+
+                    <p>Concordo! E a forma como García Márquez entrelaça o realismo com o mágico é algo que você nunca
+                        esquece.</p>
+
+                </div>
+
+            </div>
+
+            <input type="text" class="chat-input" placeholder="Digite sua mensagem...">
+
+        </section>
+
+
+        <!-- NEWSLETTER -->
+        <section class="newsletter" id="newsletter">
+
+            <h2>Receba novidades por e-mail</h2>
+
+            <form>
+
+                <input type="email" placeholder="seu@email.com.br">
+
+                <button type="submit">
+                    ASSINAR GRÁTIS
+                </button>
+
+            </form>
+
+            <p>
+                Sem spam. Cancele quando quiser.
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <!-- RODAPÉ -->
+    <footer class="footer">
+        <div class="footer-brand">
+            <img src="imagens/icone.png" alt="Logo Livros pra Vida" class="footer-icon">
+
+            <h2>Livros pra Vida</h2>
+
+            <p>
+                Uma livraria para quem acredita que cada
+                livro é uma conversa com o tempo.
+            </p>
+
+        </div>
+
+        <div class="footer-column">
+
+            <h3>Navegação</h3>
+
+            <a href="#">Catálogo</a>
+            <a href="#">Novidades</a>
+            <a href="#">Autores</a>
+            <a href="#">Coleções</a>
+            <a href="#">E-books</a>
+
+        </div>
+
+        <div class="footer-column">
+
+            <h3>Conta</h3>
+
+            <a href="#">Entrar</a>
+            <a href="#">Cadastrar</a>
+            <a href="#">Meus pedidos</a>
+            <a href="#">Lista de desejos</a>
+
+        </div>
+
+        <div class="footer-column">
+
+            <h3>Ajuda</h3>
+
+            <a href="#">FAQ</a>
+            <a href="#">Trocas e devoluções</a>
+            <a href="#">Frete</a>
+            <a href="#">Pagamento</a>
+            <a href="#">Contato</a>
+
+        </div>
+
+        <div class="footer-bottom">
+
+            <p>
+                © 2026 Livros pra Vida. Todos os direitos reservados.
+            </p>
+
+            <p>
+                Privacidade · Termos · LGPD
+            </p>
+
+        </div>
+    </footer>
+
+    <!-- TIRAR BOTÕES DE ENTRAR E CADASTRAR SE JA ESTIVER LOGADO -->
+    <script>
+        if (localStorage.getItem("logado") === "true") {
+            document.getElementById("entrar").style.display = "none";
+            document.getElementById("cadastrar").style.display = "none";
+            document.getElementById("sair").style.display = "inline-block";
+        } else {
+            document.getElementById("sair").style.display = "none";
+
+        }
+
+        function sair() {
+            localStorage.removeItem("logado");
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+
+</html>

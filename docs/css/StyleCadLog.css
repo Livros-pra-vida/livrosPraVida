@@ -1,0 +1,241 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #f7f2e8;
+    color: #1c1a16;
+    font-family: Inter, sans-serif;
+}
+
+
+
+/* CABEÇALHO */
+header {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    right: 16px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+header img {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    background: transparent;
+    mix-blend-mode: multiply;
+}
+
+header span,
+h1 {
+    font-family: "Playfair Display", serif;
+}
+
+header span {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+
+
+/* MAIN */
+main {
+    min-height: 1200px;
+    padding: 104px 16px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+section,
+footer {
+    width: 100%;
+    max-width: 448px;
+}
+
+
+
+/* TÍTULO */
+.title {
+    margin-bottom: 28px;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 4px;
+}
+
+p,
+label {
+    font-size: 14px;
+}
+
+.title p,
+footer,
+input::placeholder {
+    color: #7a7360;
+}
+
+a {
+    color: #2c5621;
+    font-weight: 500;
+}
+
+
+
+/* FORMULÁRIO */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-weight: 500;
+}
+
+
+
+/* CAMPOS */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    height: 44px;
+    padding: 12px 16px;
+    border: 1px solid #d9d4c9;
+    border-radius: 10px;
+    background: #f0ebe0;
+    outline: none;
+}
+
+input:focus {
+    border-color: #2c5621;
+}
+
+
+
+/* SENHA */
+.password {
+    position: relative;
+}
+
+.password input {
+    padding-right: 45px;
+}
+
+.password button {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 0;
+    background: none;
+    cursor: pointer;
+}
+
+.password img {
+    width: 16px;
+}
+
+
+
+/* TERMOS */
+.terms {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 4px 0 8px;
+    color: #7a7360;
+    line-height: 22px;
+    cursor: pointer;
+}
+
+.terms input {
+    width: 20px;
+    height: 20px;
+    accent-color: #2c5621;
+}
+
+
+
+/* BOTÕES */
+.register,
+.login {
+    padding: 14px;
+    border: 0;
+    border-radius: 10px;
+    background: #2c5621;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.register:hover {
+    background: #234719;
+}
+
+
+
+/* RODAPÉ */
+footer {
+    padding-top: 32px;
+    border-top: 1px solid #d9d4c9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+}
+
+footer p {
+    font: italic 16px "Playfair Display", serif;
+}
+
+.benefits {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 20px;
+    font-size: 12px;
+}
+
+footer small {
+    color: #aaa493;
+}
+
+
+
+@media (max-width: 600px) {
+    main {
+        min-height: 100vh;
+        padding-bottom: 32px;
+    }
+
+    .benefits {
+        flex-direction: column;
+    }
+}
+
+
+
+@media (max-width: 480px) {
+    header img {
+        width: 48px;
+        height: 48px;
+    }
+
+    header span {
+        font-size: 20px;
+    }
+}
