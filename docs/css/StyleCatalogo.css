@@ -1,0 +1,340 @@
+/* --- CORREÇÃO GLOBAL PARA IMPEDIR ESTOURO LATERAL --- */
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #faf8f5;
+    color: #2d251e;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 16px;
+    width: 100%;
+}
+
+/* --- HEADER / NAVEGAÇÃO COMPACTA PARA MOBILE --- */
+header, .header-container {
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    padding: 12px 0;
+    gap: 10px;
+}
+
+/* Linha superior do header (Logo + Carrinho/Perfil) */
+.header-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    width: 100%;
+}
+
+.header-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #2d251e;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.header-logo img {
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Barra de busca centralizada */
+.header-search {
+    padding: 0 16px;
+    width: 100%;
+}
+
+.header-search input {
+    width: 100%;
+    padding: 8px 14px;
+    border: 1px solid #e0d7cd;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    outline: none;
+    background-color: #faf8f5;
+    text-align: center;
+}
+
+.header-search input::placeholder {
+    color: #9e948c;
+}
+
+/* Menu de navegação rolável no mobile (evita quebrar o layout) */
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 4px 16px;
+    overflow-x: auto;
+    white-space: nowrap;
+    width: 100%;
+    scrollbar-width: none; /* Oculta barra de rolagem no Firefox */
+}
+
+.header-nav::-webkit-scrollbar {
+    display: none; /* Oculta barra de rolagem no Chrome/Safari */
+}
+
+.header-nav a {
+    text-decoration: none;
+    color: #6e655f;
+    font-weight: 500;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+.header-nav a.nav-active {
+    color: #8c533e;
+    font-weight: 700;
+}
+
+.cart-icon {
+    position: relative;
+    color: #2d251e;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -4px;
+    right: -6px;
+    background-color: #8c533e;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 10px;
+    display: none;
+}
+
+.btn-logout {
+    text-decoration: none;
+    color: #2d251e;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.header-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #8c533e;
+}
+
+/* --- CONTEÚDO E TÍTULOS --- */
+.catalog-header, .page-header {
+    margin: 20px 0 16px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.catalog-header h2, .page-header h2 {
+    font-size: 1.5rem;
+    color: #2d251e;
+    font-family: serif;
+    font-weight: 700;
+}
+
+.catalog-header p, .page-header p {
+    color: #6e655f;
+    font-size: 0.88rem;
+    margin: 0;
+}
+
+/* BOTÃO DE ANUNCIAR */
+.btn-anunciar {
+    background-color: #8c533e;
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(140, 83, 62, 0.2);
+}
+
+.btn-anunciar:hover {
+    background-color: #724231;
+}
+
+/* FILTROS ROLÁVEIS */
+.filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+}
+
+.filters::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-btn {
+    background: #fff;
+    border: 1px solid #e0d7cd;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    color: #6e655f;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.filter-btn.active {
+    background: #8c533e;
+    color: #fff;
+    border-color: #8c533e;
+}
+
+/* GRID DE LIVROS */
+.grid-livros {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    width: 100%;
+}
+
+.card-livro {
+    background: #fff;
+    border: 1px solid #e0d7cd;
+    border-radius: 8px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    min-width: 0;
+}
+
+.card-livro img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 6px;
+}
+
+.card-livro h3 {
+    font-size: 0.85rem;
+    margin: 2px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #2d251e;
+}
+
+.card-livro p.autor {
+    font-size: 0.78rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #6e655f;
+}
+
+/* MODAL */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 12px;
+}
+
+.modal-content {
+    background: #fff;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 16px;
+    position: relative;
+}
+
+/* --- AJUSTES PARA DESKTOP (Telas Maiores) --- */
+@media (min-width: 768px) {
+    header, .header-container {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 3%;
+        gap: 15px;
+    }
+
+    .header-top-row {
+        width: auto;
+        padding: 0;
+    }
+
+    .header-search {
+        flex: 1;
+        max-width: 300px;
+        padding: 0;
+    }
+
+    .header-search input {
+        text-align: left;
+    }
+
+    .header-nav {
+        overflow-x: visible;
+        width: auto;
+        padding: 0;
+    }
+
+    .grid-livros {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 20px;
+    }
+}

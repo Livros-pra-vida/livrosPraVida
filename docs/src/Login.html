@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livros pra Vida - Entrar</title>
+
+    <link rel="icon" href="../imagens/icone.png" type="image/png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/StyleCadLog.css">
+</head>
+
+<body>
+
+    <header>
+        <a href="../index.html">
+            <img src="../imagens/pngHome.png" alt="Logo Livros pra Vida">
+        </a>
+    </header>
+
+    <main>
+        <section>
+            <div class="title">
+                <h1>Entrar</h1>
+                <p>Precisa criar uma conta? <a href="Cadastro.html">Criar conta</a></p>
+            </div>
+
+            <form onsubmit="realizarLogin(event)">
+
+                <label>
+                    Nome de usuário ou e-mail
+                    <input type="text" id="loginUsuario" placeholder="Nome / E-mail" required>
+                </label>
+
+                <label>
+                    Senha
+                    <div class="password">
+                        <input type="password" id="loginSenha" placeholder="Senha" required>
+                        <!-- Botão integrado com o CSS existente, usando SVG direto para nunca quebrar -->
+                        <button type="button" id="btnOlho" onclick="alternarVisibilidade('loginSenha')">
+                            <svg id="iconeOlho" viewBox="0 0 24 24">
+                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                <line x1="1" y1="1" x2="23" y2="23"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </label>
+
+                <div class="forgot-password-container">
+                    <a href="#" class="forgot-password-link" onclick="esqueciSenha(event)">Esqueceu sua senha?</a>
+                </div>
+
+                <button class="login" type="submit">
+                    Entrar
+                </button>
+
+            </form>
+
+            <script>
+                // Função para alternar a visibilidade da senha e o ícone do olho
+                function alternarVisibilidade(inputId) {
+                    const campo = document.getElementById(inputId);
+                    const icone = document.getElementById("iconeOlho");
+
+                    if (campo.type === "password") {
+                        campo.type = "text";
+                        // Olho aberto
+                        icone.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+                    } else {
+                        campo.type = "password";
+                        // Olho fechado (riscado)
+                        icone.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+                    }
+                }
+
+                // Função de Login
+                function realizarLogin(event) {
+                    event.preventDefault();
+
+                    const usuarioDigitado = document.getElementById("loginUsuario").value.trim();
+
+                    localStorage.setItem("logado", "true"); 
+                    if (usuarioDigitado) {
+                        localStorage.setItem("usuarioNome", usuarioDigitado); 
+                    }
+
+                    sessionStorage.setItem("mensagem", "Login realizado com sucesso! Bem-vindo(a) de volta.");
+                    window.location.href = "../index.html"; 
+                }
+
+                // Fluxo profissional de recuperação de senha com E-mail + Código de Verificação
+                function esqueciSenha(event) {
+                    event.preventDefault();
+
+                    const emailCadastrado = localStorage.getItem("usuarioEmail");
+                    const nomeCadastrado = localStorage.getItem("usuarioNome");
+
+                    // Passo 1: Solicitar o e-mail cadastrado
+                    const emailInformado = prompt("Digite o E-MAIL cadastrado na sua conta para iniciar a recuperação:");
+
+                    if (!emailInformado) return; // Se cancelar, encerra
+
+                    if (!emailCadastrado) {
+                        alert("Nenhum cadastro encontrado neste navegador. Por favor, crie uma conta primeiro.");
+                        return;
+                    }
+
+                    // Valida se o e-mail confere
+                    if (emailInformado.trim().toLowerCase() !== emailCadastrado.trim().toLowerCase()) {
+                        alert("❌ E-mail não encontrado ou incorreto. Certifique-se de digitar o mesmo e-mail do cadastro.");
+                        return;
+                    }
+
+                    // Passo 2: Gerar um código de segurança de 4 dígitos simulando o envio
+                    const codigoGerado = Math.floor(1000 + Math.random() * 9000).toString();
+                    
+                    alert(`📩 [Simulação de E-mail Enviado]\n\nOlá, ${nomeCadastrado || 'Usuário'}!\nEnviamos um código de segurança para: ${emailCadastrado}\n\n👉 SEU CÓDIGO DE VERIFICAÇÃO É: ${codigoGerado}`);
+
+                    // Passo 3: Pedir para o usuário digitar o código recebido
+                    const codigoDigitado = prompt("Digite o código de 4 dígitos enviado para o seu e-mail:");
+
+                    if (!codigoDigitado) {
+                        alert("Operação cancelada.");
+                        return;
+                    }
+
+                    // Passo 4: Validar o código
+                    if (codigoDigitado.trim() === codigoGerado) {
+                        
+                        // Passo 5: Código correto! Liberar nova senha
+                        const novaSenha = prompt("✅ Código verificado com sucesso!\n\nDigite a sua NOVA senha:");
+
+                        if (novaSenha) {
+                            if (novaSenha.length < 4) {
+                                alert("A nova senha deve conter pelo menos 4 caracteres.");
+                                return;
+                            }
+
+                            localStorage.setItem("usuarioSenha", novaSenha);
+                            alert("🎉 Senha redefinida com sucesso! Agora você já pode entrar com sua nova senha.");
+                        }
+
+                    } else {
+                        alert("❌ Código de verificação inválido. A operação foi cancelada por segurança.");
+                    }
+                }
+            </script>
+        </section>
+
+        <footer>
+            <p>"Toda história começa com uma página."</p>
+            <small>© 2026 Livros pra Vida</small>
+        </footer>
+
+    </main>
+
+</body>
+
+</html>

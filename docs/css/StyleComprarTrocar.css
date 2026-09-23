@@ -1,0 +1,233 @@
+/* ESTILOS ESPECÍFICOS DA PÁGINA COMPRAR & TROCAR */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #faf8f5;
+    color: #2d251e;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+}
+
+/* CABEÇALHO PADRONIZADO EM LINHA */
+.header-padrao {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 3%;
+    background: #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    gap: 20px;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #2d251e;
+    font-weight: 700;
+    font-size: 1.2rem;
+    white-space: nowrap;
+}
+
+.logo-img {
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+/* BUSCA */
+.busca-container {
+    flex: 1;
+    max-width: 300px;
+    margin: 0;
+}
+
+.busca-form {
+    margin: 0;
+    width: 100%;
+}
+
+.busca-input {
+    width: 100%;
+    padding: 8px 14px;
+    border: 1px solid #e0d7cd;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    outline: none;
+    background-color: #faf8f5;
+}
+
+/* NAVEGAÇÃO */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: #2d251e;
+    font-weight: 500;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.nav-item.active {
+    color: #8c533e;
+    font-weight: 700;
+}
+
+/* BOTÃO MENU HAMBÚRGUER (OCULTO NO PC) */
+#btn-menu {
+    display: none;
+}
+
+/* ÁREA DE AUTENTICAÇÃO E CARRINHO */
+.auth-carrinho-area {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.carrinho-link {
+    position: relative;
+    color: #2d251e;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.carrinho-contador {
+    position: absolute;
+    top: -4px;
+    right: -6px;
+    background-color: #8c533e;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 10px;
+    display: none;
+}
+
+.btn-entrar {
+    text-decoration: none;
+    color: #2d251e;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.btn-cadastrar {
+    text-decoration: none;
+    background-color: #8c533e;
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.btn-sair {
+    text-decoration: none;
+    color: #6e655f;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.perfil-link {
+    display: flex;
+    align-items: center;
+}
+
+.perfil-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #8c533e;
+}
+
+/* ESTILIZAÇÃO E CENTRALIZAÇÃO DOS CARDS DE LIVROS */
+.books .book {
+    background: #fff;
+    border: 1px solid #e0d7cd;
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.books .book:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.books .book > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* MODALIDADES DOS LIVROS */
+.modalidade-troca {
+    color: #4CAF50;
+}
+
+.modalidade-doacao {
+    color: #2196F3;
+}
+
+.btn-negociar {
+    margin-top: 10px;
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+}
+
+/* RESPONSIVO APENAS PARA CELULAR */
+@media (max-width: 768px) {
+    .header-padrao {
+        flex-wrap: wrap;
+    }
+    #btn-menu {
+        display: flex;
+        background: none;
+        border: none;
+        cursor: pointer;
+        flex-direction: column;
+        gap: 5px;
+        padding: 5px;
+    }
+    .busca-container {
+        order: 3;
+        max-width: 100%;
+        flex-basis: 100%;
+        margin-top: 5px;
+    }
+    .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        background: #ffffff;
+        padding: 15px 0;
+        border-top: 1px solid #e0d7cd;
+        gap: 12px;
+    }
+    .nav-links.ativo {
+        display: flex;
+    }
+}
