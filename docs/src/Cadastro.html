@@ -8,9 +8,12 @@
 
     <link rel="icon" href="../imagens/icone.png" type="image/png">
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="../css/StyleCadLog.css">
 </head>
+
 <body> <!-- Início do corpo da página -->
 
     <header> <!-- Cabeçalho simplificado da página de formulário -->
@@ -28,16 +31,18 @@
             </div> <!-- Fim da div de título -->
 
             <!-- Form aciona a função em JS para validar e cadastrar o usuário -->
-            <form onsubmit="realizarCadastro(event)"> 
+            <form onsubmit="realizarCadastro(event)">
 
                 <label> <!-- Campo para o nome de usuário -->
                     Nome de usuário
-                    <input type="text" id="cadUsuario" placeholder="ex: leitor_curioso" required> <!-- Entrada de texto obrigatória -->
+                    <input type="text" id="cadUsuario" placeholder="ex: leitor_curioso" required>
+                    <!-- Entrada de texto obrigatória -->
                 </label> <!-- Fim da label do nome -->
 
                 <label> <!-- Campo para o e-mail -->
                     E-mail
-                    <input type="email" id="cadEmail" placeholder="seunome@email.com" required> <!-- Entrada de e-mail obrigatória -->
+                    <input type="email" id="cadEmail" placeholder="seunome@email.com" required>
+                    <!-- Entrada de e-mail obrigatória -->
                 </label> <!-- Fim da label do e-mail -->
 
                 <!-- CAMPO: Data de Nascimento -->
@@ -49,22 +54,30 @@
                 <!-- CAMPO: CPF (Apenas números, máximo 11) -->
                 <label>
                     CPF (somente números)
-                    <input type="text" id="cadCpf" placeholder="00000000000" maxlength="11" pattern="\d{11}" title="Digite exatamente 11 números" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 11)" required>
+                    <input type="text" id="cadCpf" placeholder="00000000000" maxlength="11" pattern="\d{11}"
+                        title="Digite exatamente 11 números"
+                        oninput="this.value = this.value.replace(/\D/g, '').slice(0, 11)" required>
                 </label>
 
                 <!-- CAMPO: Telefone (Apenas números, máximo 11) -->
                 <label>
                     Telefone (com DDD, somente números)
-                    <input type="tel" id="cadTelefone" placeholder="61999998888" maxlength="11" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 11)" required>
+                    <input type="tel" id="cadTelefone" placeholder="61999998888" maxlength="11"
+                        oninput="this.value = this.value.replace(/\D/g, '').slice(0, 11)" required>
                 </label>
 
                 <label> <!-- Campo de senha -->
                     Senha
                     <div class="password"> <!-- Container para organizar o input e o botão de visibilidade -->
-                        <input type="password" id="cadSenha" placeholder="Mínimo 8 caracteres" required minlength="8"> <!-- Entrada de senha com mínimo de 8 caracteres -->
-                        <button type="button" id="btnOlhoSenha" onclick="alternarVisibilidade('cadSenha', 'iconeOlhoSenha')"> <!-- Botão interativo em JS para ver/ocultar senha -->
+                        <input type="password" id="cadSenha" placeholder="Mínimo 8 caracteres" required minlength="8">
+                        <!-- Entrada de senha com mínimo de 8 caracteres -->
+                        <button type="button" id="btnOlhoSenha"
+                            onclick="alternarVisibilidade('cadSenha', 'iconeOlhoSenha')">
+                            <!-- Botão interativo em JS para ver/ocultar senha -->
                             <svg id="iconeOlhoSenha" viewBox="0 0 24 24">
-                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                <path
+                                    d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+                                </path>
                                 <line x1="1" y1="1" x2="23" y2="23"></line>
                             </svg>
                         </button> <!-- Fim do botão de visibilidade -->
@@ -74,10 +87,15 @@
                 <label> <!-- Campo para confirmação de senha -->
                     Confirmar senha
                     <div class="password"> <!-- Container interno -->
-                        <input type="password" id="cadConfirmaSenha" placeholder="Repita a senha" required> <!-- Entrada para validar a senha inserida -->
-                        <button type="button" id="btnOlhoConfirma" onclick="alternarVisibilidade('cadConfirmaSenha', 'iconeOlhoConfirma')"> <!-- Botão para alternar a exibição da confirmação -->
+                        <input type="password" id="cadConfirmaSenha" placeholder="Repita a senha" required>
+                        <!-- Entrada para validar a senha inserida -->
+                        <button type="button" id="btnOlhoConfirma"
+                            onclick="alternarVisibilidade('cadConfirmaSenha', 'iconeOlhoConfirma')">
+                            <!-- Botão para alternar a exibição da confirmação -->
                             <svg id="iconeOlhoConfirma" viewBox="0 0 24 24">
-                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                <path
+                                    d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+                                </path>
                                 <line x1="1" y1="1" x2="23" y2="23"></line>
                             </svg>
                         </button> <!-- Fim do botão -->
@@ -85,7 +103,8 @@
                 </label> <!-- Fim da label de confirmação -->
 
                 <label class="terms"> <!-- Checkbox dos termos do serviço -->
-                    <input type="checkbox" id="aceitoTermos" required> <!-- Entrada do tipo caixa de seleção obrigatória -->
+                    <input type="checkbox" id="aceitoTermos" required>
+                    <!-- Entrada do tipo caixa de seleção obrigatória -->
                     <span>
                         Li e concordo com os
                         <a href="#">Termos de Uso</a> <!-- Link dos termos -->
@@ -119,7 +138,7 @@
                 }
 
                 // Função de Cadastro
-                function realizarCadastro(event) {
+                async function realizarCadastro(event) {
                     event.preventDefault();
 
                     const nome = document.getElementById("cadUsuario").value.trim();
@@ -127,41 +146,62 @@
                     const senha = document.getElementById("cadSenha").value;
                     const confirmaSenha = document.getElementById("cadConfirmaSenha").value;
 
-                    // Validação simples de confirmação de senha
+                    // Validação da confirmação de senha
                     if (senha !== confirmaSenha) {
-                        alert("❌ As senhas não coincidem. Por favor, verifique os campos de senha.");
+                        alert("As senhas não coincidem.");
                         return;
                     }
 
-                    // Salvando os dados no localStorage para uso no Login e Recuperação de Senha
-                    localStorage.setItem("usuarioNome", nome);
-                    localStorage.setItem("usuarioEmail", email);
-                    localStorage.setItem("usuarioSenha", senha);
-                    localStorage.setItem("logado", "true");
+                    try {
+                        const resposta = await fetch("http://localhost:3000/users", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                user: {
+                                    username: nome,
+                                    email: email,
+                                    password: senha,
+                                    password_confirmation: confirmaSenha,
+                                    admin: false
+                                }
+                            })
+                        });
 
-                    alert("🎉 Cadastro realizado com sucesso! Bem-vindo(a) ao Livros pra Vida.");
-                    
-                    // Redireciona para a home ou página principal
-                    window.location.href = "../index.html";
+                        const dados = await resposta.json();
+
+                        if (resposta.ok) {
+                            alert("🎉 Cadastro realizado com sucesso!");
+                            window.location.href = "../index.html";
+                        } else {
+                            console.error(dados);
+                            alert("❌ Não foi possível realizar o cadastro.");
+                        }
+
+                    } catch (erro) {
+                        console.error(erro);
+                        alert("❌ Não foi possível conectar com a API.");
+                    }
                 }
             </script>
 
-        </section> 
+        </section>
 
-        <footer> 
-            <p>"Toda história começa com uma página."</p> 
+        <footer>
+            <p>"Toda história começa com uma página."</p>
 
-            <div class="benefits"> 
-                <span>✓ Acesso ilimitado ao catálogo</span> 
-                <span>✓ Recomendações personalizadas</span> 
-                <span>✓ Chat com outros leitores</span> 
-            </div> 
+            <div class="benefits">
+                <span>✓ Acesso ilimitado ao catálogo</span>
+                <span>✓ Recomendações personalizadas</span>
+                <span>✓ Chat com outros leitores</span>
+            </div>
 
-            <small>© 2026 Livros pra Vida</small> 
-        </footer> 
+            <small>© 2026 Livros pra Vida</small>
+        </footer>
 
-    </main> 
+    </main>
 
-</body> 
+</body>
 
 </html>

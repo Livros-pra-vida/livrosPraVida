@@ -7,7 +7,9 @@
     <title>Meu Perfil - Livros pra Vida</title>
 
     <link rel="icon" type="image/png" href="../imagens/icone.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="../css/StyleMeuPerfil.css">
 </head>
 
@@ -35,15 +37,18 @@
         <aside class="profile-card">
             <div class="avatar-wrapper">
                 <img src="../imagens/perfil.jpg" alt="Foto do Usuário" id="userAvatar" class="avatar-img">
-                <button class="btn-change-avatar" onclick="document.getElementById('avatarUpload').click()" title="Alterar foto">📷</button>
-                <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="uploadFotoPerfil(event)">
+                <button class="btn-change-avatar" onclick="document.getElementById('avatarUpload').click()"
+                    title="Alterar foto">📷</button>
+                <input type="file" id="avatarUpload" accept="image/*" style="display: none;"
+                    onchange="uploadFotoPerfil(event)">
             </div>
 
             <h2 id="profileName">Leitor Colaborador</h2>
             <span id="badgePlano" class="role-badge">Membro Colaborador</span>
 
             <!-- Status de Maioridade -->
-            <div id="statusIdade" style="margin-top: 10px; font-size: 0.8rem; padding: 4px 8px; border-radius: 4px; display: inline-block; background: #e0d7cd; color: #2d251e;">
+            <div id="statusIdade"
+                style="margin-top: 10px; font-size: 0.8rem; padding: 4px 8px; border-radius: 4px; display: inline-block; background: #e0d7cd; color: #2d251e;">
                 Verificando idade...
             </div>
 
@@ -76,70 +81,90 @@
                 </div>
 
                 <form id="formPerfil" onsubmit="salvarPerfil(event)">
-                    
+
                     <!-- Bloco 1: Dados Pessoais -->
-                    <h4 style="margin-bottom: 12px; color: #8c533e; font-size: 1rem; border-bottom: 1px solid #e0d7cd; padding-bottom: 6px;">1. Dados Pessoais</h4>
-                    <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                    <h4
+                        style="margin-bottom: 12px; color: #8c533e; font-size: 1rem; border-bottom: 1px solid #e0d7cd; padding-bottom: 6px;">
+                        1. Dados Pessoais</h4>
+                    <div class="form-grid"
+                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
                         <div class="form-group" style="grid-column: span 2;">
                             <label for="nomeInput">Nome Completo</label>
-                            <input type="text" id="nomeInput" required placeholder="Seu nome completo" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                            <input type="text" id="nomeInput" required placeholder="Seu nome completo"
+                                style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
                         </div>
 
                         <div class="form-group">
                             <label for="emailInput">E-mail Cadastrado</label>
-                            <input type="email" id="emailInput" required placeholder="seuemail@dominio.com" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                            <input type="email" id="emailInput" required placeholder="seuemail@dominio.com"
+                                style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
                         </div>
 
                         <div class="form-group">
                             <label for="telefoneInput">Telefone / WhatsApp</label>
-                            <input type="tel" id="telefoneInput" placeholder="(00) 00000-0000" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                            <input type="tel" id="telefoneInput" placeholder="(00) 00000-0000"
+                                style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
                         </div>
 
                         <div class="form-group">
                             <label for="nascimentoInput">Data de Nascimento (Verificação de Idade)</label>
-                            <input type="date" id="nascimentoInput" required style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                            <input type="date" id="nascimentoInput" required
+                                style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
                         </div>
 
                         <div class="form-group">
                             <label for="cpfInput">CPF</label>
-                            <input type="text" id="cpfInput" placeholder="000.000.000-00" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                            <input type="text" id="cpfInput" placeholder="000.000.000-00"
+                                style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
                         </div>
                     </div>
 
                     <!-- Bloco 2: Endereço de Entrega -->
-                    <h4 style="margin-bottom: 12px; color: #8c533e; font-size: 1rem; border-bottom: 1px solid #e0d7cd; padding-bottom: 6px;">2. Endereço de Entrega</h4>
-                    <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                    <h4
+                        style="margin-bottom: 12px; color: #8c533e; font-size: 1rem; border-bottom: 1px solid #e0d7cd; padding-bottom: 6px;">
+                        2. Endereço de Entrega</h4>
+                    <div class="form-grid"
+                        style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px;">
                         <div class="form-group">
                             <label for="cepInput">CEP</label>
-                            <input type="text" id="cepInput" placeholder="00000-000" maxlength="9" onblur="consultarCep(this.value)" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                            <input type="text" id="cepInput" placeholder="00000-000" maxlength="9"
+                                onblur="consultarCep(this.value)"
+                                style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
                         </div>
 
                         <div class="form-group" style="grid-column: span 2;">
                             <label for="ruaInput">Endereço (Rua, Avenida...)</label>
-                            <input type="text" id="ruaInput" placeholder="Nome da rua ou logradouro" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                            <input type="text" id="ruaInput" placeholder="Nome da rua ou logradouro"
+                                style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
                         </div>
 
                         <div class="form-group">
                             <label for="numeroInput">Número</label>
-                            <input type="text" id="numeroInput" placeholder="Ex: 101" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                            <input type="text" id="numeroInput" placeholder="Ex: 101"
+                                style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
                         </div>
 
                         <div class="form-group">
                             <label for="bairroInput">Bairro</label>
-                            <input type="text" id="bairroInput" placeholder="Bairro" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                            <input type="text" id="bairroInput" placeholder="Bairro"
+                                style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
                         </div>
 
                         <div class="form-group">
                             <label for="cidadeInput">Cidade / UF</label>
-                            <input type="text" id="cidadeInput" placeholder="Ex: Brasília - DF" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                            <input type="text" id="cidadeInput" placeholder="Ex: Brasília - DF"
+                                style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
                         </div>
                     </div>
 
                     <!-- Bloco 3: Formas de Pagamento Preferidas -->
-                    <h4 style="margin-bottom: 12px; color: #8c533e; font-size: 1rem; border-bottom: 1px solid #e0d7cd; padding-bottom: 6px;">3. Forma de Pagamento Principal</h4>
+                    <h4
+                        style="margin-bottom: 12px; color: #8c533e; font-size: 1rem; border-bottom: 1px solid #e0d7cd; padding-bottom: 6px;">
+                        3. Forma de Pagamento Principal</h4>
                     <div class="form-group" style="margin-bottom: 20px;">
                         <label for="pagamentoSelect">Método Favorito</label>
-                        <select id="pagamentoSelect" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px; background: #fff;">
+                        <select id="pagamentoSelect"
+                            style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px; background: #fff;">
                             <option value="Pix">Pix (Instantâneo)</option>
                             <option value="Cartão de Crédito">Cartão de Crédito</option>
                             <option value="Boleto Bancário">Boleto Bancário</option>
@@ -147,7 +172,9 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn-save" style="background: #8c533e; color: #fff; padding: 10px 20px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Salvar Alterações</button>
+                        <button type="submit" class="btn-save"
+                            style="background: #8c533e; color: #fff; padding: 10px 20px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Salvar
+                            Alterações</button>
                     </div>
                 </form>
             </section>
@@ -171,18 +198,26 @@
                 </div>
 
                 <div class="books-mini-grid" style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px;">
-                    <div class="mini-book-card" style="border: 1px solid #e0d7cd; padding: 10px; border-radius: 6px; width: 140px; text-align: center;">
-                        <span class="tag-negocio tag-troca" style="font-size: 0.75rem; background: #e6f4ea; color: #137333; padding: 2px 6px; border-radius: 4px;">Troca</span>
-                        <img src="../imagens/midnight-library.jpg" alt="A Biblioteca da Meia-Noite" style="width: 100%; height: 100px; object-fit: cover; margin: 8px 0;">
+                    <div class="mini-book-card"
+                        style="border: 1px solid #e0d7cd; padding: 10px; border-radius: 6px; width: 140px; text-align: center;">
+                        <span class="tag-negocio tag-troca"
+                            style="font-size: 0.75rem; background: #e6f4ea; color: #137333; padding: 2px 6px; border-radius: 4px;">Troca</span>
+                        <img src="../imagens/midnight-library.jpg" alt="A Biblioteca da Meia-Noite"
+                            style="width: 100%; height: 100px; object-fit: cover; margin: 8px 0;">
                         <h4 style="font-size: 0.85rem; margin-bottom: 8px;">A Biblioteca da Meia-Noite</h4>
-                        <button class="btn-action-card" style="font-size: 0.75rem; padding: 4px 8px; background: #8c533e; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Gerenciar</button>
+                        <button class="btn-action-card"
+                            style="font-size: 0.75rem; padding: 4px 8px; background: #8c533e; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Gerenciar</button>
                     </div>
 
-                    <div class="mini-book-card" style="border: 1px solid #e0d7cd; padding: 10px; border-radius: 6px; width: 140px; text-align: center;">
-                        <span class="tag-negocio tag-doacao" style="font-size: 0.75rem; background: #e8f0fe; color: #1a73e8; padding: 2px 6px; border-radius: 4px;">Doação</span>
-                        <img src="../imagens/sapiens.jpg" alt="Sapiens" style="width: 100%; height: 100px; object-fit: cover; margin: 8px 0;">
+                    <div class="mini-book-card"
+                        style="border: 1px solid #e0d7cd; padding: 10px; border-radius: 6px; width: 140px; text-align: center;">
+                        <span class="tag-negocio tag-doacao"
+                            style="font-size: 0.75rem; background: #e8f0fe; color: #1a73e8; padding: 2px 6px; border-radius: 4px;">Doação</span>
+                        <img src="../imagens/sapiens.jpg" alt="Sapiens"
+                            style="width: 100%; height: 100px; object-fit: cover; margin: 8px 0;">
                         <h4 style="font-size: 0.85rem; margin-bottom: 8px;">Sapiens</h4>
-                        <button class="btn-action-card" style="font-size: 0.75rem; padding: 4px 8px; background: #8c533e; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Gerenciar</button>
+                        <button class="btn-action-card"
+                            style="font-size: 0.75rem; padding: 4px 8px; background: #8c533e; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Gerenciar</button>
                     </div>
                 </div>
             </section>
@@ -195,12 +230,22 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Puxa os dados salvos do cadastro ou do localStorage geral
-            document.getElementById("nomeInput").value = localStorage.getItem("usuarioNome") || localStorage.getItem("nomeCadastro") || "Leitor Colaborador";
-            document.getElementById("emailInput").value = localStorage.getItem("usuarioEmail") || localStorage.getItem("emailCadastro") || "leitor@livrospravida.com";
+            const usuario = JSON.parse(localStorage.getItem("usuario"));
+
+            if (!usuario) {
+                alert("Você precisa estar logado.");
+                window.location.href = "../index.html";
+                return;
+            }
+
+            // Dados que realmente existem no usuário da API
+            document.getElementById("nomeInput").value = usuario.username || "";
+            document.getElementById("emailInput").value = usuario.email || "";
+
             document.getElementById("telefoneInput").value = localStorage.getItem("usuarioTelefone") || localStorage.getItem("telefoneCadastro") || "";
             document.getElementById("nascimentoInput").value = localStorage.getItem("usuarioNascimento") || localStorage.getItem("nascimentoCadastro") || "";
             document.getElementById("cpfInput").value = localStorage.getItem("usuarioCpf") || localStorage.getItem("cpfCadastro") || "";
-            
+
             document.getElementById("cepInput").value = localStorage.getItem("usuarioCep") || "";
             document.getElementById("ruaInput").value = localStorage.getItem("usuarioRua") || "";
             document.getElementById("numeroInput").value = localStorage.getItem("usuarioNumero") || "";

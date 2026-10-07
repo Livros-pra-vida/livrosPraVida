@@ -8,7 +8,9 @@
 
     <link rel="icon" href="../imagens/icone.png" type="image/png">
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="../css/StyleCadLog.css">
 </head>
 
@@ -41,7 +43,9 @@
                         <!-- Botão integrado com o CSS existente, usando SVG direto para nunca quebrar -->
                         <button type="button" id="btnOlho" onclick="alternarVisibilidade('loginSenha')">
                             <svg id="iconeOlho" viewBox="0 0 24 24">
-                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                <path
+                                    d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+                                </path>
                                 <line x1="1" y1="1" x2="23" y2="23"></line>
                             </svg>
                         </button>
@@ -76,18 +80,43 @@
                 }
 
                 // Função de Login
-                function realizarLogin(event) {
+                async function realizarLogin(event) {
                     event.preventDefault();
 
-                    const usuarioDigitado = document.getElementById("loginUsuario").value.trim();
+                    const email = document.getElementById("loginUsuario").value.trim();
+                    const senha = document.getElementById("loginSenha").value;
 
-                    localStorage.setItem("logado", "true"); 
-                    if (usuarioDigitado) {
-                        localStorage.setItem("usuarioNome", usuarioDigitado); 
+                    try {
+                        const resposta = await fetch("http://localhost:3000/users/login", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                email: email,
+                                password: senha
+                            })
+                        });
+
+                        const dados = await resposta.json();
+
+                        console.log("Resposta da API:", dados);
+
+                        if (resposta.ok) {
+                            // Salva os dados do usuário logado
+                            localStorage.setItem("usuario", JSON.stringify(dados.user));
+
+                            alert("✅ Login realizado com sucesso!");
+                            window.location.href = "../index.html";
+                        } else {
+                            console.error(dados);
+                            alert("❌ E-mail ou senha incorretos.");
+                        }
+
+                    } catch (erro) {
+                        console.error(erro);
+                        alert("❌ Não foi possível conectar com a API.");
                     }
-
-                    sessionStorage.setItem("mensagem", "Login realizado com sucesso! Bem-vindo(a) de volta.");
-                    window.location.href = "../index.html"; 
                 }
 
                 // Fluxo profissional de recuperação de senha com E-mail + Código de Verificação
@@ -115,7 +144,7 @@
 
                     // Passo 2: Gerar um código de segurança de 4 dígitos simulando o envio
                     const codigoGerado = Math.floor(1000 + Math.random() * 9000).toString();
-                    
+
                     alert(`📩 [Simulação de E-mail Enviado]\n\nOlá, ${nomeCadastrado || 'Usuário'}!\nEnviamos um código de segurança para: ${emailCadastrado}\n\n👉 SEU CÓDIGO DE VERIFICAÇÃO É: ${codigoGerado}`);
 
                     // Passo 3: Pedir para o usuário digitar o código recebido
@@ -128,7 +157,7 @@
 
                     // Passo 4: Validar o código
                     if (codigoDigitado.trim() === codigoGerado) {
-                        
+
                         // Passo 5: Código correto! Liberar nova senha
                         const novaSenha = prompt("✅ Código verificado com sucesso!\n\nDigite a sua NOVA senha:");
 

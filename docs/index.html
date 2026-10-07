@@ -24,23 +24,10 @@
         </div>
     </div>
 
-    <script>
-        const mensagem = sessionStorage.getItem("mensagem");
-
-        if (mensagem) {
-            document.getElementById("mensagemPopup").textContent = mensagem;
-            document.getElementById("popup").style.display = "flex";
-
-            sessionStorage.removeItem("mensagem");
-        }
-
-        function fecharPopup() {
-            document.getElementById("popup").style.display = "none";
-        }
-    </script>
+    
 
     <header class="header">
-        
+
         <a href="index.html" class="logo">
             <img src="imagens/icone.png" alt="Logo Livros pra Vida">
             <span>Livros pra Vida</span>
@@ -59,7 +46,11 @@
                 <form action="src/Catalogo.html" method="GET">
                     <input type="text" name="busca" placeholder="Buscar título ou autor...">
                     <button type="submit" aria-label="Buscar">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
                     </button>
                 </form>
             </div>
@@ -72,7 +63,8 @@
 
             <div class="header-actions">
                 <a href="src/Carrinho.html" title="Ver Carrinho" class="carrinho-link">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="9" cy="21" r="1"></circle>
                         <circle cx="20" cy="21" r="1"></circle>
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
@@ -138,7 +130,9 @@
                     <h3>The Midnight Library</h3>
                     <p>Matt Haig</p>
                     <strong>R$ 49,90</strong>
-                    <button onclick="adicionarAoCarrinho('The Midnight Library', 'R$ 49,90', 'imagens/midnight-library.jpg')" class="btn-acao-livro">Adicionar ao Carrinho</button>
+                    <button
+                        onclick="adicionarAoCarrinho('The Midnight Library', 'R$ 49,90', 'imagens/midnight-library.jpg')"
+                        class="btn-acao-livro">Adicionar ao Carrinho</button>
                 </article>
 
                 <article class="book">
@@ -146,7 +140,8 @@
                     <h3>Sapiens</h3>
                     <p>Yuval Noah Harari</p>
                     <strong>R$ 54,90</strong>
-                    <button onclick="adicionarAoCarrinho('Sapiens', 'R$ 54,90', 'imagens/sapiens.jpg')" class="btn-acao-livro">Adicionar ao Carrinho</button>
+                    <button onclick="adicionarAoCarrinho('Sapiens', 'R$ 54,90', 'imagens/sapiens.jpg')"
+                        class="btn-acao-livro">Adicionar ao Carrinho</button>
                 </article>
 
                 <article class="book">
@@ -154,7 +149,8 @@
                     <h3>O Nome do Vento</h3>
                     <p>Patrick Rothfuss</p>
                     <strong>R$ 59,90</strong>
-                    <button onclick="adicionarAoCarrinho('O Nome do Vento', 'R$ 59,90', 'imagens/nome-do-vento.jpg')" class="btn-acao-livro">Adicionar ao Carrinho</button>
+                    <button onclick="adicionarAoCarrinho('O Nome do Vento', 'R$ 59,90', 'imagens/nome-do-vento.jpg')"
+                        class="btn-acao-livro">Adicionar ao Carrinho</button>
                 </article>
 
                 <article class="book">
@@ -162,7 +158,8 @@
                     <h3>Cem Anos de Solidão</h3>
                     <p>Gabriel García Márquez</p>
                     <strong>R$ 44,90</strong>
-                    <button onclick="adicionarAoCarrinho('Cem Anos de Solidão', 'R$ 44,90', 'imagens/cem-anos.jpg')" class="btn-acao-livro">Adicionar ao Carrinho</button>
+                    <button onclick="adicionarAoCarrinho('Cem Anos de Solidão', 'R$ 44,90', 'imagens/cem-anos.jpg')"
+                        class="btn-acao-livro">Adicionar ao Carrinho</button>
                 </article>
 
                 <article class="book">
@@ -170,7 +167,8 @@
                     <h3>Duna</h3>
                     <p>Frank Herbert</p>
                     <strong>R$ 62,90</strong>
-                    <button onclick="adicionarAoCarrinho('Duna', 'R$ 62,90', 'imagens/duna.jpg')" class="btn-acao-livro">Adicionar ao Carrinho</button>
+                    <button onclick="adicionarAoCarrinho('Duna', 'R$ 62,90', 'imagens/duna.jpg')"
+                        class="btn-acao-livro">Adicionar ao Carrinho</button>
                 </article>
 
                 <article class="book">
@@ -178,7 +176,8 @@
                     <h3>Beloved</h3>
                     <p>Toni Morrison</p>
                     <strong>R$ 47,90</strong>
-                    <button onclick="adicionarAoCarrinho('Beloved', 'R$ 47,90', 'imagens/beloved.jpg')" class="btn-acao-livro">Adicionar ao Carrinho</button>
+                    <button onclick="adicionarAoCarrinho('Beloved', 'R$ 47,90', 'imagens/beloved.jpg')"
+                        class="btn-acao-livro">Adicionar ao Carrinho</button>
                 </article>
             </div>
         </section>
@@ -214,7 +213,9 @@
                         <p>Thomas Mann</p>
                     </div>
                     <strong>R$ 68,90</strong>
-                    <button onclick="adicionarAoCarrinho('A Montanha Mágica', 'R$ 68,90', 'imagens/montanha-magica.jpg')" class="btn-acao-novidade">Adicionar</button>
+                    <button
+                        onclick="adicionarAoCarrinho('A Montanha Mágica', 'R$ 68,90', 'imagens/montanha-magica.jpg')"
+                        class="btn-acao-novidade">Adicionar</button>
                 </article>
 
                 <article class="novidade-item">
@@ -224,7 +225,8 @@
                         <p>Min Jin Lee</p>
                     </div>
                     <strong>R$ 52,90</strong>
-                    <button onclick="adicionarAoCarrinho('Pachinko', 'R$ 52,90', 'imagens/pachinko.jpg')" class="btn-acao-novidade">Adicionar</button>
+                    <button onclick="adicionarAoCarrinho('Pachinko', 'R$ 52,90', 'imagens/pachinko.jpg')"
+                        class="btn-acao-novidade">Adicionar</button>
                 </article>
 
                 <article class="novidade-item">
@@ -234,7 +236,9 @@
                         <p>Emily Brontë</p>
                     </div>
                     <strong>R$ 38,90</strong>
-                    <button onclick="adicionarAoCarrinho('O Morro dos Ventos Uivantes', 'R$ 38,90', 'imagens/morro-dos-ventos.jpg')" class="btn-acao-novidade">Adicionar</button>
+                    <button
+                        onclick="adicionarAoCarrinho('O Morro dos Ventos Uivantes', 'R$ 38,90', 'imagens/morro-dos-ventos.jpg')"
+                        class="btn-acao-novidade">Adicionar</button>
                 </article>
 
                 <article class="novidade-item">
@@ -244,7 +248,8 @@
                         <p>Octavia E. Butler</p>
                     </div>
                     <strong>R$ 46,90</strong>
-                    <button onclick="adicionarAoCarrinho('Kindred', 'R$ 46,90', 'imagens/kindred.jpg')" class="btn-acao-novidade">Adicionar</button>
+                    <button onclick="adicionarAoCarrinho('Kindred', 'R$ 46,90', 'imagens/kindred.jpg')"
+                        class="btn-acao-novidade">Adicionar</button>
                 </article>
 
                 <article class="novidade-item">
@@ -254,7 +259,8 @@
                         <p>Jonathan Franzen</p>
                     </div>
                     <strong>R$ 55,90</strong>
-                    <button onclick="adicionarAoCarrinho('As Correções', 'R$ 55,90', 'imagens/correcoes.jpg')" class="btn-acao-novidade">Adicionar</button>
+                    <button onclick="adicionarAoCarrinho('As Correções', 'R$ 55,90', 'imagens/correcoes.jpg')"
+                        class="btn-acao-novidade">Adicionar</button>
                 </article>
             </div>
         </section>
@@ -339,38 +345,49 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            atualizarContadorCarrinho();
+        atualizarContadorCarrinho();
 
-            if (localStorage.getItem("logado") === "true") {
-                document.getElementById("entrar").style.display = "none";
-                document.getElementById("cadastrar").style.display = "none";
-                document.getElementById("meuPerfil").style.display = "flex";
-                document.getElementById("sair").style.display = "inline-block";
+        const usuarioSalvo = localStorage.getItem("usuario");
 
-                const fotoSalva = localStorage.getItem("usuarioFoto");
-                if (fotoSalva) {
-                    document.getElementById("menuAvatar").src = fotoSalva;
-                }
-            } else {
-                document.getElementById("meuPerfil").style.display = "none";
-                document.getElementById("sair").style.display = "none";
-                document.getElementById("entrar").style.display = "inline-block";
-                document.getElementById("cadastrar").style.display = "inline-block";
+        if (usuarioSalvo) {
+            const usuario = JSON.parse(usuarioSalvo);
+
+            console.log("Usuário logado:", usuario);
+
+            document.getElementById("entrar").style.display = "none";
+            document.getElementById("cadastrar").style.display = "none";
+            document.getElementById("meuPerfil").style.display = "flex";
+            document.getElementById("sair").style.display = "inline-block";
+
+            const fotoSalva = localStorage.getItem("usuarioFoto");
+
+            if (fotoSalva) {
+                document.getElementById("menuAvatar").src = fotoSalva;
             }
-        });
 
-        const btnMenu = document.getElementById('btn-menu');
-        const menuNavegacao = document.getElementById('menu-navegacao');
+        } else {
+            console.log("Nenhum usuário logado.");
 
-        if (btnMenu && menuNavegacao) {
-            btnMenu.addEventListener('click', () => {
-                menuNavegacao.classList.toggle('ativo');
-            });
+            document.getElementById("meuPerfil").style.display = "none";
+            document.getElementById("sair").style.display = "none";
+            document.getElementById("entrar").style.display = "inline-block";
+            document.getElementById("cadastrar").style.display = "inline-block";
         }
+    });
+
+
+    const btnMenu = document.getElementById("btn-menu");
+    const menuNavegacao = document.getElementById("menu-navegacao");
+
+    if (btnMenu && menuNavegacao) {
+        btnMenu.addEventListener("click", () => {
+            menuNavegacao.classList.toggle("ativo");
+        });
+    }
 
         function adicionarAoCarrinho(titulo, preco, imagem) {
             let carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
-            
+
             carrinho.push({
                 titulo: titulo,
                 preco: preco,
@@ -385,7 +402,7 @@
         function atualizarContadorCarrinho() {
             const carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
             const contador = document.getElementById("contadorCarrinhoHeader");
-            
+
             if (contador) {
                 if (carrinho.length > 0) {
                     contador.innerText = carrinho.length;
