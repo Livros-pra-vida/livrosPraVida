@@ -130,7 +130,7 @@
 
         if (!token) {
             // "logado" sem token = login antigo (feito antes de o chat usar token)
-            mostrarAviso(localStorage.getItem("logado") === "true"
+            mostrarAviso(localStorage.getItem("usuario")
                 ? "Para usar o chat global, saia e entre novamente na sua conta."
                 : "Faça login para ler e participar do chat global.");
             form.addEventListener("submit", (e) => {
@@ -185,6 +185,16 @@
         let destinatarioAtual = null;
         let livroAtual = null;
 
+        // O site considera "logado" quem tem o objeto "usuario" salvo (mesma regra do index.html e MeuPerfil)
+        function getUsuario() {
+            try { return JSON.parse(localStorage.getItem("usuario")); } catch (e) { return null; }
+        }
+        function estaLogado() { return !!getUsuario(); }
+        function nomeUsuario() {
+            const u = getUsuario();
+            return (u && (u.username || u.usuario || u.nome)) || localStorage.getItem("usuarioNome") || "Eu";
+        }
+
         // Escapa texto antes de colocar em innerHTML (evita XSS)
         function esc(s) {
             return String(s).replace(/[&<>"']/g, c => ({
@@ -193,7 +203,7 @@
         }
 
         document.addEventListener("DOMContentLoaded", function () {
-            if (localStorage.getItem("logado") === "true") {
+            if (estaLogado()) {
                 document.getElementById("entrar").style.display = "none";
                 document.getElementById("cadastrar").style.display = "none";
                 document.getElementById("meuPerfil").style.display = "flex";
@@ -237,7 +247,7 @@
 
         // --- CHAT PRIVADO ---
         function salvarConversaNoHistorico(destinatario, livro, primeiraMsg) {
-            const meuNome = localStorage.getItem("usuarioNome") || "Eu";
+            const meuNome = nomeUsuario();
             let conversas = JSON.parse(localStorage.getItem("chatsPrivados")) || {};
             let chaveChat = `${destinatario}_${livro}`;
 
@@ -318,7 +328,7 @@
         }
 
         function enviarMensagemPrivada() {
-            if (localStorage.getItem("logado") !== "true") {
+            if (!estaLogado()) {
                 alert("Você precisa estar logado para enviar mensagens!");
                 window.location.href = "Login.html";
                 return;
@@ -333,7 +343,7 @@
             const texto = input.value.trim();
 
             if (texto !== "") {
-                const meuNome = localStorage.getItem("usuarioNome") || "Eu";
+                const meuNome = nomeUsuario();
                 let conversas = JSON.parse(localStorage.getItem("chatsPrivados")) || {};
                 let chaveChat = `${destinatarioAtual}_${livroAtual}`;
 
@@ -354,6 +364,7 @@
         }
 
         function sair() {
+            localStorage.removeItem("usuario");
             localStorage.removeItem("logado");
             localStorage.removeItem("token"); // mesmo nome de TOKEN_KEY no script do chat global
             window.location.href = "../index.html";
