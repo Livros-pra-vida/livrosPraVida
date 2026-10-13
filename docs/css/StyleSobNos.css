@@ -1,0 +1,263 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #f5f0e8;
+    color: #1c1c1a;
+    font-family: Inter, sans-serif;
+    overflow-x: hidden;
+}
+
+/* CABEÇALHO */
+.header {
+    height: auto;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 7%;
+    background-color: #fffdf8;
+    border-bottom: 1px solid #ddd6ca;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+/* LOGO */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 22px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #29251f;
+}
+
+.logo img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    background: transparent;
+    mix-blend-mode: multiply;
+}
+
+/* MENU */
+.menu {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.menu a {
+    text-decoration: none;
+    color: #29251f;
+    font-size: 15px;
+    transition: color 0.2s ease;
+}
+
+.menu a.btn-sair {
+    color: #c0392b;
+}
+
+/* ESTILO DO BOTÃO INÍCIO COM A LOGO */
+.nav-inicio-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nav-icon-logo {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
+
+/* ESTILOS DOS BOTÕES ENTRAR E CADASTRAR NO MENU */
+.login-button {
+    color: #8c533e !important;
+    font-weight: 600;
+    padding: 8px 12px;
+}
+
+.signup-button {
+    background-color: #8c533e !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.signup-button:hover {
+    background-color: #744331 !important;
+}
+
+/* BOTÃO DA FOTO DE PERFIL CIRCULAR */
+.profile-nav-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #8c533e;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.profile-nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-nav-link:hover .profile-nav-avatar {
+    transform: scale(1.08);
+    border-color: #9b633c;
+}
+
+/* HOVER GERAL */
+.menu a:hover {
+    color: #9b633c;
+}
+
+/* APRESENTAÇÃO */
+.hero {
+    background: #2a4a25;
+    padding: 80px 32px;
+}
+
+.hero > div {
+    width: 100%;
+    max-width: 768px;
+    margin: auto;
+}
+
+.hero small {
+    color: #b8d4b2;
+    font-size: 12px;
+    letter-spacing: 1.2px;
+}
+
+h1 {
+    margin: 16px 0;
+    color: #f5f0e8;
+    font: 600 clamp(32px, 5vw, 48px) / clamp(40px, 6vw, 60px) "Lora", serif;
+}
+
+.hero p {
+    max-width: 608px;
+    color: #c8dfc8;
+    font-size: 16px;
+    line-height: 28.8px;
+}
+
+/* MAIN */
+main {
+    max-width: 768px;
+    margin: auto;
+    width: 100%;
+}
+
+main section {
+    padding: 64px 32px;
+    border-bottom: 1px solid #ddd6c8;
+}
+
+h2 {
+    margin-bottom: 20px;
+    font: 600 24px/36px "Lora", serif;
+}
+
+main p {
+    margin-bottom: 15px;
+    color: #4a4a46;
+    font-size: 15px;
+    line-height: 27.75px;
+    word-break: break-word;
+}
+
+/* VALORES */
+.values {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.values div {
+    display: grid;
+    grid-template-columns: 128px 1fr;
+    gap: 16px;
+}
+
+.values strong {
+    color: #2a4a25;
+    font: 600 15px/25.5px "Lora", serif;
+}
+
+.values span {
+    color: #4a4a46;
+    font-size: 15px;
+    line-height: 25.5px;
+}
+
+/* RODAPÉ */
+footer {
+    padding: 40px 32px;
+    background: #1c1c1a;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+footer a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+footer img {
+    width: 24px;
+    height: 24px;
+}
+
+footer span {
+    color: #f5f0e8;
+    font: 600 13px "Lora", serif;
+}
+
+footer small {
+    color: #6b6560;
+    font-size: 12px;
+}
+
+@media (max-width: 650px) {
+    .header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .menu {
+        gap: 15px;
+        justify-content: center;
+    }
+
+    .hero, main section {
+        padding: 40px 20px;
+    }
+
+    .values div {
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+
+    footer {
+        flex-direction: column;
+        text-align: center;
+    }
+}

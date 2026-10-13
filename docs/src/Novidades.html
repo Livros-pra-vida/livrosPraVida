@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novidades & Portal - Livros pra Vida</title>
+    <link rel="icon" type="image/png" href="../imagens/icone.png">
+    <link rel="stylesheet" href="../css/StyleNovidades.css">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <a href="../index.html"><img src="../imagens/icone.png" alt="Logo"></a>
+            <span>Livros pra Vida</span>
+        </div>
+        <nav class="menu">
+            <a href="Catalogo.html">Catálogo</a>
+            <a href="ComprarTrocar.html">Comprar & Trocar</a>
+            <a href="Novidades.html" class="active">Novidades</a>
+            <a href="Chat.html">Chat & Comunidade</a>
+            <a href="SobreNos.html">Sobre Nós</a>
+            
+            <a href="Login.html" id="entrar" class="login-button">Entrar</a>
+            <a href="Cadastro.html" id="cadastrar" class="signup-button">Cadastro</a>
+
+            <a href="MeuPerfil.html" id="meuPerfil" class="perfil-avatar-btn" style="display:none;">
+                <img id="menuAvatar" src="../imagens/Background.png" alt="Perfil" class="avatar-circle">
+            </a>
+            <a href="#" id="sair" onclick="sair()" style="display:none;" class="btn-sair">Sair</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h1>Novidades, Lançamentos & Mangás</h1>
+        <p style="margin-bottom: 25px; color: #666;">Fique por dentro das principais notícias do mercado literário e otaku com matérias reais dos maiores portais especializados.</p>
+
+        <!-- Filtros Rápidos / Abas de Notícias -->
+        <div class="novidades-tabs">
+            <button class="tab-novidade active" onclick="filtrarNoticias('todos', event)">🌐 Todos</button>
+            <button class="tab-novidade" onclick="filtrarNoticias('livros', event)">📚 Livros & Prêmios</button>
+            <button class="tab-novidade" onclick="filtrarNoticias('mangas', event)">🍥 Mangás & Hiatos</button>
+            <button class="tab-novidade" onclick="filtrarNoticias('adaptacoes', event)">🎬 Adaptações (Filmes/Séries)</button>
+        </div>
+
+        <!-- LAYOUT DUPLO: COLUNA PRINCIPAL DE NOTÍCIAS + CALENDÁRIO LATERAL -->
+        <div class="layout-novidades-principal">
+            
+            <!-- COLUNA DAS MATÉRIAS -->
+            <div class="coluna-noticias">
+                
+                <!-- 1. BANNER DE DESTAQUE DA SEMANA -->
+                <article class="banner-destaque item-novidade" data-categoria="mangas">
+                    <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&auto=format&fit=crop&q=80" alt="Destaque Hunter x Hunter">
+                    <div class="banner-conteudo">
+                        <span class="selo-destaque">⭐ Destaque da Semana</span>
+                        <span class="tag-categoria">Retorno de Hiato</span>
+                        <h2 style="font-size: 1.3rem; color: #2d251e;">Hunter x Hunter: Shonen Jump traz atualizações oficiais sobre a obra de Togashi</h2>
+                        <p style="font-size: 0.9rem; color: #555;">JBox - Cultura Pop Japonesa</p>
+                        <span class="descricao-noticia">Acompanhe os anúncios detalhados sobre o andamento dos novos capítulos, cronograma de publicação e o forte impacto do retorno do mangá no mercado internacional e brasileiro.</span>
+                        <a href="Chat.html" class="badge-comunidade">🔥 42 membros conversando sobre isso no Chat</a>
+                        <div style="margin-top: 10px;">
+                            <a href="https://www.jbox.com.br/?s=Hunter+x+Hunter" target="_blank" class="btn-externo">Ler Matéria Completa</a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- LISTA DE OUTRAS MATÉRIAS -->
+                <div class="novidades-grid">
+                    <!-- CATEGORIA: LIVROS -->
+                    <article class="item-novidade" data-categoria="livros">
+                        <span class="tag-categoria">Mercado Editorial</span>
+                        <img src="../imagens/montanha-magica.jpg" alt="Prêmio Jabuti">
+                        <div class="info">
+                            <h3>Prêmio Jabuti divulga novidades e cronograma da edição</h3>
+                            <p>PublishNews</p>
+                            <span class="descricao-noticia">A principal premiação da literatura brasileira traz atualizações em suas categorias e prazos para inscrições de editoras e autores independentes.</span>
+                            <a href="Chat.html" class="badge-comunidade">💬 18 comentários no Chat</a>
+                            <strong style="color: #8c533e; font-size: 0.9rem; display: block; margin-top: 4px;">Portal PublishNews</strong>
+                        </div>
+                        <a href="https://www.publishnews.com.br/busca?q=Pr%C3%AAmio+Jabuti" target="_blank" class="btn-externo">Ler Matéria Completa</a>
+                    </article>
+
+                    <!-- CATEGORIA: ADAPTAÇÕES -->
+                    <article class="item-novidade" data-categoria="adaptacoes">
+                        <span class="tag-categoria">Cinema & Literatura</span>
+                        <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400&auto=format&fit=crop&q=60" alt="Cinema e Telonas">
+                        <div class="info">
+                            <h3>Grandes sucessos literários cotados para adaptação nas telas</h3>
+                            <p>Omelete</p>
+                            <span class="descricao-noticia">Confira os romances e livros de fantasia mais comentados do momento que fecharam contratos para ganhar versões em formato de filme ou série de streaming.</span>
+                            <strong style="color: #8c533e; font-size: 0.9rem;">Portal Omelete</strong>
+                        </div>
+                        <a href="https://www.omelete.com.br/busca/?q=livros+adaptados" target="_blank" class="btn-externo">Ler Matéria Completa</a>
+                    </article>
+
+                    <!-- CATEGORIA: LIVROS -->
+                    <article class="item-novidade" data-categoria="livros">
+                        <span class="tag-categoria">Feiras e Eventos</span>
+                        <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400&auto=format&fit=crop&q=60" alt="Feira de Livros">
+                        <div class="info">
+                            <h3>Balanço e impacto das Bienais do Livro no incentivo à leitura</h3>
+                            <p>PublishNews</p>
+                            <span class="descricao-noticia">Uma análise aprofundada sobre como os grandes eventos literários presenciais impulsionam o consumo de livros físicos e aproxima autores do público jovem.</span>
+                            <strong style="color: #8c533e; font-size: 0.9rem;">Portal PublishNews</strong>
+                        </div>
+                        <a href="https://www.publishnews.com.br/busca?q=Bienal+do+Livro" target="_blank" class="btn-externo">Ler Matéria Completa</a>
+                    </article>
+                </div>
+            </div>
+
+            <!-- 2 & 3. COLUNA LATERAL: PRÓXIMOS LANÇAMENTOS & WIDGETS -->
+            <aside class="sidebar-lancamentos">
+                <h3>📅 Próximos Lançamentos</h3>
+                
+                <div class="item-calendario">
+                    <div class="data-box">
+                        <span class="dia">12</span>
+                        <span class="mes">Set</span>
+                    </div>
+                    <div class="info-calendario">
+                        <h4>Box Edição Especial O Hobbit</h4>
+                        <p>Editora HarperCollins • Capa Dura</p>
+                    </div>
+                </div>
+
+                <div class="item-calendario">
+                    <div class="data-box">
+                        <span class="dia">18</span>
+                        <span class="mes">Set</span>
+                    </div>
+                    <div class="info-calendario">
+                        <h4>Mangá Jujutsu Kaisen Vol. 28</h4>
+                        <p>Panini Mangás • Lançamento Oficial</p>
+                    </div>
+                </div>
+
+                <div class="item-calendario">
+                    <div class="data-box">
+                        <span class="dia">25</span>
+                        <span class="mes">Set</span>
+                    </div>
+                    <div class="info-calendario">
+                        <h4>Novo Romance de Fantasia Nacional</h4>
+                        <p>Selo Independente • Pré-venda</p>
+                    </div>
+                </div>
+            </aside>
+
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (localStorage.getItem("logado") === "true") {
+                document.getElementById("entrar").style.display = "none";
+                document.getElementById("cadastrar").style.display = "none";
+                document.getElementById("meuPerfil").style.display = "flex";
+                document.getElementById("sair").style.display = "inline-block";
+                const foto = localStorage.getItem("usuarioFoto");
+                if (foto) document.getElementById("menuAvatar").src = foto;
+            }
+        });
+
+        function filtrarNoticias(categoria, evento) {
+            document.querySelectorAll('.tab-novidade').forEach(btn => btn.classList.remove('active'));
+            evento.target.classList.add('active');
+
+            document.querySelectorAll('.item-novidade').forEach(card => {
+                if (categoria === 'todos' || card.getAttribute('data-categoria') === categoria) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function sair() {
+            localStorage.removeItem("logado");
+            window.location.href = "../index.html";
+        }
+    </script>
+</body>
+</html>
