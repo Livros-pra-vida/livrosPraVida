@@ -178,11 +178,19 @@
                         const dados = await resposta.json();
 
                         if (resposta.ok) {
-                            alert("🎉 Cadastro realizado com sucesso!");
+                            alert("Cadastro realizado com sucesso!");
+
+                            const usuario = dados.user || dados;
+
+                            localStorage.setItem("usuario", JSON.stringify(usuario));
+
                             window.location.href = "../index.html";
                         } else {
-                            console.error(dados);
-                            alert("❌ Não foi possível realizar o cadastro.");
+                            console.error("Erro no cadastro:", dados);
+                            alert(
+                                "Não foi possível realizar o cadastro: " +
+                                (dados.errors ? dados.errors.join(", ") : dados.error || "Verifique os dados informados.")
+                            );
                         }
 
                     } catch (erro) {
