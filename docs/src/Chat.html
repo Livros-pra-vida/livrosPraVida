@@ -45,7 +45,6 @@
                 Minhas Negociações (Privadas)</button>
         </div>
 
-        <!-- ================= CHAT GLOBAL (tempo real) ================= -->
         <div id="secaoGlobal" class="chat-section" style="display: block;">
             <div id="avisoGlobal"
                 style="display: none; text-align: center; padding: 15px; margin-bottom: 15px; color: #666; background: #fff; border-radius: 8px; border: 1px dashed #e0d7cd;">
@@ -60,7 +59,6 @@
             </div>
         </div>
 
-        <!-- ================= CHAT PRIVADO (localStorage) ================= -->
         <div id="secaoPrivado" class="chat-section" style="display: none;">
             <div id="infoNegociacao"
                 style="display: none; background: #fff; border: 1px solid #e0d7cd; padding: 10px 15px; border-radius: 6px; margin-bottom: 15px; font-size: 0.9rem; color: #2d251e;">
@@ -72,21 +70,21 @@
                 <!-- Preenchido dinamicamente via JS -->
             </div>
 
-            <div class="chat-box" id="caixaChatPrivado" style="display:none;">
+          <!--  <div class="chat-box" id="caixaChatPrivado" style="display:none;">
                 <div style="background: rgba(255,255,255,0.15); padding: 8px 12px; font-weight: bold; font-size: 0.9rem; border-radius: 4px; margin-bottom: 10px;"
                     id="tituloChatPrivado">
                     Conversa Privada
                 </div>
                 <div class="messages" id="chatPrivadoMessages">
                     <!-- Mensagens do privado -->
-                </div>
+               <!-- </div>
                 <div class="input-area">
                     <input type="text" id="chatPrivadoInput" placeholder="Digite sua mensagem..."
                         onkeypress="checarEnterPrivado(event)">
                     <button onclick="enviarMensagemPrivada()">Enviar</button>
                 </div>
             </div>
-
+-->
             <div id="semConversaAviso"
                 style="text-align: center; padding: 40px; color: #666; background: #fff; border-radius: 8px; border: 1px dashed #e0d7cd;">
                 Nenhuma conversa selecionada. Clique em "Negociar" em algum livro no catálogo de <strong>Comprar &
@@ -95,9 +93,6 @@
         </div>
     </main>
 
-    <!-- =====================================================================
-         CHAT GLOBAL: conexão em tempo real com a API (Action Cable)
-         ===================================================================== -->
     <script type="module">
         import { createConsumer } from "https://esm.sh/@rails/actioncable@7";
 
@@ -120,7 +115,7 @@
             const nome = document.createElement("strong");
             nome.textContent = m.username + ": ";
             const texto = document.createElement("span");
-            texto.textContent = m.content; // textContent: seguro contra XSS
+            texto.textContent = m.content; // textContent pra xss
             div.append(nome, texto);
             list.append(div);
             list.scrollTop = list.scrollHeight;
@@ -129,7 +124,6 @@
         const token = localStorage.getItem(TOKEN_KEY);
 
         if (!token) {
-            // "logado" sem token = login antigo (feito antes de o chat usar token)
             mostrarAviso(localStorage.getItem("usuario")
                 ? "Para usar o chat global, saia e entre novamente na sua conta."
                 : "Faça login para ler e participar do chat global.");
@@ -138,7 +132,7 @@
                 window.location.href = "Login.html";
             });
         } else {
-            // Histórico recente (a API pode demorar até 60s para acordar)
+            // Histórico recente (a API pode demorar até 60s para acordar se passar de 15 minutos sem requisição)
             mostrarAviso("Conectando ao chat...");
             try {
                 const res = await fetch(`${API}/messages`, {
@@ -178,9 +172,6 @@
         }
     </script>
 
-    <!-- =====================================================================
-         ABAS, LOGIN NO MENU E CHAT PRIVADO
-         ===================================================================== -->
     <script>
         let destinatarioAtual = null;
         let livroAtual = null;
