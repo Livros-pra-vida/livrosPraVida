@@ -343,6 +343,87 @@
         </div>
     </footer>
 
+<script type="module">
+        import { createConsumer } from "https://esm.sh/@rails/actioncable@7";
+
+        const API = "https://lpv-api.onrender.com";
+        const TOKEN_KEY = "token"; // CONFIRMAR: nome da chave do localStorage onde o login guarda o token
+
+        const list = document.getElementById("messages");
+        const form = document.getElementById("form");
+        const input = document.getElementById("input");
+        const aviso = document.getElementById("avisoGlobal");
+
+        function mostrarAviso(texto) {
+            aviso.textContent = texto;
+            aviso.style.display = "block";
+        }
+
+        function addMessage(m) {
+            const div = document.createElement("div");
+            div.className = "msg";
+            const nome = document.createElement("strong");
+            nome.textContent = m.username + ": ";
+            const texto = document.createElement("span");
+            texto.textContent = m.content; // textContent: seguro contra XSS
+            div.append(nome, texto);
+            list.append(div);
+            list.scrollTop = list.scrollHeight;
+        }
+
+        const token = localStorage.getItem(TOKEN_KEY);
+
+        if (!token) {
+            // "logado" sem token = login antigo (feito antes de o chat usar token)
+            mostrarAviso(localStorage.getItem("usuario")
+                ? "Para usar o chat global, saia e entre novamente na sua conta."
+                : "Faça login para ler e participar do chat global.");
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+                window.location.href = "Login.html";
+            });
+        } else {
+            // Histórico recente (a API pode demorar até 60s para acordar)
+            mostrarAviso("Conectando ao chat...");
+            try {
+                const res = await fetch(`${API}/messages`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    (await res.json()).forEach(addMessage);
+                    aviso.style.display = "none";
+                } else if (res.status === 401) {
+                    // token expirado ou inválido: limpa e manda para o login
+                    localStorage.removeItem(TOKEN_KEY);
+                    mostrarAviso("Sua sessão expirou. Redirecionando para o login...");
+                    setTimeout(() => { window.location.href = "Login.html"; }, 1500);
+                } else {
+                    mostrarAviso("Não foi possível carregar o histórico (erro " + res.status + ").");
+                }
+            } catch (e) {
+                console.error("Histórico indisponível:", e);
+                mostrarAviso("Servidor indisponível no momento. Tente novamente em instantes.");
+            }
+
+            // Tempo real
+            const consumer = createConsumer(
+                `${API.replace("https", "wss")}/cable?token=${encodeURIComponent(token)}`
+            );
+            const canal = consumer.subscriptions.create("ChatChannel", {
+                received: addMessage
+            });
+
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+                const content = input.value.trim();
+                if (!content) return;
+                canal.perform("speak", { content });
+                input.value = "";
+            });
+        }
+    </script>
+
+    
     <script>
         document.addEventListener("DOMContentLoaded", function () {
         atualizarContadorCarrinho();
