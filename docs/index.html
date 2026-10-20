@@ -265,6 +265,8 @@
             </div>
         </section>
 
+        <!-- ================= CHAT COMENTADO (INVISÍVEL NO SITE) ================= -->
+        <!--
         <section class="chat" id="chat">
             <div class="chat-header">
                 <h2>Chat de leitores</h2>
@@ -293,6 +295,7 @@
 
             <input type="text" class="chat-input" placeholder="Digite sua mensagem...">
         </section>
+        -->
 
         <section class="newsletter" id="newsletter">
             <h2>Receba novidades por e-mail</h2>
@@ -343,11 +346,13 @@
         </div>
     </footer>
 
-<script type="module">
+    <!-- SCRIPT DO CHAT TAMBÉM COMENTADO PARA NÃO DAR ERRO DE ELEMENTOS NULOS -->
+    <!--
+    <script type="module">
         import { createConsumer } from "https://esm.sh/@rails/actioncable@7";
 
         const API = "https://lpv-api.onrender.com";
-        const TOKEN_KEY = "token"; // CONFIRMAR: nome da chave do localStorage onde o login guarda o token
+        const TOKEN_KEY = "token";
 
         const list = document.getElementById("messages");
         const form = document.getElementById("form");
@@ -365,7 +370,7 @@
             const nome = document.createElement("strong");
             nome.textContent = m.username + ": ";
             const texto = document.createElement("span");
-            texto.textContent = m.content; // textContent: seguro contra XSS
+            texto.textContent = m.content;
             div.append(nome, texto);
             list.append(div);
             list.scrollTop = list.scrollHeight;
@@ -374,7 +379,6 @@
         const token = localStorage.getItem(TOKEN_KEY);
 
         if (!token) {
-            // "logado" sem token = login antigo (feito antes de o chat usar token)
             mostrarAviso(localStorage.getItem("usuario")
                 ? "Para usar o chat global, saia e entre novamente na sua conta."
                 : "Faça login para ler e participar do chat global.");
@@ -383,7 +387,6 @@
                 window.location.href = "Login.html";
             });
         } else {
-            // Histórico recente (a API pode demorar até 60s para acordar)
             mostrarAviso("Conectando ao chat...");
             try {
                 const res = await fetch(`${API}/messages`, {
@@ -393,7 +396,6 @@
                     (await res.json()).forEach(addMessage);
                     aviso.style.display = "none";
                 } else if (res.status === 401) {
-                    // token expirado ou inválido: limpa e manda para o login
                     localStorage.removeItem(TOKEN_KEY);
                     mostrarAviso("Sua sessão expirou. Redirecionando para o login...");
                     setTimeout(() => { window.location.href = "Login.html"; }, 1500);
@@ -405,7 +407,6 @@
                 mostrarAviso("Servidor indisponível no momento. Tente novamente em instantes.");
             }
 
-            // Tempo real
             const consumer = createConsumer(
                 `${API.replace("https", "wss")}/cable?token=${encodeURIComponent(token)}`
             );
@@ -422,8 +423,8 @@
             });
         }
     </script>
+    -->
 
-    
     <script>
         document.addEventListener("DOMContentLoaded", function () {
         atualizarContadorCarrinho();
