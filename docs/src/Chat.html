@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat & Comunidade - Livros pra Vida</title>
+    <link rel="icon" type="image/png" href="../imagens/icone.png">
+    <link rel="stylesheet" href="../css/StyleChat.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">
+            <a href="../index.html"><img src="../imagens/icone.png" alt="Logo"></a>
+            <span>Livros pra Vida</span>
+        </div>
+        <nav class="menu" id="menuNavegacao">
+            <!-- Preenchido dinamicamente via JS -->
+        </nav>
+    </header>
+
+    <main class="container">
+        <h1 style="margin-bottom: 20px;">Central de Comunicação & Fórum</h1>
+
+        <!-- Abas de Navegação -->
+        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <button id="btnTabGlobal" onclick="trocarAba('global')"
+                style="padding: 10px 20px; background: #8c533e; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">🌍
+                Comunidade Global (Fórum)</button>
+            <button id="btnTabPrivado" onclick="trocarAba('privado')"
+                style="padding: 10px 20px; background: #8c533e; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">💬
+                Minhas Negociações (Privadas)</button>
+        </div>
+
+        <!-- ================= CHAT GLOBAL (tempo real) ================= -->
+        <div id="secaoGlobal" class="chat-section" style="display: block;">
+            <div id="avisoGlobal"
+                style="display: none; text-align: center; padding: 15px; margin-bottom: 15px; color: #666; background: #fff; border-radius: 8px; border: 1px dashed #e0d7cd;">
+            </div>
+            <div class="chat-box">
+                <div class="messages" id="messages"></div>
+                <form class="input-area" id="form">
+                    <input type="text" id="input" maxlength="500" autocomplete="off"
+                        placeholder="Digite sua mensagem...">
+                    <button type="submit">Enviar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ================= CHAT PRIVADO (localStorage) ================= -->
+        <div id="secaoPrivado" class="chat-section" style="display: none;">
+            <div id="infoNegociacao"
+                style="display: none; background: #fff; border: 1px solid #e0d7cd; padding: 10px 15px; border-radius: 6px; margin-bottom: 15px; font-size: 0.9rem; color: #2d251e;">
+                📌 Conversando sobre o livro: <strong id="livroNegociacaoTitulo"></strong>
+            </div>
+
+            <div id="listaConversas" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;">
+                <!-- Preenchido dinamicamente via JS -->
+            </div>
+
+            <div class="chat-box" id="caixaChatPrivado" style="display:none;">
+                <div style="background: rgba(255,255,255,0.15); padding: 8px 12px; font-weight: bold; font-size: 0.9rem; border-radius: 4px; margin-bottom: 10px;"
+                    id="tituloChatPrivado">
+                    Conversa Privada
+                </div>
+                <div class="messages" id="chatPrivadoMessages"></div>
+                <div class="input-area">
+                    <input type="text" id="chatPrivadoInput" placeholder="Digite sua mensagem..."
+                        onkeypress="checarEnterPrivado(event)">
+                    <button onclick="enviarMensagemPrivada()">Enviar</button>
+                </div>
+            </div>
+
+            <div id="semConversaAviso"
+                style="text-align: center; padding: 40px; color: #666; background: #fff; border-radius: 8px; border: 1px dashed #e0d7cd;">
+                Nenhuma conversa selecionada. Clique em "Negociar" em algum livro no catálogo de <strong>Comprar &
+                    Trocar</strong> ou escolha uma conversa acima.
+            </div>
+        </div>
+    </main>
+
+    <!-- =====================================================================
+         CHAT GLOBAL: conexão em tempo real com a API (Action Cable)
+         ===================================================================== -->
+    <script type="module">
+    const API = "https://lpv-api.onrender.com";
+    const TOKEN_KEY = "token";
+
+    const list = document.getElementById("messages");
+    const form = document.getElementById("form");
+    const input = document.getElementById("input");
+    const aviso = document.getElementById("avisoGlobal");
+
+    function mostrarAviso(texto) {
+        aviso.textContent = texto;
+        aviso.style.display = "block";
+    }
+
+    function addMessage(m) {
+        if (!m) return;
+        const div = document.createElement("div");
+        div.className = "msg";
+        const nome = document.createElement("strong");
+        nome.textContent = (m.username || "Usuário") + ": ";
+        const texto = document.createElement("span");
+        texto.textContent = m.content || "";
+        div.append(nome, texto);
+        list.append(div);
+        list.scrollTop = list.scrollHeight;
+    }
+
+    const token = localStorage.getItem(TOKEN_KEY);
+
+    if (!token) {
+        mostrarAviso("Faça login para participar do chat global.");
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            window.location.href = "Login.html";
+        });
+    } else {
+        mostrarAviso("Conectado ao chat!");
+        aviso.style.display = "none";
+
+        let ultimaMensagemId = 0;
+
+        // Função para buscar novas mensagens periodicamente (Tempo Real via Polling)
+        async function carregarMensagens() {
+            try {
+                const res = await fetch(`${API}/messages`, {
+                    headers: { 
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    }
+                });
+                if (res.ok) {
+                    const dados = await res.json();
+                    list.innerHTML = "";
+                    dados.forEach(addMessage);
+                } else if (res.status === 401) {
+                    localStorage.removeItem(TOKEN_KEY);
+                    mostrarAviso("Sessão expirada. Redirecionando para o login...");
+                    setTimeout(() => { window.location.href = "Login.html"; }, 1500);
+                }
+            } catch (e) {
+                console.error("Erro ao atualizar chat:", e);
+            }
+        }
+
+        // Carrega imediatamente e depois atualiza a cada 3 segundos
+        carregarMensagens();
+        setInterval(carregarMensagens, 3000);
+
+        // Envio de mensagens via HTTP POST
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const content = input.value.trim();
+            if (!content) return;
+
+            try {
+                const res = await fetch(`${API}/messages`, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ content: content })
+                });
+
+                if (res.ok) {
+                    input.value = "";
+                    input.focus();
+                    carregarMensagens(); // Atualiza a lista na hora
+                } else {
+                    alert("Erro ao enviar mensagem.");
+                }
+            } catch (err) {
+                console.error("Erro no envio:", err);
+                alert("Não foi possível conectar ao servidor.");
+            }
+        });
+    }
+</script>
+
+    <!-- =====================================================================
+         ABAS, MENU DINÂMICO E CHAT PRIVADO
+         ===================================================================== -->
+    <script>
+        let destinatarioAtual = null;
+        let livroAtual = null;
+
+        function estaLogado() {
+            return localStorage.getItem("logado") === "true" || !!localStorage.getItem("usuario");
+        }
+
+        function getUsuario() {
+            try { return JSON.parse(localStorage.getItem("usuario")); } catch (e) { return null; }
+        }
+
+        function nomeUsuario() {
+            const u = getUsuario();
+            return (u && (u.username || u.usuario || u.nome)) || localStorage.getItem("usuarioNome") || "Eu";
+        }
+
+        function esc(s) {
+            return String(s).replace(/[&<>"']/g, c => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[c]));
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const menu = document.getElementById("menuNavegacao");
+            const fotoPerfil = localStorage.getItem("usuarioFoto") || "../imagens/Background.png";
+
+            if (estaLogado()) {
+                menu.innerHTML = `
+                    <a href="Catalogo.html">Catálogo</a>
+                    <a href="ComprarTrocar.html">Comprar & Trocar</a>
+                    <a href="Novidades.html">Novidades</a>
+                    <a href="Chat.html" class="active">Chat & Comunidade</a>
+                    <a href="SobreNos.html">Sobre Nós</a>
+                    <a href="#" onclick="sair(event)" class="btn-sair">Sair</a>
+                    <a href="MeuPerfil.html" class="profile-nav-link" title="Meu Perfil">
+                        <img src="${fotoPerfil}" alt="Meu Perfil" class="profile-nav-avatar" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid #8c533e;">
+                    </a>
+                `;
+            } else {
+                menu.innerHTML = `
+                    <a href="Catalogo.html">Catálogo</a>
+                    <a href="ComprarTrocar.html">Comprar & Trocar</a>
+                    <a href="Novidades.html">Novidades</a>
+                    <a href="Chat.html" class="active">Chat & Comunidade</a>
+                    <a href="SobreNos.html">Sobre Nós</a>
+                    <a href="Login.html" class="login-button">Entrar</a>
+                    <a href="Cadastro.html" class="signup-button">Cadastrar</a>
+                `;
+            }
+
+            document.getElementById("listaConversas").addEventListener("click", function (e) {
+                const item = e.target.closest("[data-chave]");
+                if (!item) return;
+                const conversas = JSON.parse(localStorage.getItem("chatsPrivados")) || {};
+                const c = conversas[item.dataset.chave];
+                if (c) abrirChatPrivado(c.destinatario, c.livro);
+            });
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const msgAutomatica = urlParams.get('msg');
+            const livroParam = urlParams.get('livro');
+            const destinatarioParam = urlParams.get('destinatario');
+
+            if (livroParam && destinatarioParam) {
+                livroAtual = decodeURIComponent(livroParam);
+                destinatarioAtual = decodeURIComponent(destinatarioParam);
+
+                salvarConversaNoHistorico(destinatarioAtual, livroAtual, msgAutomatica);
+                trocarAba('privado');
+                abrirChatPrivado(destinatarioAtual, livroAtual);
+            }
+
+            carregarListaConversasPrivadas();
+        });
+
+        function trocarAba(aba) {
+            document.getElementById('secaoGlobal').style.display = aba === 'global' ? 'block' : 'none';
+            document.getElementById('secaoPrivado').style.display = aba === 'privado' ? 'block' : 'none';
+            if (aba === 'privado') carregarListaConversasPrivadas();
+        }
+
+        function salvarConversaNoHistorico(destinatario, livro, primeiraMsg) {
+            const meuNome = nomeUsuario();
+            let conversas = JSON.parse(localStorage.getItem("chatsPrivados")) || {};
+            let chaveChat = `${destinatario}_${livro}`;
+
+            if (!conversas[chaveChat]) {
+                conversas[chaveChat] = {
+                    destinatario: destinatario,
+                    livro: livro,
+                    mensagens: []
+                };
+                if (primeiraMsg) {
+                    conversas[chaveChat].mensagens.push({ remetente: meuNome, texto: primeiraMsg });
+                }
+                localStorage.setItem("chatsPrivados", JSON.stringify(conversas));
+            }
+        }
+
+        function carregarListaConversasPrivadas() {
+            const listaEl = document.getElementById("listaConversas");
+            let conversas = JSON.parse(localStorage.getItem("chatsPrivados")) || {};
+            let chaves = Object.keys(conversas);
+
+            if (chaves.length === 0) {
+                listaEl.innerHTML = "";
+                return;
+            }
+
+            listaEl.innerHTML = chaves.map(chave => {
+                let c = conversas[chave];
+                let estiloItem = (destinatarioAtual === c.destinatario && livroAtual === c.livro)
+                    ? 'background: #fff; padding: 12px 15px; border: 2px solid #8c533e; border-radius: 6px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;'
+                    : 'background: #fff; padding: 12px 15px; border: 1px solid #e0d7cd; border-radius: 6px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;';
+
+                return `
+                    <div style="${estiloItem}" data-chave="${esc(chave)}">
+                        <div>
+                            <strong style="color: #2d251e;">${esc(c.destinatario)}</strong><br>
+                            <small style="color: #666;">📖 Livro: ${esc(c.livro)}</small>
+                        </div>
+                        <span style="font-size: 0.8rem; background: #8c533e; color: #fff; padding: 5px 10px; border-radius: 4px;">Conversar</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function abrirChatPrivado(destinatario, livro) {
+            destinatarioAtual = destinatario;
+            livroAtual = livro;
+
+            document.getElementById("semConversaAviso").style.display = "none";
+            document.getElementById("caixaChatPrivado").style.display = "block";
+            document.getElementById("tituloChatPrivado").innerText = `Negociação com ${destinatario} (Livro: ${livro})`;
+
+            const infoBox = document.getElementById("infoNegociacao");
+            const livroTituloEl = document.getElementById("livroNegociacaoTitulo");
+            livroTituloEl.innerText = `${livro} (Anunciante: ${destinatario})`;
+            infoBox.style.display = "block";
+
+            carregarMensagensPrivadas();
+            carregarListaConversasPrivadas();
+        }
+
+        function carregarMensagensPrivadas() {
+            if (!destinatarioAtual || !livroAtual) return;
+
+            let conversas = JSON.parse(localStorage.getItem("chatsPrivados")) || {};
+            let chaveChat = `${destinatarioAtual}_${livroAtual}`;
+            let chat = conversas[chaveChat];
+
+            const container = document.getElementById("chatPrivadoMessages");
+            if (chat && chat.mensagens && chat.mensagens.length > 0) {
+                container.innerHTML = chat.mensagens.map(m => `
+                    <div class="msg"><strong>${esc(m.remetente)}:</strong> ${esc(m.texto)}</div>
+                `).join('');
+            } else {
+                container.innerHTML = '<div style="color: #999; text-align: center;">Inicie a conversa abaixo...</div>';
+            }
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function enviarMensagemPrivada() {
+            if (!estaLogado()) {
+                alert("Você precisa estar logado para enviar mensagens!");
+                window.location.href = "Login.html";
+                return;
+            }
+
+            if (!destinatarioAtual || !livroAtual) {
+                alert("Selecione uma conversa antes de enviar.");
+                return;
+            }
+
+            const input = document.getElementById("chatPrivadoInput");
+            const texto = input.value.trim();
+
+            if (texto !== "") {
+                const meuNome = nomeUsuario();
+                let conversas = JSON.parse(localStorage.getItem("chatsPrivados")) || {};
+                let chaveChat = `${destinatarioAtual}_${livroAtual}`;
+
+                if (!conversas[chaveChat]) {
+                    conversas[chaveChat] = { destinatario: destinatarioAtual, livro: livroAtual, mensagens: [] };
+                }
+
+                conversas[chaveChat].mensagens.push({ remetente: meuNome, texto: texto });
+                localStorage.setItem("chatsPrivados", JSON.stringify(conversas));
+
+                input.value = "";
+                carregarMensagensPrivadas();
+            }
+        }
+
+        function checarEnterPrivado(event) {
+            if (event.key === "Enter") enviarMensagemPrivada();
+        }
+
+        function sair(event) {
+            if (event) event.preventDefault();
+            localStorage.removeItem("usuario");
+            localStorage.removeItem("logado");
+            localStorage.removeItem("usuarioLogado");
+            localStorage.removeItem("usuarioNome");
+            localStorage.removeItem("token");
+            window.location.href = "../index.html";
+        }
+    </script>
+</body>
+
+</html>
