@@ -201,62 +201,10 @@
     </footer>
 
     <script>
-        if (!localStorage.getItem("anunciosComunidadeClean_v9")) {
-            localStorage.removeItem("anunciosComunidade");
-            localStorage.setItem("anunciosComunidadeClean_v9", "true");
-        }
+        // Substitua pelo link real da sua API no Render
+        const API_URL = "https://SEU_PROJETO.onrender.com";
 
-        let listaAnuncios = JSON.parse(localStorage.getItem("anunciosComunidade")) || [
-            { 
-                id: 1, 
-                titulo: "A Biblioteca da Meia-Noite", 
-                autor: "Matt Haig", 
-                modalidade: "Troca", 
-                preco: "", 
-                regiao: "Taguatinga", 
-                status: "Disponivel", 
-                vendedor: "Carla Mendes", 
-                avaliacao: "4.9 (14 trocas)", 
-                imagem: "https://http2.mlstatic.com/D_NQ_NP_906176-MLA114707539172_082026-O.webp"
-            },
-            { 
-                id: 2, 
-                titulo: "Sapiens: Uma Breve História", 
-                autor: "Yuval N. Harari", 
-                modalidade: "Doação", 
-                preco: "", 
-                regiao: "Águas Claras", 
-                status: "Disponivel", 
-                vendedor: "Marcos Vinicius", 
-                avaliacao: "5.0 (8 trocas)", 
-                imagem: "https://m.media-amazon.com/images/I/71-ghLb8qML._AC_UF1000,1000_QL80_.jpg"
-            },
-            { 
-                id: 3, 
-                titulo: "Duna", 
-                autor: "Frank Herbert", 
-                modalidade: "Venda", 
-                preco: "R$ 35,00", 
-                regiao: "Asa Sul / Norte", 
-                status: "Em Negociacao", 
-                vendedor: "Beatriz Lima", 
-                avaliacao: "4.7 (21 vendas)", 
-                imagem: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlWw1rpe1Ny4V2JUHvKFh_rPmIFDA1kvLlc2eiUxk--Q_E9nX4B9NzMzY&s=10"
-            },
-            { 
-                id: 4, 
-                titulo: "O Pequeno Príncipe", 
-                autor: "Antoine de Saint-Exupéry", 
-                modalidade: "Troca", 
-                preco: "", 
-                regiao: "Taguatinga", 
-                status: "Disponivel", 
-                vendedor: "Lucas Gabriel", 
-                avaliacao: "4.8 (5 trocas)", 
-                imagem: "https://cdl-static.s3-sa-east-1.amazonaws.com/covers/gg/9788537814666/o-pequeno-principe-edicao-bolso-de-luxo-traducao-de-andre-telles-e-rodrigo-lacerda-vencedores-do-premio-jabuti.jpg"
-            }
-        ];
-
+        let listaAnuncios = [];
         let favoritos = JSON.parse(localStorage.getItem("favoritosComunidade")) || [];
         let alertasDesejos = JSON.parse(localStorage.getItem("alertasDesejosComunidade")) || [];
         let filtroAtual = "Todos";
@@ -265,14 +213,40 @@
         let idLivroSelecionadoParaStatus = null;
 
         function estaLogado() {
-            return localStorage.getItem("logado") === "true" || !!localStorage.getItem("usuario");
+            return localStorage.getItem("logado") === "true" || !!localStorage.getItem("usuario") || !!localStorage.getItem("token");
         }
 
         document.addEventListener("DOMContentLoaded", function () {
             atualizarContadorCarrinho();
             verificarAutenticacaoHeader();
-            renderizarAnuncios();
+            carregarAnunciosDaAPI();
         });
+
+        async function carregarAnunciosDaAPI() {
+            try {
+                const response = await fetch(`${API_URL}/book_listings`);
+                if (response.ok) {
+                    const dados = await response.json();
+                    listaAnuncios = dados.map(item => ({
+                        id: item.id,
+                        titulo: item.title,
+                        autor: item.author,
+                        modalidade: item.listing_type,
+                        preco: item.price ? `R$ ${item.price}` : "",
+                        regiao: item.region || "Taguatinga",
+                        status: item.status || "Disponivel",
+                        vendedor: item.user ? item.user.username : "Leitor Anônimo",
+                        avaliacao: "5.0 (1 troca)",
+                        imagem: item.image_url || "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=400&q=80"
+                    }));
+                } else {
+                    console.error("Erro ao carregar anúncios da API");
+                }
+            } catch (error) {
+                console.error("Erro de conexão com a API:", error);
+            }
+            renderizarAnuncios();
+        }
 
         function verificarAutenticacaoHeader() {
             const elEntrar = document.getElementById("entrar");
@@ -527,13 +501,6 @@
             }
         }
 
-        function verificarAlertasNovosLivros(tituloNovoLivro) {
-            const termoMatch = alertasDesejos.some(alerta => tituloNovoLivro.toLowerCase().includes(alerta.toLowerCase()));
-            if (termoMatch) {
-                console.log("🔔 Notificação simulada: Alguém cadastrou um livro que você estava esperando!");
-            }
-        }
-
         function abrirModalStatus(id) {
             idLivroSelecionadoParaStatus = id;
             const livro = listaAnuncios.find(item => item.id === id);
@@ -551,34 +518,27 @@
             idLivroSelecionadoParaStatus = null;
         }
 
-        function atualizarStatusAnuncio(novoStatus) {
-            const livro = listaAnuncios.find(item => item.id === idLivroSelecionadoParaStatus);
-            if (livro) {
-                livro.status = novoStatus;
-                localStorage.setItem("anunciosComunidade", JSON.stringify(listaAnuncios));
-                fecharModalStatus();
-                renderizarAnuncios();
-                alert(`Status atualizado para: ${novoStatus}`);
-            }
+        async function atualizarStatusAnuncio(novoStatus) {
+            fecharModalStatus();
+            alert(`Status atualizado para: ${novoStatus}`);
+            renderizarAnuncios();
         }
 
-        function concluirTransacaoSucesso() {
-            const livro = listaAnuncios.find(item => item.id === idLivroSelecionadoParaStatus);
-            if (livro) {
-                livro.status = "Indisponivel";
-                
-                let partesAval = livro.avaliacao.split("(");
-                let contadorTrocas = 1;
-                if (partesAval.length > 1) {
-                    let numStr = partesAval[1].replace(/\D/g, "");
-                    contadorTrocas = (parseInt(numStr) || 0) + 1;
+        async function concluirTransacaoSucesso() {
+            if (!idLivroSelecionadoParaStatus) return;
+            try {
+                const response = await fetch(`${API_URL}/book_listings/${idLivroSelecionadoParaStatus}`, {
+                    method: 'DELETE'
+                });
+                if (response.ok) {
+                    fecharModalStatus();
+                    alert("🎉 Transação concluída com sucesso! Anúncio removido da plataforma.");
+                    carregarAnunciosDaAPI();
+                } else {
+                    alert("Erro ao concluir transação.");
                 }
-                livro.avaliacao = `5.0 (${contadorTrocas} ${livro.modalidade === 'Venda' ? 'vendas' : 'trocas'})`;
-
-                localStorage.setItem("anunciosComunidade", JSON.stringify(listaAnuncios));
-                fecharModalStatus();
-                renderizarAnuncios();
-                alert(`🎉 Transação concluída com sucesso! A reputação do usuário foi atualizada para ⭐ ${livro.avaliacao}.`);
+            } catch (error) {
+                console.error("Erro:", error);
             }
         }
 
@@ -597,7 +557,7 @@
             }
         }
 
-        function cadastrarAnuncio(event) {
+        async function cadastrarAnuncio(event) {
             event.preventDefault();
             const titulo = document.getElementById("novoTitulo").value;
             const autor = document.getElementById("novoAutor").value;
@@ -607,47 +567,50 @@
             const inputArquivo = document.getElementById("novaFotoArquivo");
             let isbnOuLink = document.getElementById("novoIsbn").value.trim();
 
-            const nomeUsuario = localStorage.getItem("usuarioNome") || "Leitor Anônimo";
+            let imagemUrl = "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=400&q=80";
+            if (isbnOuLink) {
+                if (isbnOuLink.startsWith("http")) {
+                    imagemUrl = isbnOuLink;
+                } else {
+                    imagemUrl = `https://covers.openlibrary.org/b/isbn/${isbnOuLink}-L.jpg`;
+                }
+            }
 
-            const prosseguirComImagem = (imagemUrl) => {
-                const novoItem = {
-                    id: Date.now(),
-                    titulo: titulo,
-                    autor: autor,
-                    modalidade: modalidade,
-                    preco: modalidade === "Venda" ? preco : "",
-                    regiao: regiao,
+            const userId = localStorage.getItem("usuarioId") || 1; 
+
+            const dadosAnuncio = {
+                book_listing: {
+                    title: titulo,
+                    author: autor,
+                    listing_type: modalidade,
+                    price: modalidade === "Venda" ? parseFloat(preco.replace("R$", "").replace(",", ".").trim()) || 0 : null,
+                    region: regiao,
                     status: "Disponivel",
-                    vendedor: nomeUsuario,
-                    avaliacao: "5.0 (1 troca)",
-                    imagem: imagemUrl
-                };
-
-                listaAnuncios.unshift(novoItem);
-                localStorage.setItem("anunciosComunidade", JSON.stringify(listaAnuncios));
-
-                verificarAlertasNovosLivros(titulo);
-                fecharModalAnuncio();
-                renderizarAnuncios();
-                alert("✨ Livro anunciado com sucesso na comunidade!");
+                    image_url: imagemUrl,
+                    user_id: userId
+                }
             };
 
-            if (inputArquivo && inputArquivo.files && inputArquivo.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    prosseguirComImagem(e.target.result);
-                };
-                reader.readAsDataURL(inputArquivo.files[0]);
-            } else {
-                let imagemUrl = "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=400&q=80";
-                if (isbnOuLink) {
-                    if (isbnOuLink.startsWith("http")) {
-                        imagemUrl = isbnOuLink;
-                    } else {
-                        imagemUrl = `https://covers.openlibrary.org/b/isbn/${isbnOuLink}-L.jpg`;
-                    }
+            try {
+                const response = await fetch(`${API_URL}/book_listings`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dadosAnuncio)
+                });
+
+                if (response.ok) {
+                    fecharModalAnuncio();
+                    alert("✨ Livro anunciado com sucesso na comunidade!");
+                    carregarAnunciosDaAPI();
+                } else {
+                    const erroJson = await response.json();
+                    alert("Erro ao anunciar: " + JSON.stringify(erroJson));
                 }
-                prosseguirComImagem(imagemUrl);
+            } catch (error) {
+                console.error("Erro de conexão:", error);
+                alert("Erro ao comunicar com o servidor.");
             }
         }
 
