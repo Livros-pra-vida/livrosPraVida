@@ -5,7 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<<<<<<< HEAD
     <title>Livros pra Vida - Página Inicial</title>
+=======
+    <title>Livros pra Vida</title>
+>>>>>>> c061b7dcad7818cbfce92e468d0ed7d432534031
 
     <link rel="icon" type="image/png" href="imagens/icone.png">
     <link rel="stylesheet" href="css/StyleHome.css">
@@ -17,6 +21,7 @@
 
 <body>
 
+<<<<<<< HEAD
     <header class="header">
 
         <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #2d251e; font-weight: 700;">
@@ -25,18 +30,48 @@
         </a>
 
         <!-- Botão Hambúrguer -->
+=======
+    <div id="popup" class="popup-fundo">
+        <div class="popup">
+            <p id="mensagemPopup"></p>
+            <button onclick="fecharPopup()" class="popup button">OK</button>
+        </div>
+    </div>
+
+    
+
+    <header class="header">
+
+        <a href="index.html" class="logo">
+            <img src="imagens/icone.png" alt="Logo Livros pra Vida">
+            <span>Livros pra Vida</span>
+        </a>
+
+        <!-- Botão das Três Barras (Hambúrguer) -->
+>>>>>>> c061b7dcad7818cbfce92e468d0ed7d432534031
         <button id="btn-menu" class="menu-toggle" aria-label="Abrir Menu">
             <span class="barrinha"></span>
             <span class="barrinha"></span>
             <span class="barrinha"></span>
         </button>
 
+<<<<<<< HEAD
         <nav class="menu-principal" id="menu-navegacao">
             <div class="search-box">
                 <form action="src/Catalogo.html" method="GET">
                     <input type="text" name="busca" placeholder="Buscar título ou autor no acervo...">
                     <button type="submit" aria-label="Buscar">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+=======
+        <!-- Menu de Navegação contendo a barra de busca à esquerda do Catálogo -->
+        <nav class="menu-principal" id="menu-navegacao">
+            <div class="search-box">
+                <form action="src/Catalogo.html" method="GET">
+                    <input type="text" name="busca" placeholder="Buscar título ou autor...">
+                    <button type="submit" aria-label="Buscar">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+>>>>>>> c061b7dcad7818cbfce92e468d0ed7d432534031
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
@@ -52,7 +87,12 @@
 
             <div class="header-actions">
                 <a href="src/Carrinho.html" title="Ver Carrinho" class="carrinho-link">
+<<<<<<< HEAD
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+=======
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+>>>>>>> c061b7dcad7818cbfce92e468d0ed7d432534031
                         <circle cx="9" cy="21" r="1"></circle>
                         <circle cx="20" cy="21" r="1"></circle>
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
@@ -63,7 +103,11 @@
                 <a href="src/Login.html" id="entrar">Entrar</a>
                 <a href="src/Cadastro.html" id="cadastrar" class="btn-cadastrar">Cadastrar</a>
 
+<<<<<<< HEAD
                 <a href="#" id="sair" onclick="sair(event)" style="display: none;">Sair</a>
+=======
+                <a href="#" id="sair" onclick="sair()" style="display: none;">Sair</a>
+>>>>>>> c061b7dcad7818cbfce92e468d0ed7d432534031
                 <a href="src/MeuPerfil.html" id="meuPerfil" title="Meu Perfil" style="display: none;">
                     <img id="menuAvatar" src="imagens/Background.png" alt="Foto do Perfil" class="avatar-img">
                 </a>
@@ -75,9 +119,25 @@
 
         <section class="hero">
             <div class="hero-content">
+<<<<<<< HEAD
                 <h1>Toda história<br>começa com uma<br>página.</h1>
                 <p>O seu acervo de leitura oficial e espaço de troca com outros leitores.</p>
                 <a href="src/Catalogo.html" class="button">Ver Catálogo da Loja</a>
+=======
+                <h1>
+                    Toda história<br>
+                    começa com uma<br>
+                    página.
+                </h1>
+
+                <p>
+                    Livros para todos os gostos, com frete grátis.
+                </p>
+
+                <a href="#destaques" class="button">
+                    Ver livros
+                </a>
+>>>>>>> c061b7dcad7818cbfce92e468d0ed7d432534031
             </div>
 
             <div class="hero-image">
@@ -85,6 +145,7 @@
             </div>
         </section>
 
+<<<<<<< HEAD
         <!-- SEÇÃO 1: DESTAQUES DO CATÁLOGO DA LOJA (POSTGRESQL) -->
         <section class="section" id="destaques">
             <div class="section-title">
@@ -106,11 +167,86 @@
 
             <div class="books" id="containerDestaquesP2P">
                 <p style="color: #6e655f; padding: 20px;">Carregando ofertas da comunidade...</p>
+=======
+        <section class="categories" id="categories">
+            <a href="src/Catalogo.html">Ficção</a>
+            <a href="src/Catalogo.html">História</a>
+            <a href="src/Catalogo.html">Fantasia</a>
+            <a href="src/Catalogo.html">Ciência</a>
+            <a href="src/Catalogo.html">Filosofia</a>
+            <a href="src/Catalogo.html">Poesia</a>
+            <a href="src/Catalogo.html">Biografia</a>
+            <a href="src/Catalogo.html">Romance</a>
+        </section>
+
+        <section class="section" id="destaques">
+            <div class="section-title">
+                <h2>Destaques</h2>
+                <p>Livros selecionados para você.</p>
+            </div>
+
+            <div class="books">
+                <article class="book">
+                    <img src="imagens/midnight-library.jpg" alt="Capa do livro The Midnight Library">
+                    <h3>The Midnight Library</h3>
+                    <p>Matt Haig</p>
+                    <strong>R$ 49,90</strong>
+                    <button
+                        onclick="adicionarAoCarrinho('The Midnight Library', 'R$ 49,90', 'imagens/midnight-library.jpg')"
+                        class="btn-acao-livro">Adicionar ao Carrinho</button>
+                </article>
+
+                <article class="book">
+                    <img src="imagens/sapiens.jpg" alt="Capa do livro Sapiens">
+                    <h3>Sapiens</h3>
+                    <p>Yuval Noah Harari</p>
+                    <strong>R$ 54,90</strong>
+                    <button onclick="adicionarAoCarrinho('Sapiens', 'R$ 54,90', 'imagens/sapiens.jpg')"
+                        class="btn-acao-livro">Adicionar ao Carrinho</button>
+                </article>
+
+                <article class="book">
+                    <img src="imagens/nome-do-vento.jpg" alt="Capa do livro O Nome do Vento">
+                    <h3>O Nome do Vento</h3>
+                    <p>Patrick Rothfuss</p>
+                    <strong>R$ 59,90</strong>
+                    <button onclick="adicionarAoCarrinho('O Nome do Vento', 'R$ 59,90', 'imagens/nome-do-vento.jpg')"
+                        class="btn-acao-livro">Adicionar ao Carrinho</button>
+                </article>
+
+                <article class="book">
+                    <img src="imagens/cem-anos.jpg" alt="Capa do livro Cem Anos de Solidão">
+                    <h3>Cem Anos de Solidão</h3>
+                    <p>Gabriel García Márquez</p>
+                    <strong>R$ 44,90</strong>
+                    <button onclick="adicionarAoCarrinho('Cem Anos de Solidão', 'R$ 44,90', 'imagens/cem-anos.jpg')"
+                        class="btn-acao-livro">Adicionar ao Carrinho</button>
+                </article>
+
+                <article class="book">
+                    <img src="imagens/duna.jpg" alt="Capa do livro Duna">
+                    <h3>Duna</h3>
+                    <p>Frank Herbert</p>
+                    <strong>R$ 62,90</strong>
+                    <button onclick="adicionarAoCarrinho('Duna', 'R$ 62,90', 'imagens/duna.jpg')"
+                        class="btn-acao-livro">Adicionar ao Carrinho</button>
+                </article>
+
+                <article class="book">
+                    <img src="imagens/beloved.jpg" alt="Capa do livro Beloved">
+                    <h3>Beloved</h3>
+                    <p>Toni Morrison</p>
+                    <strong>R$ 47,90</strong>
+                    <button onclick="adicionarAoCarrinho('Beloved', 'R$ 47,90', 'imagens/beloved.jpg')"
+                        class="btn-acao-livro">Adicionar ao Carrinho</button>
+                </article>
+>>>>>>> c061b7dcad7818cbfce92e468d0ed7d432534031
             </div>
         </section>
 
         <section class="benefits" id="benefits">
             <div class="benefit">
+<<<<<<< HEAD
                 <h3>Frete Grátis</h3>
                 <p>Nas compras acima de R$ 99,00 do catálogo</p>
             </div>
@@ -142,6 +278,125 @@
             <h2>Receba novidades por e-mail</h2>
             <form onsubmit="event.preventDefault(); alert('🎉 Inscrição realizada com sucesso!');">
                 <input type="email" placeholder="seu@email.com.br" required>
+=======
+                <h3>Frete grátis</h3>
+                <p>Para todo o Brasil</p>
+            </div>
+
+            <div class="benefit">
+                <h3>Compra garantida</h3>
+                <p>30 dias para troca ou devolução sem burocracia</p>
+            </div>
+
+            <div class="benefit">
+                <h3>Comunidade ativa</h3>
+                <p>Converse com outros leitores em tempo real no chat</p>
+            </div>
+        </section>
+
+        <section class="section section-novidades" id="novidades">
+            <div class="section-title">
+                <h2>Novidades</h2>
+                <p>Títulos recém-chegados ao nosso acervo.</p>
+            </div>
+
+            <div class="novidades-list">
+                <article class="novidade-item">
+                    <img src="imagens/montanha-magica.jpg" alt="Capa do livro A Montanha Mágica">
+                    <div class="book-info">
+                        <h3>A Montanha Mágica</h3>
+                        <p>Thomas Mann</p>
+                    </div>
+                    <strong>R$ 68,90</strong>
+                    <button
+                        onclick="adicionarAoCarrinho('A Montanha Mágica', 'R$ 68,90', 'imagens/montanha-magica.jpg')"
+                        class="btn-acao-novidade">Adicionar</button>
+                </article>
+
+                <article class="novidade-item">
+                    <img src="imagens/pachinko.jpg" alt="Capa do livro Pachinko">
+                    <div class="book-info">
+                        <h3>Pachinko</h3>
+                        <p>Min Jin Lee</p>
+                    </div>
+                    <strong>R$ 52,90</strong>
+                    <button onclick="adicionarAoCarrinho('Pachinko', 'R$ 52,90', 'imagens/pachinko.jpg')"
+                        class="btn-acao-novidade">Adicionar</button>
+                </article>
+
+                <article class="novidade-item">
+                    <img src="imagens/morro-dos-ventos.jpg" alt="Capa do livro O Morro dos Ventos Uivantes">
+                    <div class="book-info">
+                        <h3>O Morro dos Ventos Uivantes</h3>
+                        <p>Emily Brontë</p>
+                    </div>
+                    <strong>R$ 38,90</strong>
+                    <button
+                        onclick="adicionarAoCarrinho('O Morro dos Ventos Uivantes', 'R$ 38,90', 'imagens/morro-dos-ventos.jpg')"
+                        class="btn-acao-novidade">Adicionar</button>
+                </article>
+
+                <article class="novidade-item">
+                    <img src="imagens/kindred.jpg" alt="Capa do livro Kindred">
+                    <div class="book-info">
+                        <h3>Kindred</h3>
+                        <p>Octavia E. Butler</p>
+                    </div>
+                    <strong>R$ 46,90</strong>
+                    <button onclick="adicionarAoCarrinho('Kindred', 'R$ 46,90', 'imagens/kindred.jpg')"
+                        class="btn-acao-novidade">Adicionar</button>
+                </article>
+
+                <article class="novidade-item">
+                    <img src="imagens/correcoes.jpg" alt="Capa do livro As Correções">
+                    <div class="book-info">
+                        <h3>As Correções</h3>
+                        <p>Jonathan Franzen</p>
+                    </div>
+                    <strong>R$ 55,90</strong>
+                    <button onclick="adicionarAoCarrinho('As Correções', 'R$ 55,90', 'imagens/correcoes.jpg')"
+                        class="btn-acao-novidade">Adicionar</button>
+                </article>
+            </div>
+        </section>
+
+        <!-- ================= CHAT COMENTADO (INVISÍVEL NO SITE) ================= -->
+        <!--
+        <section class="chat" id="chat">
+            <div class="chat-header">
+                <h2>Chat de leitores</h2>
+                <p>Converse com quem está lendo os mesmos livros que você.</p>
+            </div>
+
+            <div class="messages">
+                <div class="message">
+                    <div class="message-user">
+                        <img src="imagens/Background.png" alt="CR" class="avatar">
+                        <strong>Camila Rocha</strong>
+                        <span>14:12</span>
+                    </div>
+                    <p>Alguém já leu O Nome do Vento? Estou no segundo capítulo e já estou completamente viciada!</p>
+                </div>
+
+                <div class="message">
+                    <div class="message-user">
+                        <img src="imagens/Background-1.png" alt="TA" class="avatar">
+                        <strong>Thiago Alves</strong>
+                        <span>14:14</span>
+                    </div>
+                    <p>Sim! Patrick Rothfuss é genial. O terceiro livro é aguardado há anos...</p>
+                </div>
+            </div>
+
+            <input type="text" class="chat-input" placeholder="Digite sua mensagem...">
+        </section>
+        -->
+
+        <section class="newsletter" id="newsletter">
+            <h2>Receba novidades por e-mail</h2>
+            <form>
+                <input type="email" placeholder="seu@email.com.br">
+>>>>>>> c061b7dcad7818cbfce92e468d0ed7d432534031
                 <button type="submit">ASSINAR GRÁTIS</button>
             </form>
             <p>Sem spam. Cancele quando quiser.</p>
@@ -187,6 +442,7 @@
         </div>
     </footer>
 
+<<<<<<< HEAD
     <script>
         const API_URL = "http://localhost:3000";
 
@@ -339,11 +595,150 @@
             localStorage.setItem("carrinhoLivros", JSON.stringify(carrinho));
             atualizarContadorCarrinho();
             alert(`🛒 "${titulo}" foi adicionado ao seu carrinho!`);
+=======
+    <!-- SCRIPT DO CHAT TAMBÉM COMENTADO PARA NÃO DAR ERRO DE ELEMENTOS NULOS -->
+    <!--
+    <script type="module">
+        import { createConsumer } from "https://esm.sh/@rails/actioncable@7";
+
+        const API = "https://lpv-api.onrender.com";
+        const TOKEN_KEY = "token";
+
+        const list = document.getElementById("messages");
+        const form = document.getElementById("form");
+        const input = document.getElementById("input");
+        const aviso = document.getElementById("avisoGlobal");
+
+        function mostrarAviso(texto) {
+            aviso.textContent = texto;
+            aviso.style.display = "block";
+        }
+
+        function addMessage(m) {
+            const div = document.createElement("div");
+            div.className = "msg";
+            const nome = document.createElement("strong");
+            nome.textContent = m.username + ": ";
+            const texto = document.createElement("span");
+            texto.textContent = m.content;
+            div.append(nome, texto);
+            list.append(div);
+            list.scrollTop = list.scrollHeight;
+        }
+
+        const token = localStorage.getItem(TOKEN_KEY);
+
+        if (!token) {
+            mostrarAviso(localStorage.getItem("usuario")
+                ? "Para usar o chat global, saia e entre novamente na sua conta."
+                : "Faça login para ler e participar do chat global.");
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+                window.location.href = "Login.html";
+            });
+        } else {
+            mostrarAviso("Conectando ao chat...");
+            try {
+                const res = await fetch(`${API}/messages`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    (await res.json()).forEach(addMessage);
+                    aviso.style.display = "none";
+                } else if (res.status === 401) {
+                    localStorage.removeItem(TOKEN_KEY);
+                    mostrarAviso("Sua sessão expirou. Redirecionando para o login...");
+                    setTimeout(() => { window.location.href = "Login.html"; }, 1500);
+                } else {
+                    mostrarAviso("Não foi possível carregar o histórico (erro " + res.status + ").");
+                }
+            } catch (e) {
+                console.error("Histórico indisponível:", e);
+                mostrarAviso("Servidor indisponível no momento. Tente novamente em instantes.");
+            }
+
+            const consumer = createConsumer(
+                `${API.replace("https", "wss")}/cable?token=${encodeURIComponent(token)}`
+            );
+            const canal = consumer.subscriptions.create("ChatChannel", {
+                received: addMessage
+            });
+
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+                const content = input.value.trim();
+                if (!content) return;
+                canal.perform("speak", { content });
+                input.value = "";
+            });
+        }
+    </script>
+    -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        atualizarContadorCarrinho();
+
+        const usuarioSalvo = localStorage.getItem("usuario");
+
+        if (usuarioSalvo) {
+            const usuario = JSON.parse(usuarioSalvo);
+
+            console.log("Usuário logado:", usuario);
+
+            document.getElementById("entrar").style.display = "none";
+            document.getElementById("cadastrar").style.display = "none";
+            document.getElementById("meuPerfil").style.display = "flex";
+            document.getElementById("sair").style.display = "inline-block";
+
+            const fotoSalva = localStorage.getItem("usuarioFoto");
+
+            if (fotoSalva) {
+                document.getElementById("menuAvatar").src = fotoSalva;
+            }
+
+        } else {
+            console.log("Nenhum usuário logado.");
+
+            document.getElementById("meuPerfil").style.display = "none";
+            document.getElementById("sair").style.display = "none";
+            document.getElementById("entrar").style.display = "inline-block";
+            document.getElementById("cadastrar").style.display = "inline-block";
+        }
+    });
+
+
+    const btnMenu = document.getElementById("btn-menu");
+    const menuNavegacao = document.getElementById("menu-navegacao");
+
+    if (btnMenu && menuNavegacao) {
+        btnMenu.addEventListener("click", () => {
+            menuNavegacao.classList.toggle("ativo");
+        });
+    }
+
+        function adicionarAoCarrinho(titulo, preco, imagem) {
+            let carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
+
+            carrinho.push({
+                titulo: titulo,
+                preco: preco,
+                imagem: imagem
+            });
+
+            localStorage.setItem("carrinhoLivros", JSON.stringify(carrinho));
+            atualizarContadorCarrinho();
+            alert(`"${titulo}" foi adicionado ao seu carrinho!`);
+>>>>>>> c061b7dcad7818cbfce92e468d0ed7d432534031
         }
 
         function atualizarContadorCarrinho() {
             const carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
             const contador = document.getElementById("contadorCarrinhoHeader");
+<<<<<<< HEAD
+=======
+
+>>>>>>> c061b7dcad7818cbfce92e468d0ed7d432534031
             if (contador) {
                 if (carrinho.length > 0) {
                     contador.innerText = carrinho.length;
@@ -354,6 +749,7 @@
             }
         }
 
+<<<<<<< HEAD
         function atualizarHeaderAuth() {
             const logado = localStorage.getItem("logado") === "true";
             if (logado) {
@@ -377,9 +773,18 @@
         function sair(e) {
             if (e) e.preventDefault();
             localStorage.clear();
+=======
+        function sair() {
+            localStorage.removeItem("usuario");
+            localStorage.removeItem("logado");
+>>>>>>> c061b7dcad7818cbfce92e468d0ed7d432534031
             window.location.href = "index.html";
         }
     </script>
 </body>
 
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> c061b7dcad7818cbfce92e468d0ed7d432534031
