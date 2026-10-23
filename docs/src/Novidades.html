@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novidades & Lançamentos - Livros pra Vida</title>
+
+    <link rel="icon" type="image/png" href="../imagens/icone.png">
+    <link rel="stylesheet" href="../css/StyleHome.css">
+    <link rel="stylesheet" href="../css/StyleCatalogo.css">
+    <link rel="stylesheet" href="../css/StyleNovidades.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="header-padrao" style="flex-direction: column; align-items: stretch; gap: 12px; padding: 15px 5%;">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <a href="../index.html" class="logo-link" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #2d251e; font-weight: 700; font-size: 1.1rem;">
+                <img src="../imagens/icone.png" alt="Logo Livros pra Vida" class="logo-img" style="height: 36px; width: auto; object-fit: contain;">
+                <span>Livros pra Vida</span>
+            </a>
+
+            <div class="auth-carrinho-area" style="display: flex; align-items: center; gap: 16px;">
+                <a href="Login.html" id="entrar" class="btn-entrar" style="text-decoration: none; color: #2d251e; font-size: 0.85rem; font-weight: 500;">Entrar</a>
+                <a href="Cadastro.html" class="btn-cadastrar" id="cadastrar" style="text-decoration: none; background-color: #8c533e; color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">Cadastrar</a>
+                <a href="MeuPerfil.html" id="meuPerfil" class="perfil-link" style="display: none; align-items: center;" title="Meu Perfil">
+                    <img id="menuAvatar" src="../imagens/Background.png" alt="Avatar" class="perfil-avatar" style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #8c533e;">
+                </a>
+                <a href="#" id="sair" onclick="sair(event)" class="btn-sair" style="display: none; text-decoration: none; color: #6e655f; font-size: 0.85rem; font-weight: 500;">Sair</a>
+            </div>
+        </div>
+
+        <nav class="nav-links" style="display: flex; justify-content: center; align-items: center; gap: 24px; width: 100%;">
+            <a href="Catalogo.html" class="nav-item" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.9rem;">Catálogo</a>
+            <a href="ComprarTrocar.html" class="nav-item" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.9rem;">Comprar & Trocar</a>
+            <a href="Novidades.html" class="nav-item active" style="text-decoration: none; color: #8c533e; font-weight: 700; font-size: 0.9rem;">Novidades</a>
+            <a href="Chat.html" class="nav-item" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.9rem;">Chat & Comunidade</a>
+            <a href="SobreNos.html" class="nav-item" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.9rem;">Sobre Nós</a>
+        </nav>
+    </header>
+
+    <main style="max-width: 1200px; margin: 30px auto; padding: 0 20px;">
+        
+        <!-- PAINEL EXCLUSIVO DO ADMIN PARA PUBLICAR NOTÍCIAS SALVAS NO POSTGRESQL -->
+        <div id="painelPostarNoticiaAdmin" style="display: none; background: #faf8f5; border: 2px solid #8c533e; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+            <h3 style="margin-top: 0; color: #8c533e;">📢 Publicar Nova Notícia (Persistência no PostgreSQL)</h3>
+            <form id="formNovaNoticia" onsubmit="publicarNoticiaAdmin(event)" style="display: flex; flex-direction: column; gap: 12px;">
+                <input type="text" id="tituloNoticia" placeholder="Título da Notícia..." required style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                <input type="text" id="fonteNoticia" placeholder="Fonte / Portal (ex: PublishNews, G1, Folha)" required style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                <input type="url" id="linkNoticia" placeholder="Link original da notícia (ex: https://site.com/noticia)..." required style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                <input type="text" id="imagemNoticia" placeholder="URL da Imagem da Notícia (opcional)..." style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                <textarea id="descNoticia" placeholder="Descrição resumida da matéria..." required style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; height: 70px;"></textarea>
+                <button type="submit" style="background: #8c533e; color: #fff; border: none; padding: 10px; border-radius: 4px; font-weight: bold; cursor: pointer; align-self: flex-start;">➕ Publicar Notícia no Banco de Dados</button>
+            </form>
+        </div>
+
+        <section class="section">
+            <h2 style="font-size: 1.8rem; margin-bottom: 10px; color: #2d251e;">Novidades & Portal Literário</h2>
+            <p style="color: #6e655f; margin-bottom: 25px;">Acompanhe os lançamentos e matérias do mundo literário. Clique na notícia para ler a matéria completa no site original.</p>
+            
+            <div id="gridNovidades" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;"></div>
+        </section>
+    </main>
+
+    <script>
+        const API_URL = "http://localhost:3000";
+
+        document.addEventListener("DOMContentLoaded", function () {
+            verificarAutenticacao();
+            carregarNoticiasDoBanco();
+
+            if (localStorage.getItem("isAdmin") === "true") {
+                const painel = document.getElementById("painelPostarNoticiaAdmin");
+                if (painel) painel.style.display = "block";
+            }
+        });
+
+        async function carregarNoticiasDoBanco() {
+            try {
+                const response = await fetch(`${API_URL}/news`);
+                if (response.ok) {
+                    const noticias = await response.json();
+                    renderizarNoticias(noticias);
+                }
+            } catch (error) {
+                console.error("Erro ao carregar notícias:", error);
+            }
+        }
+
+        function renderizarNoticias(lista) {
+            const grid = document.getElementById("gridNovidades");
+            if (!grid) return;
+            grid.innerHTML = "";
+
+            if (lista.length === 0) {
+                grid.innerHTML = `<p style="color: #6e655f; grid-column: 1/-1;">Nenhuma notícia cadastrada no momento.</p>`;
+                return;
+            }
+
+            const souAdmin = localStorage.getItem("isAdmin") === "true";
+
+            lista.forEach(item => {
+                const card = document.createElement("article");
+                card.style.background = "#fff";
+                card.style.border = "1px solid #e0d7cd";
+                card.style.borderRadius = "8px";
+                card.style.overflow = "hidden";
+                card.style.boxShadow = "0 2px 5px rgba(0,0,0,0.05)";
+                card.style.display = "flex";
+                card.style.flexDirection = "column";
+
+                let painelAdminBotoes = "";
+                if (souAdmin) {
+                    const emDestaque = item.featured === true;
+                    painelAdminBotoes = `
+                        <div style="display: flex; flex-direction: column; gap: 4px; margin-top: auto;">
+                            <button onclick="alternarDestaqueNoticia(${item.id}, ${!emDestaque}, event)" style="background: ${emDestaque ? '#f1c40f' : '#2c3e50'}; color: ${emDestaque ? '#000' : '#fff'}; border: none; padding: 6px; width: 100%; font-weight: bold; cursor: pointer; font-size: 0.8rem;">
+                                ${emDestaque ? '⭐ Em Destaque na Home' : '📌 Destacar na Home'}
+                            </button>
+                            <button onclick="excluirNoticia(${item.id}, event)" style="background: #e74c3c; color: #fff; border: none; padding: 6px; width: 100%; font-weight: bold; cursor: pointer; font-size: 0.8rem;">
+                                🗑️ Excluir Notícia
+                            </button>
+                        </div>
+                    `;
+                }
+
+                const urlDestino = item.link_url || "#";
+
+                card.innerHTML = `
+                    <a href="${urlDestino}" target="_blank" style="text-decoration: none; color: inherit; display: block; flex-grow: 1;">
+                        <img src="${item.image_url || 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=400&auto=format&fit=crop&q=60'}" style="width: 100%; height: 180px; object-fit: cover;">
+                        <div style="padding: 15px;">
+                            <span style="font-size: 0.75rem; color: #8c533e; font-weight: bold; text-transform: uppercase;">🔗 ${item.source || 'Portal Literário'}</span>
+                            <h3 style="margin: 6px 0; font-size: 1.1rem; color: #2d251e; line-height: 1.3;">${item.title}</h3>
+                            <p style="font-size: 0.85rem; color: #6e655f; margin-bottom: 10px; line-height: 1.4;">${item.description}</p>
+                            <span style="font-size: 0.8rem; color: #8c533e; font-weight: 600; display: inline-block;">Ler matéria completa ↗</span>
+                        </div>
+                    </a>
+                    ${painelAdminBotoes}
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        async function alternarDestaqueNoticia(idNoticia, novoStatus, event) {
+            if (event) event.stopPropagation();
+            const token = localStorage.getItem("token");
+
+            try {
+                const response = await fetch(`${API_URL}/news/${idNoticia}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ news: { featured: novoStatus } })
+                });
+
+                if (response.ok) {
+                    alert(novoStatus ? "⭐ Notícia destacada com sucesso na Página Inicial!" : "Notícia removida dos destaques da Home.");
+                    carregarNoticiasDoBanco();
+                } else {
+                    alert("Apenas administradores podem gerenciar os destaques.");
+                }
+            } catch (e) {
+                alert("Erro ao alterar destaque.");
+            }
+        }
+
+        async function publicarNoticiaAdmin(event) {
+            event.preventDefault();
+            const token = localStorage.getItem("token");
+
+            const titulo = document.getElementById("tituloNoticia").value;
+            const fonte = document.getElementById("fonteNoticia").value;
+            const link = document.getElementById("linkNoticia").value;
+            const imagem = document.getElementById("imagemNoticia").value;
+            const desc = document.getElementById("descNoticia").value;
+
+            try {
+                const response = await fetch(`${API_URL}/news`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        news: {
+                            title: titulo,
+                            source: fonte,
+                            link_url: link,
+                            image_url: imagem,
+                            description: desc
+                        }
+                    })
+                });
+
+                if (response.ok) {
+                    alert("✨ Notícia publicada e salva no PostgreSQL!");
+                    document.getElementById("formNovaNoticia").reset();
+                    carregarNoticiasDoBanco();
+                } else {
+                    alert("Apenas administradores podem publicar notícias.");
+                }
+            } catch (e) {
+                alert("Erro ao conectar com a API.");
+            }
+        }
+
+        async function excluirNoticia(id, event) {
+            if (event) event.stopPropagation();
+            if (!confirm("Deseja remover esta notícia do banco de dados?")) return;
+            const token = localStorage.getItem("token");
+
+            try {
+                const response = await fetch(`${API_URL}/news/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    alert("🗑️ Notícia removida do PostgreSQL!");
+                    carregarNoticiasDoBanco();
+                }
+            } catch (e) {
+                alert("Erro ao excluir notícia.");
+            }
+        }
+
+        function verificarAutenticacao() {
+            if (localStorage.getItem("logado") === "true") {
+                document.getElementById("entrar").style.display = "none";
+                document.getElementById("cadastrar").style.display = "none";
+                document.getElementById("meuPerfil").style.display = "flex";
+                document.getElementById("sair").style.display = "inline-block";
+            }
+        }
+
+        function sair(e) {
+            e.preventDefault();
+            localStorage.clear();
+            window.location.href = "../index.html";
+        }
+    </script>
+</body>
+</html>

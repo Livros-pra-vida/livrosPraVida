@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Livros pra Vida - Página Inicial</title>
+
+    <link rel="icon" type="image/png" href="imagens/icone.png">
+    <link rel="stylesheet" href="css/StyleHome.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="header">
+
+        <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #2d251e; font-weight: 700;">
+            <img src="imagens/icone.png" alt="Logo Livros pra Vida" style="width: 32px; height: 32px; object-fit: contain;">
+            <span>Livros pra Vida</span>
+        </a>
+
+        <!-- Botão Hambúrguer -->
+        <button id="btn-menu" class="menu-toggle" aria-label="Abrir Menu">
+            <span class="barrinha"></span>
+            <span class="barrinha"></span>
+            <span class="barrinha"></span>
+        </button>
+
+        <nav class="menu-principal" id="menu-navegacao">
+            <div class="search-box">
+                <form action="src/Catalogo.html" method="GET">
+                    <input type="text" name="busca" placeholder="Buscar título ou autor no acervo...">
+                    <button type="submit" aria-label="Buscar">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+
+            <a href="src/Catalogo.html">Catálogo</a>
+            <a href="src/ComprarTrocar.html">Comprar & Trocar</a>
+            <a href="src/Novidades.html">Novidades</a>
+            <a href="src/Chat.html">Chat & Comunidade</a>
+            <a href="src/SobreNos.html">Sobre Nós</a>
+
+            <div class="header-actions">
+                <a href="src/Carrinho.html" title="Ver Carrinho" class="carrinho-link">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span id="contadorCarrinhoHeader">0</span>
+                </a>
+
+                <a href="src/Login.html" id="entrar">Entrar</a>
+                <a href="src/Cadastro.html" id="cadastrar" class="btn-cadastrar">Cadastrar</a>
+
+                <a href="#" id="sair" onclick="sair(event)" style="display: none;">Sair</a>
+                <a href="src/MeuPerfil.html" id="meuPerfil" title="Meu Perfil" style="display: none;">
+                    <img id="menuAvatar" src="imagens/Background.png" alt="Foto do Perfil" class="avatar-img">
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Toda história<br>começa com uma<br>página.</h1>
+                <p>O seu acervo de leitura oficial e espaço de troca com outros leitores.</p>
+                <a href="src/Catalogo.html" class="button">Ver Catálogo da Loja</a>
+            </div>
+
+            <div class="hero-image">
+                <img src="imagens/pratileira.jpg" alt="Biblioteca com estantes de livros">
+            </div>
+        </section>
+
+        <!-- SEÇÃO 1: DESTAQUES DO CATÁLOGO DA LOJA (POSTGRESQL) -->
+        <section class="section" id="destaques">
+            <div class="section-title">
+                <h2>📚 Destaques do Catálogo Oficial</h2>
+                <p>Seleção dos livros mais vendidos da livraria.</p>
+            </div>
+
+            <div class="books" id="containerDestaquesCatalogo">
+                <p style="color: #6e655f; padding: 20px;">Carregando acervo do banco de dados...</p>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 2: MARKETPLACE P2P COM TAXA DE 5% PARA O ADMIN -->
+        <section class="section" style="background: #faf8f5; padding: 35px 5%; border-radius: 8px; margin: 30px 0;">
+            <div class="section-title">
+                <h2>🔄 Destaques da Comunidade (Comprar & Trocar P2P)</h2>
+                <p>Livros seminovos anunciados por outros leitores com taxa de 5% da plataforma inclusa.</p>
+            </div>
+
+            <div class="books" id="containerDestaquesP2P">
+                <p style="color: #6e655f; padding: 20px;">Carregando ofertas da comunidade...</p>
+            </div>
+        </section>
+
+        <section class="benefits" id="benefits">
+            <div class="benefit">
+                <h3>Frete Grátis</h3>
+                <p>Nas compras acima de R$ 99,00 do catálogo</p>
+            </div>
+
+            <div class="benefit">
+                <h3>Comissão Justa (5%)</h3>
+                <p>A taxa P2P mais baixa do mercado literário</p>
+            </div>
+
+            <div class="benefit">
+                <h3>Comunidade Ativa</h3>
+                <p>Fórum e chat global integrado em tempo real</p>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 3: NOVIDADES LITERÁRIAS COM REDIRECIONAMENTO DE LINK EXTERNO -->
+        <section class="section section-novidades" id="novidades">
+            <div class="section-title">
+                <h2>📰 Últimas Novidades & Matérias</h2>
+                <p>Clique em qualquer matéria para ler a notícia no site da fonte original.</p>
+            </div>
+
+            <div class="novidades-list" id="containerNoticiasHome" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                <p style="color: #6e655f; padding: 20px;">Carregando últimas notícias...</p>
+            </div>
+        </section>
+
+        <section class="newsletter" id="newsletter">
+            <h2>Receba novidades por e-mail</h2>
+            <form onsubmit="event.preventDefault(); alert('🎉 Inscrição realizada com sucesso!');">
+                <input type="email" placeholder="seu@email.com.br" required>
+                <button type="submit">ASSINAR GRÁTIS</button>
+            </form>
+            <p>Sem spam. Cancele quando quiser.</p>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-brand">
+            <img src="imagens/icone.png" alt="Logo Livros pra Vida" class="footer-icon">
+            <h2>Livros pra Vida</h2>
+            <p>Uma livraria para quem acredita que cada livro é uma conversa com o tempo.</p>
+        </div>
+
+        <div class="footer-column">
+            <h3>Navegação</h3>
+            <a href="src/Catalogo.html">Catálogo</a>
+            <a href="src/ComprarTrocar.html">Comprar & Trocar</a>
+            <a href="src/Novidades.html">Novidades</a>
+            <a href="src/Chat.html">Chat & Comunidade</a>
+            <a href="src/SobreNos.html">Sobre Nós</a>
+        </div>
+
+        <div class="footer-column">
+            <h3>Conta</h3>
+            <a href="src/Login.html">Entrar</a>
+            <a href="src/Cadastro.html">Cadastrar</a>
+            <a href="src/MeuPerfil.html">Meu Perfil</a>
+        </div>
+
+        <div class="footer-column">
+            <h3>Ajuda</h3>
+            <a href="#">FAQ</a>
+            <a href="#">Trocas e devoluções</a>
+            <a href="#">Frete</a>
+            <a href="#">Pagamento</a>
+            <a href="#">Contato</a>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2026 Livros pra Vida. Todos os direitos reservados.</p>
+            <p>Privacidade · Termos · LGPD</p>
+        </div>
+    </footer>
+
+    <script>
+        const API_URL = "http://localhost:3000";
+
+        document.addEventListener("DOMContentLoaded", function () {
+            atualizarHeaderAuth();
+            atualizarContadorCarrinho();
+            carregarDestaquesCatalogo();
+            carregarDestaquesP2P();
+            carregarNoticiasHome();
+
+            const btnMenu = document.getElementById("btn-menu");
+            const menuNavegacao = document.getElementById("menu-navegacao");
+            if (btnMenu && menuNavegacao) {
+                btnMenu.addEventListener("click", () => {
+                    menuNavegacao.classList.toggle("ativo");
+                });
+            }
+        });
+
+        // 1. CARREGA OS LIVROS DO CATÁLOGO DA LOJA
+        async function carregarDestaquesCatalogo() {
+            const container = document.getElementById("containerDestaquesCatalogo");
+            try {
+                const response = await fetch(`${API_URL}/books`);
+                if (response.ok) {
+                    const livros = await response.json();
+                    container.innerHTML = "";
+
+                    if (livros.length === 0) {
+                        container.innerHTML = "<p style='color: #6e655f;'>Nenhum livro no catálogo oficial.</p>";
+                        return;
+                    }
+
+                    livros.slice(0, 6).forEach(livro => {
+                        const precoFormatado = Number(livro.price || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                        const capa = livro.image_url || 'imagens/icone.png';
+                        
+                        const article = document.createElement("article");
+                        article.className = "book";
+                        article.innerHTML = `
+                            <img src="${capa}" alt="${livro.title}" style="height: 220px; object-fit: cover; border-radius: 6px;">
+                            <h3>${livro.title}</h3>
+                            <p>Por: ${livro.author}</p>
+                            <strong>${precoFormatado}</strong>
+                            <button onclick="adicionarAoCarrinho('${livro.title}', '${precoFormatado}', '${capa}')" class="btn-acao-livro">
+                                Adicionar ao Carrinho
+                            </button>
+                        `;
+                        container.appendChild(article);
+                    });
+                }
+            } catch (e) {
+                container.innerHTML = "<p style='color: #6e655f;'>Servidor offline. Verifique a API Rails.</p>";
+            }
+        }
+
+        // 2. CARREGA OS ANÚNCIOS P2P CALCULANDO A TAXA DE 5% DA PLATAFORMA
+        async function carregarDestaquesP2P() {
+            const container = document.getElementById("containerDestaquesP2P");
+            try {
+                const response = await fetch(`${API_URL}/book_listings`);
+                if (response.ok) {
+                    const anuncios = await response.json();
+                    container.innerHTML = "";
+
+                    if (anuncios.length === 0) {
+                        container.innerHTML = "<p style='color: #6e655f;'>Nenhum anúncio da comunidade ativo.</p>";
+                        return;
+                    }
+
+                    anuncios.slice(0, 6).forEach(item => {
+                        const precoVal = parseFloat(item.price || 0);
+                        const comissaoPlataforma = (precoVal * 0.05); // 5% de taxa do Admin
+                        const valorVendedor = precoVal - comissaoPlataforma;
+
+                        const precoFormatado = precoVal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                        const taxaFormatada = comissaoPlataforma.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                        const liquidoFormatado = valorVendedor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+                        const article = document.createElement("article");
+                        article.className = "book";
+                        article.style.background = "#fff";
+                        article.style.padding = "15px";
+                        article.style.border = "1px solid #e0d7cd";
+
+                        article.innerHTML = `
+                            <img src="${item.image_url || 'imagens/icone.png'}" style="height: 200px; object-fit: cover; border-radius: 6px;">
+                            <h3 style="font-size: 0.95rem; margin-top: 8px;">${item.title}</h3>
+                            <p style="font-size: 0.8rem; color: #6e655f;">Vendedor: 👤 <strong>${item.username || 'Anônimo'}</strong></p>
+                            <strong style="color: #8c533e; font-size: 1.1rem;">${precoFormatado}</strong>
+                            <small style="display: block; font-size: 0.7rem; color: #27ae60; margin: 4px 0 8px 0;">
+                                💡 (Taxa da loja 5%: ${taxaFormatada} | Vendedor recebe: ${liquidoFormatado})
+                            </small>
+                            <a href="src/ComprarTrocar.html" class="button" style="display: block; text-align: center; text-decoration: none; padding: 8px; font-size: 0.8rem;">
+                                Negociar na Comunidade
+                            </a>
+                        `;
+                        container.appendChild(article);
+                    });
+                }
+            } catch (e) {
+                container.innerHTML = "<p style='color: #6e655f;'>Não foi possível carregar anúncios P2P.</p>";
+            }
+        }
+
+        // 3. CARREGA AS NOTÍCIAS REDIRECIONANDO PARA O LINK EXTERNO DA FONTE
+        async function carregarNoticiasHome() {
+            const container = document.getElementById("containerNoticiasHome");
+            try {
+                const response = await fetch(`${API_URL}/news`);
+                if (response.ok) {
+                    const noticias = await response.json();
+                    container.innerHTML = "";
+
+                    if (noticias.length === 0) {
+                        container.innerHTML = "<p style='color: #6e655f;'>Nenhuma notícia publicada.</p>";
+                        return;
+                    }
+
+                    noticias.slice(0, 3).forEach(item => {
+                        const linkDestino = item.link_url || "src/Novidades.html";
+                        const article = document.createElement("article");
+                        article.style.background = "#fff";
+                        article.style.border = "1px solid #e0d7cd";
+                        article.style.borderRadius = "8px";
+                        article.style.overflow = "hidden";
+
+                        article.innerHTML = `
+                            <a href="${linkDestino}" target="_blank" style="text-decoration: none; color: inherit; display: block;">
+                                <img src="${item.image_url || 'imagens/pratileira.jpg'}" style="width: 100%; height: 160px; object-fit: cover;">
+                                <div style="padding: 15px;">
+                                    <span style="font-size: 0.7rem; color: #8c533e; font-weight: bold; text-transform: uppercase;">🔗 ${item.source || 'Portal Literário'}</span>
+                                    <h3 style="margin: 6px 0; font-size: 1rem; color: #2d251e;">${item.title}</h3>
+                                    <p style="font-size: 0.8rem; color: #6e655f; margin-bottom: 10px;">${item.description}</p>
+                                    <span style="font-size: 0.8rem; color: #8c533e; font-weight: bold;">Ler matéria original ↗</span>
+                                </div>
+                            </a>
+                        `;
+                        container.appendChild(article);
+                    });
+                }
+            } catch (e) {
+                container.innerHTML = "<p style='color: #6e655f;'>Não foi possível carregar as notícias.</p>";
+            }
+        }
+
+        function adicionarAoCarrinho(titulo, preco, imagem) {
+            let carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
+            carrinho.push({ titulo: titulo, preco: preco, imagem: imagem });
+            localStorage.setItem("carrinhoLivros", JSON.stringify(carrinho));
+            atualizarContadorCarrinho();
+            alert(`🛒 "${titulo}" foi adicionado ao seu carrinho!`);
+        }
+
+        function atualizarContadorCarrinho() {
+            const carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
+            const contador = document.getElementById("contadorCarrinhoHeader");
+            if (contador) {
+                if (carrinho.length > 0) {
+                    contador.innerText = carrinho.length;
+                    contador.style.display = "inline-block";
+                } else {
+                    contador.style.display = "none";
+                }
+            }
+        }
+
+        function atualizarHeaderAuth() {
+            const logado = localStorage.getItem("logado") === "true";
+            if (logado) {
+                document.getElementById("entrar").style.display = "none";
+                document.getElementById("cadastrar").style.display = "none";
+                document.getElementById("meuPerfil").style.display = "flex";
+                document.getElementById("sair").style.display = "inline-block";
+
+                const fotoSalva = localStorage.getItem("usuarioFoto");
+                if (fotoSalva) {
+                    document.getElementById("menuAvatar").src = fotoSalva;
+                }
+            } else {
+                document.getElementById("meuPerfil").style.display = "none";
+                document.getElementById("sair").style.display = "none";
+                document.getElementById("entrar").style.display = "inline-block";
+                document.getElementById("cadastrar").style.display = "inline-block";
+            }
+        }
+
+        function sair(e) {
+            if (e) e.preventDefault();
+            localStorage.clear();
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+
+</html>

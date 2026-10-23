@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprar & Trocar - Livros pra Vida</title>
+
+    <link rel="icon" type="image/png" href="../imagens/icone.png">
+    <link rel="stylesheet" href="../css/StyleHome.css">
+    <link rel="stylesheet" href="../css/StyleCatalogo.css">
+    <link rel="stylesheet" href="../css/StyleComprarTrocar.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="header-padrao" style="flex-direction: column; align-items: stretch; gap: 12px; padding: 15px 5%;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <a href="../index.html" class="logo-link" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #2d251e; font-weight: 700; font-size: 1.1rem;">
+                <img src="../imagens/icone.png" alt="Logo Livros pra Vida" class="logo-img" style="height: 36px; width: auto; object-fit: contain;">
+                <span>Livros pra Vida</span>
+            </a>
+
+            <div class="auth-carrinho-area" style="display: flex; align-items: center; gap: 16px;">
+                <a href="Carrinho.html" title="Ver Carrinho" class="carrinho-link" style="position: relative; color: #2d251e; display: flex; align-items: center; text-decoration: none;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span id="contadorCarrinhoHeader" class="carrinho-contador" style="position: absolute; top: -4px; right: -6px; background-color: #8c533e; color: #fff; font-size: 0.7rem; font-weight: 700; padding: 2px 6px; border-radius: 10px; display: none;">0</span>
+                </a>
+
+                <a href="Login.html" id="entrar" class="btn-entrar" style="text-decoration: none; color: #2d251e; font-size: 0.85rem; font-weight: 500;">Entrar</a>
+                <a href="Cadastro.html" class="btn-cadastrar" id="cadastrar" style="text-decoration: none; background-color: #8c533e; color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">Cadastrar</a>
+
+                <a href="MeuPerfil.html" id="meuPerfil" class="perfil-link" style="display: none; align-items: center;" title="Meu Perfil">
+                    <img id="menuAvatar" src="../imagens/Background.png" alt="Avatar" class="perfil-avatar" style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #8c533e;">
+                </a>
+                <a href="#" id="sair" onclick="sair(event)" class="btn-sair" style="display: none; text-decoration: none; color: #6e655f; font-size: 0.85rem; font-weight: 500;">Sair</a>
+            </div>
+        </div>
+
+        <nav class="nav-links" style="display: flex; justify-content: center; align-items: center; gap: 24px; width: 100%;">
+            <a href="Catalogo.html" class="nav-item" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.9rem;">Catálogo</a>
+            <a href="ComprarTrocar.html" class="nav-item active" style="text-decoration: none; color: #8c533e; font-weight: 700; font-size: 0.9rem;">Comprar & Trocar</a>
+            <a href="Novidades.html" class="nav-item" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.9rem;">Novidades</a>
+            <a href="Chat.html" class="nav-item" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.9rem;">Chat & Comunidade</a>
+            <a href="SobreNos.html" class="nav-item" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.9rem;">Sobre Nós</a>
+        </nav>
+
+    </header>
+
+    <main style="max-width: 1200px; margin: 30px auto; padding: 0 20px;">
+        <!-- BANNER EXCLUSIVO DE ADMINISTRADOR -->
+        <div id="painelAdminHeader" style="display: none; background: #2c3e50; color: #fff; padding: 15px 20px; border-radius: 8px; margin-bottom: 25px; justify-content: space-between; align-items: center;">
+            <div>
+                <h3 style="margin: 0; font-size: 1.1rem; color: #f1c40f;">👑 Painel de Controle do Administrador</h3>
+                <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: #ecf0f1;">Gerencie os anúncios, defina os destaques da Home e calcule o lucro das comissões de 5%.</p>
+            </div>
+            <button onclick="gerarRelatorioAdmin()" style="background: #27ae60; color: #fff; border: none; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                📊 Gerar Relatório do Sistema
+            </button>
+        </div>
+
+        <section class="section">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 15px; margin-bottom: 25px;">
+                <div class="section-title">
+                    <h2 style="font-size: 1.8rem; margin-bottom: 5px; color: #2d251e;">Comprar & Trocar (Comunidade P2P)</h2>
+                    <p style="color: #6e655f; margin: 0;">Negocie diretamente com outros leitores. Taxa transparente da plataforma: 5% por venda.</p>
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button onclick="abrirModalAnuncio()" style="background-color: #8c533e; color: #fff; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.9rem;">
+                        + Anunciar um Livro
+                    </button>
+                </div>
+            </div>
+
+            <div id="gridAnuncios" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px;"></div>
+        </section>
+    </main>
+
+    <!-- MODAL DE CADASTRO DE ANÚNCIO -->
+    <div id="modalAnuncio" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; overflow-y: auto; padding: 20px;">
+        <div style="background: #fff; padding: 30px; border-radius: 8px; width: 100%; max-width: 450px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin: auto;">
+            <button onclick="fecharModalAnuncio()" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #6e655f;">✕</button>
+            <h3 style="margin-top: 0; color: #2d251e; margin-bottom: 20px;">Anunciar Livro na Comunidade</h3>
+            
+            <form id="formAnuncio" onsubmit="cadastrarAnuncio(event)" style="display: flex; flex-direction: column; gap: 14px;">
+                <div>
+                    <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; color: #2d251e;">Título do Livro</label>
+                    <input type="text" id="novoTitulo" required placeholder="Ex: O Pequeno Príncipe" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px; font-size: 0.9rem; outline: none;">
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; color: #2d251e;">Autor</label>
+                    <input type="text" id="novoAutor" required placeholder="Ex: Antoine de Saint-Exupéry" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px; font-size: 0.9rem; outline: none;">
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; color: #2d251e;">Preço de Venda (R$)</label>
+                    <input type="text" id="novoPreco" placeholder="Ex: 25.00" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px; font-size: 0.9rem; outline: none;" oninput="atualizarSimulacaoTaxa(this.value)">
+                    <small id="simulacaoTaxa" style="color: #27ae60; font-size: 0.75rem; display: block; margin-top: 4px;">💡 Taxa da loja (5%): R$ 0,00 | Você receberá: R$ 0,00</small>
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; color: #2d251e;">URL da Capa do Livro</label>
+                    <input type="text" id="novoIsbn" placeholder="Link da imagem..." style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px; font-size: 0.9rem; outline: none;">
+                </div>
+                <button type="submit" style="background: #8c533e; color: #fff; border: none; padding: 12px; border-radius: 6px; font-weight: 600; cursor: pointer; margin-top: 10px;">Publicar Anúncio</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "http://localhost:3000";
+        let listaAnuncios = [];
+        let listaFavoritosIds = [];
+
+        function estaLogado() {
+            return localStorage.getItem("logado") === "true";
+        }
+
+        function ehAdmin() {
+            return localStorage.getItem("isAdmin") === "true";
+        }
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            verificarAutenticacaoHeader();
+            if (estaLogado()) {
+                await carregarFavoritosUsuario();
+            }
+            await carregarAnunciosDaAPI();
+            
+            if (ehAdmin()) {
+                const painel = document.getElementById("painelAdminHeader");
+                if (painel) painel.style.display = "flex";
+            }
+        });
+
+        function atualizarSimulacaoTaxa(valor) {
+            const precoVal = parseFloat(valor) || 0;
+            const comissao = precoVal * 0.05;
+            const liquido = precoVal - comissao;
+            
+            document.getElementById("simulacaoTaxa").innerText = 
+                `💡 Taxa da loja (5%): R$ ${comissao.toFixed(2)} | Você receberá: R$ ${liquido.toFixed(2)}`;
+        }
+
+        async function carregarFavoritosUsuario() {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+
+            try {
+                const res = await fetch(`${API_URL}/favorites`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    listaFavoritosIds = await res.json();
+                }
+            } catch (e) {
+                console.error("Erro ao carregar favoritos:", e);
+            }
+        }
+
+        async function carregarAnunciosDaAPI() {
+            try {
+                const response = await fetch(`${API_URL}/book_listings`);
+                if (response.ok) {
+                    const dados = await response.json();
+                    listaAnuncios = dados;
+                    renderizarAnuncios();
+                }
+            } catch (error) {
+                console.error("Erro ao carregar do servidor:", error);
+            }
+        }
+
+        function renderizarAnuncios() {
+            const grid = document.getElementById("gridAnuncios");
+            if (!grid) return;
+            grid.innerHTML = "";
+
+            if (listaAnuncios.length === 0) {
+                grid.innerHTML = `<p style="text-align: center; color: #6e655f; padding: 30px; grid-column: 1/-1;">Nenhum livro anunciado até o momento.</p>`;
+                return;
+            }
+
+            const usuarioIdLogado = localStorage.getItem("usuarioId");
+            const souAdmin = ehAdmin();
+
+            listaAnuncios.forEach(item => {
+                const card = document.createElement("article");
+                card.className = "book";
+                card.style.background = "#fff";
+                card.style.borderRadius = "8px";
+                card.style.padding = "15px";
+                card.style.boxShadow = "0 2px 5px rgba(0,0,0,0.05)";
+                card.style.position = "relative";
+                card.style.display = "flex";
+                card.style.flexDirection = "column";
+
+                const ehDonoDoAnuncio = usuarioIdLogado && String(item.user_id) === String(usuarioIdLogado);
+                const estaFavoritado = listaFavoritosIds.includes(item.id);
+                const emDestaque = item.featured === true;
+
+                const precoVal = parseFloat(item.price || 0);
+                const comissao = precoVal * 0.05;
+
+                let painelAdminControle = "";
+                if (souAdmin) {
+                    painelAdminControle = `
+                        <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 8px;">
+                            <button onclick="alternarDestaqueP2PAdmin(${item.id}, ${!emDestaque}, event)" style="background: ${emDestaque ? '#f1c40f' : '#2c3e50'}; color: ${emDestaque ? '#000' : '#fff'}; border: none; padding: 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; cursor: pointer; width: 100%;">
+                                ${emDestaque ? '⭐ Em Destaque na Home' : '📌 Destacar na Home'}
+                            </button>
+                            <button onclick="excluirAnuncio(${item.id})" style="background: #e74c3c; color: #fff; border: none; padding: 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; cursor: pointer; width: 100%;">
+                                🗑️ Excluir Anúncio (Admin)
+                            </button>
+                        </div>
+                    `;
+                } else if (ehDonoDoAnuncio) {
+                    painelAdminControle = `
+                        <button onclick="excluirAnuncio(${item.id})" style="background: #e74c3c; color: #fff; border: none; padding: 6px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; cursor: pointer; width: 100%; margin-top: 8px;">
+                            🗑️ Excluir Meu Anúncio
+                        </button>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <img src="${item.image_url || 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=400&q=80'}" style="width: 100%; height: 220px; object-fit: cover; border-radius: 6px; margin-bottom: 10px;">
+                    <h3 style="font-size: 1rem; color: #2d251e; margin: 0 0 6px 0;">${item.title}</h3>
+                    <p style="font-size: 0.85rem; color: #6e655f; margin: 0 0 4px 0;">Autor: <strong>${item.author}</strong></p>
+                    <p style="font-size: 0.85rem; color: #8c533e; margin: 0 0 2px 0; font-weight: bold;">R$ ${precoVal.toFixed(2)}</p>
+                    <small style="font-size: 0.7rem; color: #27ae60; margin-bottom: 6px; font-weight: 600;">(Comissão 5%: R$ ${comissao.toFixed(2)})</small>
+                    <p style="font-size: 0.8rem; color: #6e655f; margin: 0 0 10px 0;">Anunciado por: 👤 <strong>${item.username || 'Anônimo'}</strong></p>
+                    
+                    <button onclick="alternarFavorito(${item.id}, this)" class="${estaFavoritado ? 'favoritado' : ''}" style="background: ${estaFavoritado ? '#e74c3c' : '#faf8f5'}; color: ${estaFavoritado ? '#fff' : '#2d251e'}; border: 1px solid #e0d7cd; padding: 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; cursor: pointer; margin-top: auto;">
+                        ${estaFavoritado ? '❤️ Favoritado' : '🤍 Favoritar'}
+                    </button>
+
+                    ${painelAdminControle}
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        async function alternarDestaqueP2PAdmin(idAnuncio, novoStatus, event) {
+            if (event) event.stopPropagation();
+            const token = localStorage.getItem("token");
+
+            try {
+                const response = await fetch(`${API_URL}/book_listings/${idAnuncio}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ book_listing: { featured: novoStatus } })
+                });
+
+                if (response.ok) {
+                    alert(novoStatus ? "⭐ Anúncio adicionado aos destaques da Página Inicial!" : "Anúncio removido dos destaques da Home.");
+                    carregarAnunciosDaAPI();
+                } else {
+                    alert("Apenas administradores podem alterar destaques.");
+                }
+            } catch (e) {
+                alert("Erro ao conectar com a API.");
+            }
+        }
+
+        async function alternarFavorito(idAnuncio, botaoElemento) {
+            if (!estaLogado()) {
+                alert("⚠️ Faça login para salvar seus livros favoritos!");
+                window.location.href = "Login.html";
+                return;
+            }
+
+            const token = localStorage.getItem("token");
+            const estaFavoritado = botaoElemento.classList.contains("favoritado");
+
+            try {
+                if (estaFavoritado) {
+                    const response = await fetch(`${API_URL}/favorites/${idAnuncio}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+
+                    if (response.ok) {
+                        botaoElemento.classList.remove("favoritado");
+                        botaoElemento.style.background = "#faf8f5";
+                        botaoElemento.style.color = "#2d251e";
+                        botaoElemento.innerHTML = "🤍 Favoritar";
+                        listaFavoritosIds = listaFavoritosIds.filter(id => id !== idAnuncio);
+                    }
+                } else {
+                    const response = await fetch(`${API_URL}/favorites`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ book_listing_id: idAnuncio })
+                    });
+
+                    if (response.ok) {
+                        botaoElemento.classList.add("favoritado");
+                        botaoElemento.style.background = "#e74c3c";
+                        botaoElemento.style.color = "#fff";
+                        botaoElemento.innerHTML = "❤️ Favoritado";
+                        listaFavoritosIds.push(idAnuncio);
+                    }
+                }
+            } catch (erro) {
+                console.error("Erro ao atualizar favorito no servidor:", erro);
+            }
+        }
+
+        async function excluirAnuncio(idAnuncio) {
+            if (!confirm("Tem certeza que deseja excluir este anúncio do PostgreSQL?")) return;
+
+            const token = localStorage.getItem("token");
+
+            try {
+                const response = await fetch(`${API_URL}/book_listings/${idAnuncio}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    alert("✅ Anúncio excluído com sucesso do Banco de Dados!");
+                    carregarAnunciosDaAPI();
+                } else {
+                    const erro = await response.json();
+                    alert("❌ Não foi possível excluir: " + (erro.error || "Acesso negado."));
+                }
+            } catch (e) {
+                alert("Erro ao conectar com a API.");
+            }
+        }
+
+        function abrirModalAnuncio() {
+            if (!estaLogado()) {
+                alert("⚠️ Você precisa estar logado para anunciar um livro!");
+                window.location.href = "Login.html";
+                return;
+            }
+            document.getElementById("modalAnuncio").style.display = "flex";
+        }
+
+        function fecharModalAnuncio() {
+            document.getElementById("modalAnuncio").style.display = "none";
+            document.getElementById("formAnuncio").reset();
+        }
+
+        async function cadastrarAnuncio(event) {
+            event.preventDefault();
+            const titulo = document.getElementById("novoTitulo").value;
+            const autor = document.getElementById("novoAutor").value;
+            const preco = document.getElementById("novoPreco").value;
+            const imagemUrl = document.getElementById("novoIsbn").value;
+
+            const token = localStorage.getItem("token");
+
+            try {
+                const response = await fetch(`${API_URL}/book_listings`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        book_listing: {
+                            title: titulo,
+                            author: autor,
+                            price: parseFloat(preco) || 0,
+                            image_url: imagemUrl
+                        }
+                    })
+                });
+
+                if (response.ok) {
+                    alert("✨ Anúncio cadastrado e salvo com sucesso no PostgreSQL!");
+                    fecharModalAnuncio();
+                    carregarAnunciosDaAPI();
+                } else {
+                    alert("Erro ao criar anúncio. Faça login novamente.");
+                }
+            } catch (e) {
+                alert("Erro ao conectar com a API.");
+            }
+        }
+
+        function gerarRelatorioAdmin() {
+            let relatorio = "=== RELATÓRIO DE ADMINISTRADOR - LIVROS PRA VIDA ===\n\n";
+            relatorio += `Data do Relatório: ${new Date().toLocaleString()}\n`;
+            relatorio += `Total de Anúncios Ativos no Banco: ${listaAnuncios.length}\n\n`;
+            
+            let totalComissoes = 0;
+            relatorio += "DETALHAMENTO DOS ANÚNCIOS & COMISSÕES (5%):\n";
+
+            listaAnuncios.forEach((l, index) => {
+                const p = parseFloat(l.price || 0);
+                const c = p * 0.05;
+                totalComissoes += c;
+                relatorio += `${index + 1}. Título: ${l.title} | Preço: R$ ${p.toFixed(2)} | Comissão Plataforma (5%): R$ ${c.toFixed(2)} | Vendedor: ${l.username}\n`;
+            });
+
+            relatorio += `\nLUCRO ESTIMADO EM COMISSÕES DA PLATAFORMA: R$ ${totalComissoes.toFixed(2)}\n`;
+
+            const blob = new Blob([relatorio], { type: "text/plain;charset=utf-8" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `Relatorio_Sistema_${Date.now()}.txt`;
+            link.click();
+
+            alert("📊 Relatório gerado e baixado com sucesso!");
+        }
+
+        function verificarAutenticacaoHeader() {
+            const elEntrar = document.getElementById("entrar");
+            const elCadastrar = document.getElementById("cadastrar");
+            const elPerfil = document.getElementById("meuPerfil");
+            const elSair = document.getElementById("sair");
+
+            if (estaLogado()) {
+                if (elEntrar) elEntrar.style.display = "none";
+                if (elCadastrar) elCadastrar.style.display = "none";
+                if (elPerfil) elPerfil.style.display = "flex";
+                if (elSair) elSair.style.display = "inline-block";
+            }
+        }
+
+        function sair(e) {
+            if (e) e.preventDefault();
+            localStorage.clear();
+            window.location.href = "../index.html";
+        }
+    </script>
+</body>
+</html>
