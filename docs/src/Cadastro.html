@@ -105,73 +105,72 @@
     <script>
         const API_URL = "https://lpv-api.onrender.com";
 
-        function alternarSenha(id) {
-            const input = document.getElementById(id);
-            input.type = input.type === "password" ? "text" : "password";
-        }
+function alternarSenha(id) {
+    const input = document.getElementById(id);
+    input.type = input.type === "password" ? "text" : "password";
+}
 
-        document.getElementById("formCadastro").addEventListener("submit", async function (event) {
-            event.preventDefault();
+document.getElementById("formCadastro").addEventListener("submit", async function (event) {
+    event.preventDefault();
 
-            const username = document.getElementById("username").value.trim();
-            const email = document.getElementById("email").value.trim();
-            const birthdate = document.getElementById("birthdate").value;
-            const cpf = document.getElementById("cpf").value.trim().replace(/\D/g, '');
-            const phone = document.getElementById("phone").value.trim().replace(/\D/g, '');
-            const senha = document.getElementById("senha").value;
-            const confirmarSenha = document.getElementById("confirmarSenha").value;
-            const btnSubmit = document.getElementById("btnSubmit");
+    const username = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const nascimento = document.getElementById("birthdate").value;
+    const cpf = document.getElementById("cpf").value.trim().replace(/\D/g, '');
+    const telefone = document.getElementById("phone").value.trim().replace(/\D/g, '');
+    const senha = document.getElementById("senha").value;
+    const confirmarSenha = document.getElementById("confirmarSenha").value;
+    const btnSubmit = document.getElementById("btnSubmit");
 
-            if (cpf.length !== 11) {
-                alert("❌ O CPF precisa conter exatamente 11 números.");
-                return;
-            }
+    if (cpf.length !== 11) {
+        alert("❌ O CPF precisa conter exatamente 11 números.");
+        return;
+    }
 
-            if (senha !== confirmarSenha) {
-                alert("❌ As senhas não coincidem!");
-                return;
-            }
+    if (senha !== confirmarSenha) {
+        alert("❌ As senhas não coincidem!");
+        return;
+    }
 
-            btnSubmit.disabled = true;
-            btnSubmit.innerText = "Cadastrando...";
+    btnSubmit.disabled = true;
+    btnSubmit.innerText = "Cadastrando...";
 
-            try {
-                const response = await fetch(`${API_URL}/users`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        user: {
-                            username: username,
-                            email: email,
-                            cpf: cpf,
-                            phone: phone,
-                            birthdate: birthdate,
-                            password: senha,
-                            password_confirmation: confirmarSenha,
-                            admin: false
-                        }
-                    })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    alert("🎉 Conta criada com sucesso! Faça login para continuar.");
-                    window.location.href = "Login.html";
-                } else {
-                    const erros = data.errors ? data.errors.join(", ") : (data.error || "Verifique os dados digitados.");
-                    alert("❌ Erro ao criar conta: " + erros);
+    try {
+        const response = await fetch(`${API_URL}/users`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                user: {
+                    username: username,
+                    email: email,
+                    cpf: cpf,
+                    telefone: telefone,
+                    nascimento: nascimento,
+                    password: senha,
+                    password_confirmation: confirmarSenha
                 }
-            } catch (error) {
-                console.error("Erro no cadastro:", error);
-                alert("❌ Não foi possível conectar ao servidor. Verifique a conexão com a API.");
-            } finally {
-                btnSubmit.disabled = false;
-                btnSubmit.innerText = "Concluir";
-            }
+            })
         });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert("🎉 Conta criada com sucesso! Faça login para continuar.");
+            window.location.href = "Login.html";
+        } else {
+            const erros = data.errors ? data.errors.join(", ") : (data.error || "Verifique os dados digitados.");
+            alert("❌ Erro ao criar conta: " + erros);
+        }
+    } catch (error) {
+        console.error("Erro no cadastro:", error);
+        alert("❌ Não foi possível conectar ao servidor no Render.");
+    } finally {
+        btnSubmit.disabled = false;
+        btnSubmit.innerText = "Concluir";
+    }
+});
     </script>
 </body>
 

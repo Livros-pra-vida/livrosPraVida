@@ -69,62 +69,58 @@
     </main>
 
     <script>
-        const API_URL = "https://lpv-api.onrender.com";
+         const API_URL = "https://lpv-api.onrender.com";
 
-        function alternarVisibilidadeSenha() {
-            const campo = document.getElementById("senha");
-            campo.type = campo.type === "password" ? "text" : "password";
-        }
+function alternarVisibilidadeSenha() {
+    const campo = document.getElementById("senha");
+    campo.type = campo.type === "password" ? "text" : "password";
+}
 
-        document.getElementById("formLogin").addEventListener("submit", async function (event) {
-            event.preventDefault();
+document.getElementById("formLogin").addEventListener("submit", async function (event) {
+    event.preventDefault();
 
-            const loginValue = document.getElementById("loginInput").value.trim();
-            const passwordValue = document.getElementById("senha").value;
-            const btnSubmit = document.getElementById("btnSubmit");
+    const loginValue = document.getElementById("loginInput").value.trim();
+    const passwordValue = document.getElementById("senha").value;
+    const btnSubmit = document.getElementById("btnSubmit");
 
-            btnSubmit.disabled = true;
-            btnSubmit.innerText = "Entrando...";
+    btnSubmit.disabled = true;
+    btnSubmit.innerText = "Entrando...";
 
-            try {
-                const response = await fetch(`${API_URL}/users/login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        login: loginValue,
-                        password: passwordValue
-                    })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    localStorage.setItem("logado", "true");
-                    localStorage.setItem("token", data.token);
-                    localStorage.setItem("usuarioId", data.user.id);
-                    localStorage.setItem("usuarioNome", data.user.username);
-                    localStorage.setItem("usuarioEmail", data.user.email);
-                    localStorage.setItem("isAdmin", data.user.admin ? "true" : "false");
-
-                    if (data.user.avatar_url) {
-                        localStorage.setItem("usuarioFoto", data.user.avatar_url);
-                    }
-
-                    alert(`🎉 Bem-vindo(a) de volta, ${data.user.username}!`);
-                    window.location.href = "../index.html";
-                } else {
-                    alert("❌ Erro ao entrar: " + (data.error || "Usuário ou senha incorretos."));
-                }
-            } catch (error) {
-                console.error("Erro no login:", error);
-                alert("❌ Não foi possível conectar ao servidor no Render. Verifique a API.");
-            } finally {
-                btnSubmit.disabled = false;
-                btnSubmit.innerText = "Entrar";
-            }
+    try {
+        const response = await fetch(`${API_URL}/users/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: loginValue,
+                password: passwordValue
+            })
         });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            localStorage.setItem("logado", "true");
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("usuarioId", data.user.id);
+            localStorage.setItem("usuarioNome", data.user.username);
+            localStorage.setItem("usuarioEmail", data.user.email);
+            localStorage.setItem("isAdmin", data.user.admin ? "true" : "false");
+
+            alert(`🎉 Bem-vindo(a) de volta, ${data.user.username}!`);
+            window.location.href = "../index.html";
+        } else {
+            alert("❌ Erro ao entrar: " + (data.error || "Usuário ou senha incorretos."));
+        }
+    } catch (error) {
+        console.error("Erro no login:", error);
+        alert("❌ Não foi possível conectar ao servidor no Render.");
+    } finally {
+        btnSubmit.disabled = false;
+        btnSubmit.innerText = "Entrar";
+    }
+});
     </script>
 </body>
 
