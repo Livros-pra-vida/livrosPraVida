@@ -34,7 +34,7 @@
         <!-- CARTÃO LATERAL: PERFIL E REPUTAÇÃO -->
         <aside class="profile-card">
             <div class="avatar-wrapper">
-                <img src="../imagens/perfil.jpg" alt="Foto do Usuário" id="userAvatar" class="avatar-img">
+                <img src="../imagens/perfil.jpg" alt="Foto do Usuário" id="userAvatar" class="avatar-img" onerror="this.src='../imagens/perfil.jpg'">
                 <button class="btn-change-avatar" onclick="document.getElementById('avatarUpload').click()" title="Alterar foto">📷</button>
                 <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="uploadFotoPerfil(event)">
             </div>
@@ -207,7 +207,6 @@
             }
 
             try {
-                // Carrega os dados atualizados do banco PostgreSQL no Render
                 const resposta = await fetch(`${API_URL}/users/${usuarioId}`);
                 if (!resposta.ok) throw new Error("Erro ao carregar dados do banco.");
 
@@ -228,6 +227,11 @@
 
                 document.getElementById("profileName").textContent = usuario.username || "Leitor Colaborador";
                 
+                // Carrega a foto de perfil do banco ou usa a padrão
+                const fotoPerfil = usuario.avatar_url || localStorage.getItem("usuarioFoto") || "../imagens/perfil.jpg";
+                document.getElementById("userAvatar").src = fotoPerfil;
+                localStorage.setItem("usuarioFoto", fotoPerfil);
+
                 if (usuario.admin) {
                     document.getElementById("badgePlano").textContent = "Administrador";
                     document.getElementById("badgePlano").style.background = "#8c533e";
@@ -235,26 +239,25 @@
                 }
 
                 verificarMaioridade();
-                carregarHistoricoPedidosDoBanco(usuarioId);
+                carregarHistoricoPedidosDoBanco();
 
             } catch (erro) {
                 console.error("Erro ao carregar perfil:", erro);
-                carregarHistoricoPedidosDoBanco(usuarioId);
+                carregarHistoricoPedidosDoBanco();
             }
         });
 
-        // Carrega o histórico de pedidos sincronizado com o banco (via API ou fallback seguro)
-        function carregarHistoricoPedidosDoBanco(usuarioId) {
+        // Carrega o histórico de pedidos com capa e protocolo
+        function carregarHistoricoPedidosDoBanco() {
             const containerHistorico = document.getElementById("listaHistoricoPedidos");
             const historico = JSON.parse(localStorage.getItem("historicoPedidos")) || [];
 
             if (historico.length === 0) {
-                containerHistorico.innerHTML = `<p style="color: #666; font-size: 0.9rem;">Nenhum pedido realizado ainda no banco de dados.</p>`;
+                containerHistorico.innerHTML = `<p style="color: #666; font-size: 0.9rem;">Nenhum pedido realizado ainda.</p>`;
                 return;
             }
 
             containerHistorico.innerHTML = historico.map(pedido => {
-                // Pega a imagem do pedido ou usa uma capa padrão da OpenLibrary se não houver
                 const imagemCapa = pedido.imagem || "https://covers.openlibrary.org/b/id/12645114-L.jpg";
 
                 return `
@@ -286,7 +289,39 @@
             }).join('');
         }
 
-        // Consulta CEP externa ViaCEP
+        // Upload da foto de perfil salvando diretamente no PostgreSQL
+        async function uploadFotoPerfil(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async function (e) {
+                const base64Image = e.target.result;
+                document.getElementById("userAvatar").src = base64Image;
+
+                const usuarioId = localStorage.getItem("usuarioId");
+                if (!usuarioId) return;
+
+                try {
+                    const resposta = await fetch(`${API_URL}/users/${usuarioId}`, {
+                        method: "PATCH",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            user: { avatar_url: base64Image }
+                        })
+                    });
+
+                    if (resposta.ok) {
+                        localStorage.setItem("usuarioFoto", base64Image);
+                        alert("✨ Foto de perfil atualizada e salva no banco de dados PostgreSQL!");
+                    }
+                } catch (erro) {
+                    console.error("Erro ao salvar foto no banco:", erro);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
         function consultarCep(cep) {
             const cepLimpo = cep.replace(/\D/g, '');
             if (cepLimpo.length !== 8) return;
@@ -304,19 +339,6 @@
                     }
                 })
                 .catch(() => alert("Erro ao buscar o CEP."));
-        }
-
-        function uploadFotoPerfil(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const base64Image = e.target.result;
-                    document.getElementById("userAvatar").src = base64Image;
-                    localStorage.setItem("usuarioFoto", base64Image);
-                };
-                reader.readAsDataURL(file);
-            }
         }
 
         function verificarMaioridade() {
@@ -351,7 +373,6 @@
 
         document.getElementById("nascimentoInput").addEventListener("change", verificarMaioridade);
 
-        // Salva TUDO no banco de dados PostgreSQL do Render via PATCH /users/:id
         async function salvarPerfil(event) {
             event.preventDefault();
 
@@ -402,7 +423,7 @@
                 document.getElementById("profileName").textContent = resultado.username;
                 verificarMaioridade();
 
-                alert("✨ Dados cadastrais e endereço salvos com sucesso no PostgreSQL!");
+                alert("✨ Dados cadastrais, endereço e perfil salvos com sucesso no PostgreSQL!");
 
             } catch (erro) {
                 console.error("Erro ao salvar no banco:", erro);
