@@ -208,6 +208,9 @@
         const API_URL = "https://lpv-api.onrender.com";
 
         document.addEventListener("DOMContentLoaded", function () {
+            // Acorda a API no Render em segundo plano assim que o usuário acessa o site
+            fetch(`${API_URL}/users`).catch(() => {});
+
             atualizarHeaderAuth();
             atualizarContadorCarrinho();
             carregarDestaquesCatalogo();
