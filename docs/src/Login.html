@@ -82,12 +82,7 @@
                     const senha = document.getElementById("loginSenha").value;
 
                     try {
-<<<<<<< HEAD
-                        // Conecta diretamente à API Rails local rodando PostgreSQL
                         const resposta = await fetch("http://localhost:3000/users/login", {
-=======
-                        const resposta = await fetch("https://lpv-api.onrender.com/users/login", {
->>>>>>> c061b7dcad7818cbfce92e468d0ed7d432534031
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json"
@@ -103,8 +98,6 @@
                         if (resposta.ok) {
                             const user = dados.user || {};
                             
-<<<<<<< HEAD
-                            // Registra o perfil e a verificação de Administrador
                             localStorage.setItem("usuario", JSON.stringify(user));
                             localStorage.setItem("logado", "true");
                             localStorage.setItem("usuarioId", user.id);
@@ -112,20 +105,11 @@
                             localStorage.setItem("usuarioNome", user.username || user.nome || "Usuário");
                             localStorage.setItem("usuarioEmail", user.email || email);
                             localStorage.setItem("isAdmin", user.admin ? "true" : "false");
-=======
-                            // Salva todas as chaves de controle para garantir sincronia entre abas
-                            localStorage.setItem("usuario", JSON.stringify(user));
-                            localStorage.setItem("logado", "true");
-                            localStorage.setItem("usuarioLogado", user.username || email);
-                            localStorage.setItem("usuarioNome", user.username || user.nome || "Usuário");
-                            localStorage.setItem("usuarioEmail", user.email || email);
->>>>>>> c061b7dcad7818cbfce92e468d0ed7d432534031
 
                             if (dados.token) {
                                 localStorage.setItem("token", dados.token);
                             }
 
-<<<<<<< HEAD
                             if (user.admin) {
                                 alert("👑 Bem-vindo, Administrador!");
                             } else {
@@ -135,21 +119,11 @@
                             window.location.href = "../index.html";
                         } else {
                             alert("❌ " + (dados.error || "E-mail ou senha incorretos."));
-=======
-                            alert("✅ Login realizado com sucesso!");
-                            window.location.href = "../index.html";
-                        } else {
-                            alert("❌ E-mail ou senha incorretos.");
->>>>>>> c061b7dcad7818cbfce92e468d0ed7d432534031
                         }
 
                     } catch (erro) {
                         console.error(erro);
-<<<<<<< HEAD
                         alert("❌ Não foi possível conectar com a API local. Verifique se 'bundle exec rails server' está ativo.");
-=======
-                        alert("❌ Não foi possível conectar com a API.");
->>>>>>> c061b7dcad7818cbfce92e468d0ed7d432534031
                     }
                 }
 
