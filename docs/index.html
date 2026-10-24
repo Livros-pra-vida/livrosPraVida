@@ -106,7 +106,7 @@
         <!-- SEÇÃO 1: DESTAQUES DO CATÁLOGO DA LOJA -->
         <section class="section" id="destaques">
             <div class="section-title">
-                <h2>📚 Destaques do Catálogo Oficial</h2>
+                <h2>Destaques do Catálogo Oficial</h2>
                 <p>Seleção dos livros mais vendidos da livraria.</p>
             </div>
 
@@ -118,8 +118,8 @@
         <!-- SEÇÃO 2: MARKETPLACE P2P -->
         <section class="section" style="background: #faf8f5; padding: 35px 5%; border-radius: 8px; margin: 30px 0;">
             <div class="section-title">
-                <h2>🔄 Destaques da Comunidade (Comprar & Trocar P2P)</h2>
-                <p>Livros seminovos anunciados por outros leitores com taxa de 5% da plataforma inclusa.</p>
+                <h2>Destaques da Comunidade (Comprar & Trocar P2P)</h2>
+                <p>Livros seminovos anunciados por outros leitores com taxa de comissão da plataforma inclusa.</p>
             </div>
 
             <div class="books" id="containerDestaquesP2P">
@@ -134,8 +134,8 @@
             </div>
 
             <div class="benefit">
-                <h3>Comissão Justa (5%)</h3>
-                <p>A taxa P2P mais baixa do mercado literário</p>
+                <h3>Comissão Transparente (5%)</h3>
+                <p>A taxa P2P mais justa do mercado literário</p>
             </div>
 
             <div class="benefit">
@@ -147,7 +147,7 @@
         <!-- SEÇÃO 3: NOVIDADES LITERÁRIAS -->
         <section class="section section-novidades" id="novidades">
             <div class="section-title">
-                <h2>📰 Últimas Novidades & Matérias</h2>
+                <h2>Últimas Novidades & Matérias</h2>
                 <p>Clique em qualquer matéria para ler a notícia no site da fonte original.</p>
             </div>
 
@@ -158,7 +158,7 @@
 
         <section class="newsletter" id="newsletter">
             <h2>Receba novidades por e-mail</h2>
-            <form onsubmit="event.preventDefault(); alert('🎉 Inscrição realizada com sucesso!');">
+            <form onsubmit="event.preventDefault(); alert('Inscrição realizada com sucesso!');">
                 <input type="email" placeholder="seu@email.com.br" required>
                 <button type="submit">ASSINAR GRÁTIS</button>
             </form>
@@ -292,10 +292,10 @@
                         article.innerHTML = `
                             <img src="${item.image_url || 'imagens/icone.png'}" style="height: 200px; object-fit: cover; border-radius: 6px;">
                             <h3 style="font-size: 0.95rem; margin-top: 8px;">${item.title}</h3>
-                            <p style="font-size: 0.8rem; color: #6e655f;">Vendedor: 👤 <strong>${item.username || 'Anônimo'}</strong></p>
+                            <p style="font-size: 0.8rem; color: #6e655f;">Vendedor: <strong>${item.username || 'Anônimo'}</strong></p>
                             <strong style="color: #8c533e; font-size: 1.1rem;">${precoFormatado}</strong>
                             <small style="display: block; font-size: 0.7rem; color: #27ae60; margin: 4px 0 8px 0;">
-                                💡 (Taxa da loja 5%: ${taxaFormatada} | Vendedor recebe: ${liquidoFormatado})
+                                Taxa da plataforma (5%): ${taxaFormatada} | Líquido Vendedor: ${liquidoFormatado}
                             </small>
                             <a href="src/ComprarTrocar.html" class="button" style="display: block; text-align: center; text-decoration: none; padding: 8px; font-size: 0.8rem;">
                                 Negociar na Comunidade
@@ -334,10 +334,10 @@
                             <a href="${linkDestino}" target="_blank" style="text-decoration: none; color: inherit; display: block;">
                                 <img src="${item.image_url || 'imagens/pratileira.jpg'}" style="width: 100%; height: 160px; object-fit: cover;">
                                 <div style="padding: 15px;">
-                                    <span style="font-size: 0.7rem; color: #8c533e; font-weight: bold; text-transform: uppercase;">🔗 ${item.source || 'Portal Literário'}</span>
+                                    <span style="font-size: 0.7rem; color: #8c533e; font-weight: bold; text-transform: uppercase;">Portal: ${item.source || 'Literário'}</span>
                                     <h3 style="margin: 6px 0; font-size: 1rem; color: #2d251e;">${item.title}</h3>
                                     <p style="font-size: 0.8rem; color: #6e655f; margin-bottom: 10px;">${item.description}</p>
-                                    <span style="font-size: 0.8rem; color: #8c533e; font-weight: bold;">Ler matéria original ↗</span>
+                                    <span style="font-size: 0.8rem; color: #8c533e; font-weight: bold;">Ler matéria original &rarr;</span>
                                 </div>
                             </a>
                         `;
@@ -354,7 +354,7 @@
             carrinho.push({ titulo: titulo, preco: preco, imagem: imagem });
             localStorage.setItem("carrinhoLivros", JSON.stringify(carrinho));
             atualizarContadorCarrinho();
-            alert(`🛒 "${titulo}" foi adicionado ao seu carrinho!`);
+            alert(`O livro "${titulo}" foi adicionado ao seu carrinho.`);
         }
 
         function atualizarContadorCarrinho() {
