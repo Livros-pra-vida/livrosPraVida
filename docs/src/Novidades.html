@@ -54,7 +54,7 @@
                 <input type="url" id="linkNoticia" placeholder="Link original da notícia (ex: https://site.com/noticia)..." required style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
                 <input type="text" id="imagemNoticia" placeholder="URL da Imagem da Notícia (opcional)..." style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
                 <textarea id="descNoticia" placeholder="Descrição resumida da matéria..." required style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; height: 70px;"></textarea>
-                <button type="submit" style="background: #8c533e; color: #fff; border: none; padding: 10px; border-radius: 4px; font-weight: bold; cursor: pointer; align-self: flex-start;">➕ Publicar Notícia no Banco de Dados</button>
+                <button type="submit" id="btnPublicarNoticia" style="background: #8c533e; color: #fff; border: none; padding: 10px; border-radius: 4px; font-weight: bold; cursor: pointer; align-self: flex-start;">➕ Publicar Notícia no Banco de Dados</button>
             </form>
         </div>
 
@@ -67,7 +67,7 @@
     </main>
 
     <script>
-        const API_URL = "http://localhost:3000";
+        const API_URL = "https://lpv-api.onrender.com";
 
         document.addEventListener("DOMContentLoaded", function () {
             verificarAutenticacao();
@@ -148,13 +148,11 @@
 
         async function alternarDestaqueNoticia(idNoticia, novoStatus, event) {
             if (event) event.stopPropagation();
-            const token = localStorage.getItem("token");
 
             try {
                 const response = await fetch(`${API_URL}/news/${idNoticia}`, {
                     method: 'PUT',
                     headers: {
-                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ news: { featured: novoStatus } })
@@ -164,7 +162,7 @@
                     alert(novoStatus ? "⭐ Notícia destacada com sucesso na Página Inicial!" : "Notícia removida dos destaques da Home.");
                     carregarNoticiasDoBanco();
                 } else {
-                    alert("Apenas administradores podem gerenciar os destaques.");
+                    alert("Não foi possível alterar o destaque da notícia.");
                 }
             } catch (e) {
                 alert("Erro ao alterar destaque.");
@@ -173,19 +171,21 @@
 
         async function publicarNoticiaAdmin(event) {
             event.preventDefault();
-            const token = localStorage.getItem("token");
 
+            const btn = document.getElementById("btnPublicarNoticia");
             const titulo = document.getElementById("tituloNoticia").value;
             const fonte = document.getElementById("fonteNoticia").value;
             const link = document.getElementById("linkNoticia").value;
             const imagem = document.getElementById("imagemNoticia").value;
             const desc = document.getElementById("descNoticia").value;
 
+            btn.disabled = true;
+            btn.innerText = "Publicando no PostgreSQL...";
+
             try {
                 const response = await fetch(`${API_URL}/news`, {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
@@ -204,22 +204,23 @@
                     document.getElementById("formNovaNoticia").reset();
                     carregarNoticiasDoBanco();
                 } else {
-                    alert("Apenas administradores podem publicar notícias.");
+                    alert("Erro ao publicar notícia no banco de dados.");
                 }
             } catch (e) {
                 alert("Erro ao conectar com a API.");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "➕ Publicar Notícia no Banco de Dados";
             }
         }
 
         async function excluirNoticia(id, event) {
             if (event) event.stopPropagation();
             if (!confirm("Deseja remover esta notícia do banco de dados?")) return;
-            const token = localStorage.getItem("token");
 
             try {
                 const response = await fetch(`${API_URL}/news/${id}`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${token}` }
+                    method: 'DELETE'
                 });
 
                 if (response.ok) {

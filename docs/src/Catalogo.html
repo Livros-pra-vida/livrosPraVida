@@ -74,7 +74,7 @@
                 <input type="number" step="0.01" id="adminPreco" placeholder="Preço R$ (ex: 39.90)..." required style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
                 <input type="text" id="adminImagem" placeholder="URL da Capa do Livro..." style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; grid-column: span 2;">
                 <textarea id="adminSinopse" placeholder="Sinopse do Livro..." required style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; grid-column: 1 / -1; height: 60px;"></textarea>
-                <button type="submit" style="background: #8c533e; color: #fff; border: none; padding: 10px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; grid-column: 1 / -1;">➕ Salvar Livro no Acervo PostgreSQL</button>
+                <button type="submit" id="btnSalvarLivro" style="background: #8c533e; color: #fff; border: none; padding: 10px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; grid-column: 1 / -1;">➕ Salvar Livro no Acervo PostgreSQL</button>
             </form>
         </div>
 
@@ -159,7 +159,7 @@
     </div>
 
     <script>
-        const API_URL = "http://localhost:3000";
+        const API_URL = "https://lpv-api.onrender.com";
 
         let acervoLivros = [];
         let generoAtual = "Todos";
@@ -355,13 +355,11 @@
 
         async function alternarDestaqueCatalogoAdmin(idLivro, novoStatus, event) {
             if (event) event.stopPropagation();
-            const token = localStorage.getItem("token");
 
             try {
                 const response = await fetch(`${API_URL}/books/${idLivro}`, {
                     method: 'PUT',
                     headers: {
-                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ book: { featured: novoStatus } })
@@ -381,8 +379,8 @@
 
         async function cadastrarLivroCatalogoAdmin(event) {
             event.preventDefault();
-            const token = localStorage.getItem("token");
 
+            const btn = document.getElementById("btnSalvarLivro");
             const titulo = document.getElementById("adminTitulo").value;
             const autor = document.getElementById("adminAutor").value;
             const genero = document.getElementById("adminGenero").value;
@@ -390,11 +388,13 @@
             const imagem = document.getElementById("adminImagem").value;
             const sinopse = document.getElementById("adminSinopse").value;
 
+            btn.disabled = true;
+            btn.innerText = "Salvando no PostgreSQL...";
+
             try {
                 const response = await fetch(`${API_URL}/books`, {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
@@ -411,7 +411,7 @@
                 });
 
                 if (response.ok) {
-                    alert("✨ Novo livro cadastrado no acervo PostgreSQL do Catálogo!");
+                    alert("✨ Novo livro cadastrado com sucesso no acervo PostgreSQL!");
                     document.getElementById("formNovoLivroCatalogo").reset();
                     carregarLivrosDoBanco();
                 } else {
@@ -419,7 +419,11 @@
                     alert("⚠️ " + (erroData.error || (erroData.errors ? erroData.errors.join(", ") : "Erro ao cadastrar livro.")));
                 }
             } catch (e) {
+                console.error("Erro ao cadastrar livro:", e);
                 alert("Erro de conexão com o servidor Rails.");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "➕ Salvar Livro no Acervo PostgreSQL";
             }
         }
 
@@ -427,12 +431,9 @@
             if (event) event.stopPropagation();
             if (!confirm("Tem certeza que deseja remover este livro do acervo oficial?")) return;
 
-            const token = localStorage.getItem("token");
-
             try {
                 const response = await fetch(`${API_URL}/books/${idLivro}`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${token}` }
+                    method: 'DELETE'
                 });
 
                 if (response.ok) {
@@ -467,14 +468,6 @@
         function filtrarPorTexto(texto) {
             textoBuscaAtual = texto;
             renderizarLivros();
-        }
-
-        function limparFiltros() {
-            generoAtual = "Todos";
-            textoBuscaAtual = "";
-            document.getElementById("inputBuscaHeader").value = "";
-            const primeiroBotao = document.querySelector(".filter-btn");
-            if (primeiroBotao) filtrarPorGenero('Todos', primeiroBotao);
         }
 
         function abrirModalDetalhes(idLivro) {
