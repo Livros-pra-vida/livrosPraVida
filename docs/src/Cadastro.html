@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criar Conta - Livros pra Vida</title>
+    <title>Criar conta - Livros pra Vida</title>
 
     <link rel="icon" type="image/png" href="../imagens/icone.png">
     <link rel="stylesheet" href="../css/StyleCadLog.css">
@@ -42,15 +42,30 @@
                 </label>
 
                 <label>
+                    Data de Nascimento
+                    <input type="date" id="birthdate">
+                </label>
+
+                <label>
                     CPF (somente números)
                     <input type="text" id="cpf" required maxlength="11" placeholder="00000000000">
+                </label>
+
+                <label>
+                    Telefone (com DDD, somente números)
+                    <input type="tel" id="phone" placeholder="00000000000">
                 </label>
 
                 <label>
                     Senha
                     <div class="password">
                         <input type="password" id="senha" required placeholder="Crie uma senha segura">
-                        <button type="button" onclick="alternarSenha('senha')">👁️</button>
+                        <button type="button" onclick="alternarSenha('senha')" aria-label="Mostrar/Ocultar Senha">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
                     </div>
                 </label>
 
@@ -58,7 +73,12 @@
                     Confirmar senha
                     <div class="password">
                         <input type="password" id="confirmarSenha" required placeholder="Repita a senha">
-                        <button type="button" onclick="alternarSenha('confirmarSenha')">👁️</button>
+                        <button type="button" onclick="alternarSenha('confirmarSenha')" aria-label="Mostrar/Ocultar Senha">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
                     </div>
                 </label>
 
@@ -95,7 +115,9 @@
 
             const username = document.getElementById("username").value.trim();
             const email = document.getElementById("email").value.trim();
+            const birthdate = document.getElementById("birthdate").value;
             const cpf = document.getElementById("cpf").value.trim().replace(/\D/g, '');
+            const phone = document.getElementById("phone").value.trim().replace(/\D/g, '');
             const senha = document.getElementById("senha").value;
             const confirmarSenha = document.getElementById("confirmarSenha").value;
             const btnSubmit = document.getElementById("btnSubmit");
@@ -124,8 +146,11 @@
                             username: username,
                             email: email,
                             cpf: cpf,
+                            phone: phone,
+                            birthdate: birthdate,
                             password: senha,
-                            password_confirmation: confirmarSenha
+                            password_confirmation: confirmarSenha,
+                            admin: false
                         }
                     })
                 });
