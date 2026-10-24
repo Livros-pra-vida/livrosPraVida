@@ -18,46 +18,44 @@
 
 <body>
 
-    <header class="header-padrao" style="flex-direction: column; align-items: stretch; gap: 12px; padding: 15px 5%;">
+    <header style="display: flex; flex-direction: column; background: #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.06); position: sticky; top: 0; z-index: 100; width: 100%; padding: 12px 16px; gap: 12px;">
         
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-            <a href="../index.html" class="logo-link" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #2d251e; font-weight: 700; font-size: 1.1rem;">
-                <img src="../imagens/icone.png" alt="Logo Livros pra Vida" class="logo-img" style="height: 36px; width: auto; object-fit: contain;">
+            <a href="../index.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #2d251e; font-weight: 700; font-size: 1.15rem;">
+                <img src="../imagens/icone.png" alt="Logo Livros pra Vida" style="width: 32px; height: 32px; border-radius: 6px; object-fit: cover;">
                 <span>Livros pra Vida</span>
             </a>
 
-            <div class="auth-carrinho-area" style="display: flex; align-items: center; gap: 16px;">
-                <a href="Carrinho.html" title="Ver Carrinho" class="carrinho-link" style="position: relative; color: #2d251e; display: flex; align-items: center; text-decoration: none;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <a href="Carrinho.html" title="Ver Carrinho" style="position: relative; color: #2d251e; display: flex; align-items: center; text-decoration: none;">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="9" cy="21" r="1"></circle>
                         <circle cx="20" cy="21" r="1"></circle>
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                     </svg>
-                    <span id="contadorCarrinhoHeader" class="carrinho-contador" style="position: absolute; top: -4px; right: -6px; background-color: #8c533e; color: #fff; font-size: 0.7rem; font-weight: 700; padding: 2px 6px; border-radius: 10px; display: none;">0</span>
+                    <span id="contadorCarrinhoHeader" style="position: absolute; top: -4px; right: -6px; background-color: #8c533e; color: #fff; font-size: 0.65rem; font-weight: 700; padding: 2px 5px; border-radius: 10px; display: none;">0</span>
                 </a>
 
-                <a href="Login.html" id="entrar" class="btn-entrar" style="text-decoration: none; color: #2d251e; font-size: 0.85rem; font-weight: 500;">Entrar</a>
-                <a href="Cadastro.html" class="btn-cadastrar" id="cadastrar" style="text-decoration: none; background-color: #8c533e; color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">Cadastrar</a>
-
-                <a href="MeuPerfil.html" id="meuPerfil" class="perfil-link" style="display: none; align-items: center;" title="Meu Perfil">
-                    <img id="menuAvatar" src="../imagens/Background.png" alt="Avatar" class="perfil-avatar" style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #8c533e;">
-                </a>
-                <a href="#" id="sair" onclick="sair(event)" class="btn-sair" style="display: none; text-decoration: none; color: #6e655f; font-size: 0.85rem; font-weight: 500;">Sair</a>
+                <div id="areaAuthHeader" style="display: flex; align-items: center; gap: 8px;"></div>
             </div>
         </div>
 
-        <nav class="nav-links" style="display: flex; justify-content: center; align-items: center; gap: 24px; width: 100%;">
-            <a href="Catalogo.html" class="nav-item" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.9rem;">Catálogo</a>
-            <a href="ComprarTrocar.html" class="nav-item active" style="text-decoration: none; color: #8c533e; font-weight: 700; font-size: 0.9rem;">Comprar & Trocar</a>
-            <a href="Novidades.html" class="nav-item" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.9rem;">Novidades</a>
-            <a href="Chat.html" class="nav-item" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.9rem;">Chat & Comunidade</a>
-            <a href="SobreNos.html" class="nav-item" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.9rem;">Sobre Nós</a>
+        <div style="width: 100%;">
+            <input type="text" id="inputBuscaP2P" placeholder="Buscar título ou autor na comunidade..." style="width: 100%; padding: 8px 14px; border: 1px solid #e0d7cd; border-radius: 20px; font-size: 0.85rem; outline: none; background-color: #faf8f5; text-align: center;" oninput="filtrarAnuncios(this.value)">
+        </div>
+
+        <nav style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px 16px; width: 100%; padding-top: 2px;">
+            <a href="Catalogo.html" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.88rem;">Catálogo</a>
+            <a href="ComprarTrocar.html" style="text-decoration: none; color: #8c533e; font-weight: 700; font-size: 0.88rem;">Comprar & Trocar</a>
+            <a href="Novidades.html" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.88rem;">Novidades</a>
+            <a href="Chat.html" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.88rem;">Chat & Comunidade</a>
+            <a href="SobreNos.html" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.88rem;">Sobre Nós</a>
         </nav>
 
     </header>
 
     <main style="max-width: 1200px; margin: 30px auto; padding: 0 20px;">
-        <!-- BANNER EXCLUSIVO DE ADMINISTRADOR -->
+        <!-- PAINEL EXCLUSIVO DE ADMINISTRADOR -->
         <div id="painelAdminHeader" style="display: none; background: #2c3e50; color: #fff; padding: 15px 20px; border-radius: 8px; margin-bottom: 25px; justify-content: space-between; align-items: center;">
             <div>
                 <h3 style="margin: 0; font-size: 1.1rem; color: #f1c40f;">👑 Painel de Controle do Administrador</h3>
@@ -118,17 +116,25 @@
         const API_URL = "https://lpv-api.onrender.com";
         let listaAnuncios = [];
         let listaFavoritosIds = [];
+        let textoBuscaP2P = "";
+        let carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
 
         function estaLogado() {
-            return localStorage.getItem("logado") === "true";
+            return localStorage.getItem("logado") === "true" || !!localStorage.getItem("usuario");
         }
 
         function ehAdmin() {
-            return localStorage.getItem("isAdmin") === "true";
+            try {
+                const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+                return usuario.admin === true || localStorage.getItem("isAdmin") === "true";
+            } catch (e) {
+                return false;
+            }
         }
 
         document.addEventListener("DOMContentLoaded", async function () {
-            verificarAutenticacaoHeader();
+            atualizarCabecalhoAuth();
+            atualizarContadorCarrinho();
             if (estaLogado()) {
                 await carregarFavoritosUsuario();
             }
@@ -139,6 +145,45 @@
                 if (painel) painel.style.display = "flex";
             }
         });
+
+        function atualizarCabecalhoAuth() {
+            const areaAuth = document.getElementById("areaAuthHeader");
+            const fotoSalva = localStorage.getItem("usuarioFoto") || "../imagens/Background.png";
+
+            if (!areaAuth) return;
+
+            if (estaLogado()) {
+                areaAuth.innerHTML = `
+                    <a href="#" onclick="realizarLogout(event)" style="text-decoration: none; color: #6e655f; font-size: 0.85rem; font-weight: 500;">Sair</a>
+                    <a href="MeuPerfil.html" title="Meu Perfil">
+                        <img src="${fotoSalva}" alt="Foto do Perfil" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid #8c533e;">
+                    </a>
+                `;
+            } else {
+                areaAuth.innerHTML = `
+                    <a href="Login.html" style="text-decoration: none; color: #8c533e; font-size: 0.85rem; font-weight: 600; padding: 4px 8px;">Entrar</a>
+                    <a href="Cadastro.html" style="text-decoration: none; background-color: #8c533e; color: #fff; padding: 5px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">Cadastrar</a>
+                `;
+            }
+        }
+
+        function realizarLogout(e) {
+            if (e) e.preventDefault();
+            localStorage.clear();
+            window.location.href = "../index.html";
+        }
+
+        function atualizarContadorCarrinho() {
+            const contador = document.getElementById("contadorCarrinhoHeader");
+            if (!contador) return;
+
+            if (carrinho.length > 0) {
+                contador.innerText = carrinho.length;
+                contador.style.display = "inline-block";
+            } else {
+                contador.style.display = "none";
+            }
+        }
 
         function atualizarSimulacaoTaxa(valor) {
             const precoVal = parseFloat(valor) || 0;
@@ -170,7 +215,7 @@
                 const response = await fetch(`${API_URL}/book_listings`);
                 if (response.ok) {
                     const dados = await response.json();
-                    listaAnuncios = dados;
+                    listaAnuncios = Array.isArray(dados) ? dados : [];
                     renderizarAnuncios();
                 }
             } catch (error) {
@@ -178,20 +223,32 @@
             }
         }
 
+        function filtrarAnuncios(texto) {
+            textoBuscaP2P = texto;
+            renderizarAnuncios();
+        }
+
         function renderizarAnuncios() {
             const grid = document.getElementById("gridAnuncios");
             if (!grid) return;
             grid.innerHTML = "";
 
-            if (listaAnuncios.length === 0) {
-                grid.innerHTML = `<p style="text-align: center; color: #6e655f; padding: 30px; grid-column: 1/-1;">Nenhum livro anunciado até o momento.</p>`;
+            const anunciosFiltrados = listaAnuncios.filter(item => {
+                const titulo = (item.title || "").toLowerCase();
+                const autor = (item.author || "").toLowerCase();
+                const termo = textoBuscaP2P.toLowerCase();
+                return titulo.includes(termo) || autor.includes(termo);
+            });
+
+            if (anunciosFiltrados.length === 0) {
+                grid.innerHTML = `<p style="text-align: center; color: #6e655f; padding: 30px; grid-column: 1/-1;">Nenhum livro anunciado encontrado.</p>`;
                 return;
             }
 
             const usuarioIdLogado = localStorage.getItem("usuarioId");
             const souAdmin = ehAdmin();
 
-            listaAnuncios.forEach(item => {
+            anunciosFiltrados.forEach(item => {
                 const card = document.createElement("article");
                 card.className = "book";
                 card.style.background = "#fff";
@@ -208,6 +265,10 @@
 
                 const precoVal = parseFloat(item.price || 0);
                 const comissao = precoVal * 0.05;
+
+                const capaUrl = (item.image_url && item.image_url.trim() !== "") 
+                    ? item.image_url 
+                    : 'https://covers.openlibrary.org/b/id/12645114-L.jpg';
 
                 let painelAdminControle = "";
                 if (souAdmin) {
@@ -230,21 +291,36 @@
                 }
 
                 card.innerHTML = `
-                    <img src="${item.image_url || 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=400&q=80'}" style="width: 100%; height: 220px; object-fit: cover; border-radius: 6px; margin-bottom: 10px;">
+                    <img src="${capaUrl}" onerror="this.src='https://covers.openlibrary.org/b/id/12645114-L.jpg'" style="width: 100%; height: 220px; object-fit: cover; border-radius: 6px; margin-bottom: 10px;">
                     <h3 style="font-size: 1rem; color: #2d251e; margin: 0 0 6px 0;">${item.title}</h3>
-                    <p style="font-size: 0.85rem; color: #6e655f; margin: 0 0 4px 0;">Autor: <strong>${item.author}</strong></p>
+                    <p style="font-size: 0.85rem; color: #6e655f; margin: 0 0 4px 0;">Autor: <strong>${item.author || 'Desconhecido'}</strong></p>
                     <p style="font-size: 0.85rem; color: #8c533e; margin: 0 0 2px 0; font-weight: bold;">R$ ${precoVal.toFixed(2)}</p>
                     <small style="font-size: 0.7rem; color: #27ae60; margin-bottom: 6px; font-weight: 600;">(Comissão 5%: R$ ${comissao.toFixed(2)})</small>
-                    <p style="font-size: 0.8rem; color: #6e655f; margin: 0 0 10px 0;">Anunciado por: 👤 <strong>${item.username || 'Anônimo'}</strong></p>
+                    <p style="font-size: 0.8rem; color: #6e655f; margin: 0 0 10px 0;">Anunciado por: 👤 <strong>${item.username || 'admin'}</strong></p>
                     
-                    <button onclick="alternarFavorito(${item.id}, this)" class="${estaFavoritado ? 'favoritado' : ''}" style="background: ${estaFavoritado ? '#e74c3c' : '#faf8f5'}; color: ${estaFavoritado ? '#fff' : '#2d251e'}; border: 1px solid #e0d7cd; padding: 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; cursor: pointer; margin-top: auto;">
-                        ${estaFavoritado ? '❤️ Favoritado' : '🤍 Favoritar'}
-                    </button>
+                    <div style="display: flex; gap: 6px; margin-top: auto;">
+                        <button onclick="adicionarAnuncioAoCarrinho(${item.id})" style="flex: 2; background: #8c533e; color: #fff; border: none; padding: 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; cursor: pointer;">
+                            🛒 Comprar
+                        </button>
+                        <button onclick="alternarFavorito(${item.id}, this)" class="${estaFavoritado ? 'favoritado' : ''}" style="flex: 1; background: ${estaFavoritado ? '#e74c3c' : '#faf8f5'}; color: ${estaFavoritado ? '#fff' : '#2d251e'}; border: 1px solid #e0d7cd; padding: 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; cursor: pointer;">
+                            ${estaFavoritado ? '❤️' : '🤍'}
+                        </button>
+                    </div>
 
                     ${painelAdminControle}
                 `;
                 grid.appendChild(card);
             });
+        }
+
+        function adicionarAnuncioAoCarrinho(idAnuncio) {
+            const item = listaAnuncios.find(l => l.id === idAnuncio);
+            if (!item) return;
+
+            carrinho.push(item);
+            localStorage.setItem("carrinhoLivros", JSON.stringify(carrinho));
+            atualizarContadorCarrinho();
+            alert(`🛒 "${item.title}" foi adicionado ao seu carrinho!`);
         }
 
         async function alternarDestaqueP2PAdmin(idAnuncio, novoStatus, event) {
@@ -293,7 +369,7 @@
                         botaoElemento.classList.remove("favoritado");
                         botaoElemento.style.background = "#faf8f5";
                         botaoElemento.style.color = "#2d251e";
-                        botaoElemento.innerHTML = "🤍 Favoritar";
+                        botaoElemento.innerHTML = "🤍";
                         listaFavoritosIds = listaFavoritosIds.filter(id => id !== idAnuncio);
                     }
                 } else {
@@ -310,7 +386,7 @@
                         botaoElemento.classList.add("favoritado");
                         botaoElemento.style.background = "#e74c3c";
                         botaoElemento.style.color = "#fff";
-                        botaoElemento.innerHTML = "❤️ Favoritado";
+                        botaoElemento.innerHTML = "❤️";
                         listaFavoritosIds.push(idAnuncio);
                     }
                 }
@@ -421,26 +497,6 @@
             link.click();
 
             alert("📊 Relatório gerado e baixado com sucesso!");
-        }
-
-        function verificarAutenticacaoHeader() {
-            const elEntrar = document.getElementById("entrar");
-            const elCadastrar = document.getElementById("cadastrar");
-            const elPerfil = document.getElementById("meuPerfil");
-            const elSair = document.getElementById("sair");
-
-            if (estaLogado()) {
-                if (elEntrar) elEntrar.style.display = "none";
-                if (elCadastrar) elCadastrar.style.display = "none";
-                if (elPerfil) elPerfil.style.display = "flex";
-                if (elSair) elSair.style.display = "inline-block";
-            }
-        }
-
-        function sair(e) {
-            if (e) e.preventDefault();
-            localStorage.clear();
-            window.location.href = "../index.html";
         }
     </script>
 </body>
