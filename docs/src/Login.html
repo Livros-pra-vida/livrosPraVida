@@ -4,174 +4,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Livros pra Vida - Entrar</title>
+    <title>Entrar - Livros pra Vida</title>
 
-    <link rel="icon" href="../imagens/icone.png" type="image/png">
+    <link rel="icon" type="image/png" href="../imagens/icone.png">
+    <link rel="stylesheet" href="../css/StyleLogin.css">
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="../css/StyleCadLog.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-    <header>
-        <a href="../index.html">
-            <img src="../imagens/pngHome.png" alt="Logo Livros pra Vida">
+    <div class="login-container">
+        <a href="../index.html" class="logo">
+            <img src="../imagens/icone.png" alt="Logo Livros pra Vida">
+            <span>Livros pra Vida</span>
         </a>
-    </header>
 
-    <main>
-        <section>
-            <div class="title">
-                <h1>Entrar</h1>
-                <p>Precisa criar uma conta? <a href="Cadastro.html">Criar conta</a></p>
+        <h1>Entrar</h1>
+        <p class="subtitle">Precisa criar uma conta? <a href="Cadastro.html">Criar conta</a></p>
+
+        <form id="formLogin" onsubmit="fazerLogin(event)">
+            <div class="form-group">
+                <label for="loginInput">Nome de usuário ou e-mail</label>
+                <input type="text" id="loginInput" required placeholder="Digite seu e-mail ou usuário" autocomplete="username">
             </div>
 
-            <form onsubmit="realizarLogin(event)">
-
-                <label>
-                    Nome de usuário ou e-mail
-                    <input type="text" id="loginUsuario" placeholder="E-mail" required>
-                </label>
-
-                <label>
-                    Senha
-                    <div class="password">
-                        <input type="password" id="loginSenha" placeholder="Senha" required>
-                        <button type="button" id="btnOlho" onclick="alternarVisibilidade('loginSenha')">
-                            <svg id="iconeOlho" viewBox="0 0 24 24">
-                                <path
-                                    d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
-                                </path>
-                                <line x1="1" y1="1" x2="23" y2="23"></line>
-                            </svg>
-                        </button>
-                    </div>
-                </label>
-
-                <div class="forgot-password-container">
-                    <a href="#" class="forgot-password-link" onclick="esqueciSenha(event)">Esqueceu sua senha?</a>
+            <div class="form-group">
+                <label for="senha">Senha</label>
+                <div class="input-password-wrapper">
+                    <input type="password" id="senha" required placeholder="Digite sua senha" autocomplete="current-password">
+                    <button type="button" class="btn-toggle-password" onclick="alternarVisibilidadeSenha()" aria-label="Mostrar/Ocultar Senha">
+                        👁️
+                    </button>
                 </div>
+            </div>
 
-                <button class="login" type="submit">
-                    Entrar
-                </button>
+            <div class="form-options">
+                <a href="#" class="forgot-password" onclick="alert('Instruções enviadas se o e-mail existir no sistema.')">Esqueceu sua senha?</a>
+            </div>
 
-            </form>
+            <button type="submit" class="btn-submit" id="btnSubmit">Entrar</button>
+        </form>
 
-            <script>
-                function alternarVisibilidade(inputId) {
-                    const campo = document.getElementById(inputId);
-                    const icone = document.getElementById("iconeOlho");
-
-                    if (campo.type === "password") {
-                        campo.type = "text";
-                        icone.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
-                    } else {
-                        campo.type = "password";
-                        icone.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
-                    }
-                }
-
-                async function realizarLogin(event) {
-                    event.preventDefault();
-
-                    const email = document.getElementById("loginUsuario").value.trim();
-                    const senha = document.getElementById("loginSenha").value;
-
-                    try {
-                        const resposta = await fetch("http://localhost:3000/users/login", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify({
-                                email: email,
-                                password: senha
-                            })
-                        });
-
-                        const dados = await resposta.json();
-
-                        if (resposta.ok) {
-                            const user = dados.user || {};
-                            
-                            localStorage.setItem("usuario", JSON.stringify(user));
-                            localStorage.setItem("logado", "true");
-                            localStorage.setItem("usuarioId", user.id);
-                            localStorage.setItem("usuarioLogado", user.username || email);
-                            localStorage.setItem("usuarioNome", user.username || user.nome || "Usuário");
-                            localStorage.setItem("usuarioEmail", user.email || email);
-                            localStorage.setItem("isAdmin", user.admin ? "true" : "false");
-
-                            if (dados.token) {
-                                localStorage.setItem("token", dados.token);
-                            }
-
-                            if (user.admin) {
-                                alert("👑 Bem-vindo, Administrador!");
-                            } else {
-                                alert("✅ Login realizado com sucesso!");
-                            }
-
-                            window.location.href = "../index.html";
-                        } else {
-                            alert("❌ " + (dados.error || "E-mail ou senha incorretos."));
-                        }
-
-                    } catch (erro) {
-                        console.error(erro);
-                        alert("❌ Não foi possível conectar com a API local. Verifique se 'bundle exec rails server' está ativo.");
-                    }
-                }
-
-                function esqueciSenha(event) {
-                    event.preventDefault();
-
-                    const emailCadastrado = localStorage.getItem("usuarioEmail");
-                    const nomeCadastrado = localStorage.getItem("usuarioNome");
-
-                    const emailInformado = prompt("Digite o E-MAIL cadastrado na sua conta para iniciar a recuperação:");
-                    if (!emailInformado) return;
-
-                    if (!emailCadastrado) {
-                        alert("Nenhum cadastro encontrado neste navegador. Por favor, crie uma conta primeiro.");
-                        return;
-                    }
-
-                    if (emailInformado.trim().toLowerCase() !== emailCadastrado.trim().toLowerCase()) {
-                        alert("❌ E-mail não encontrado ou incorreto.");
-                        return;
-                    }
-
-                    const codigoGerado = Math.floor(1000 + Math.random() * 9000).toString();
-                    alert(`📩 [Simulação de E-mail Enviado]\n\nOlá, ${nomeCadastrado || 'Usuário'}!\nEnviamos um código para: ${emailCadastrado}\n\n👉 CÓDIGO DE VERIFICAÇÃO: ${codigoGerado}`);
-
-                    const codigoDigitado = prompt("Digite o código de 4 dígitos enviado:");
-                    if (!codigoDigitado) return;
-
-                    if (codigoDigitado.trim() === codigoGerado) {
-                        const novaSenha = prompt("✅ Código verificado!\n\nDigite a sua NOVA senha:");
-                        if (novaSenha && novaSenha.length >= 4) {
-                            localStorage.setItem("usuarioSenha", novaSenha);
-                            alert("🎉 Senha redefinida com sucesso!");
-                        }
-                    } else {
-                        alert("❌ Código inválido.");
-                    }
-                }
-            </script>
-        </section>
-
-        <footer>
+        <footer class="login-footer">
             <p>"Toda história começa com uma página."</p>
-            <small>© 2026 Livros pra Vida</small>
+            <p>© 2026 Livros pra Vida</p>
         </footer>
+    </div>
 
-    </main>
+    <script>
+        const API_URL = "https://lpv-api.onrender.com";
 
+        function alternarVisibilidadeSenha() {
+            const campo = document.getElementById("senha");
+            campo.type = campo.type === "password" ? "text" : "password";
+        }
+
+        async function fazerLogin(event) {
+            event.preventDefault();
+
+            const loginValue = document.getElementById("loginInput").value.trim();
+            const passwordValue = document.getElementById("senha").value;
+            const btnSubmit = document.getElementById("btnSubmit");
+
+            btnSubmit.disabled = true;
+            btnSubmit.innerText = "Entrando...";
+
+            try {
+                const response = await fetch(`${API_URL}/users/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        login: loginValue,
+                        password: passwordValue
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem("logado", "true");
+                    localStorage.setItem("token", data.token);
+                    localStorage.setItem("usuarioId", data.user.id);
+                    localStorage.setItem("usuarioNome", data.user.username);
+                    localStorage.setItem("usuarioEmail", data.user.email);
+                    localStorage.setItem("isAdmin", data.user.admin ? "true" : "false");
+
+                    if (data.user.avatar_url) {
+                        localStorage.setItem("usuarioFoto", data.user.avatar_url);
+                    }
+
+                    alert(`🎉 Bem-vindo(a) de volta, ${data.user.username}!`);
+                    window.location.href = "../index.html";
+                } else {
+                    alert("❌ Erro ao entrar: " + (data.error || "Usuário ou senha incorretos."));
+                }
+            } catch (error) {
+                console.error("Erro no login:", error);
+                alert("❌ Não foi possível conectar ao servidor no Render. Verifique a API.");
+            } finally {
+                btnSubmit.disabled = false;
+                btnSubmit.innerText = "Entrar";
+            }
+        }
+    </script>
 </body>
 
 </html>
