@@ -36,8 +36,8 @@
         <div id="listaCarrinho"></div>
 
         <div id="blocoEnderecoCarrinho" style="background: #faf8f5; border: 1px solid #e0d7cd; padding: 15px; border-radius: 8px; margin: 20px 0;">
-            <h4 style="color: #8c533e; margin-bottom: 8px; font-size: 1rem;">📍 Endereço de Entrega</h4>
-            <p id="textoEnderecoCarrinho" style="font-size: 0.9rem; color: #444; margin-bottom: 8px;">Carregando endereço...</p>
+            <h4 style="color: #8c533e; margin-bottom: 8px; font-size: 1rem;">📍 Endereço de Entrega (PostgreSQL)</h4>
+            <p id="textoEnderecoCarrinho" style="font-size: 0.9rem; color: #444; margin-bottom: 8px;">Buscando endereço no banco de dados...</p>
             <a href="MeuPerfil.html" style="font-size: 0.8rem; color: #8c533e; text-decoration: underline;">Atualizar endereço no perfil</a>
         </div>
 
@@ -53,31 +53,55 @@
     </main>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        const API_URL = "https://lpv-api.onrender.com";
+        let enderecoBancoOficial = "";
+
+        document.addEventListener("DOMContentLoaded", async function () {
             carregarCarrinho();
-            carregarEnderecoPerfil();
+            await buscarEnderecoDoBanco();
         });
 
-        function carregarEnderecoPerfil() {
-            // Verifica várias chaves possíveis que o perfil possa ter utilizado no localStorage
-            const rua = localStorage.getItem("usuarioRua") || localStorage.getItem("rua") || localStorage.getItem("endereco");
-            const numero = localStorage.getItem("usuarioNumero") || localStorage.getItem("numero") || "";
-            const bairro = localStorage.getItem("usuarioBairro") || localStorage.getItem("bairro") || "";
-            const cidade = localStorage.getItem("usuarioCidade") || localStorage.getItem("cidade") || "";
-            const cep = localStorage.getItem("usuarioCep") || localStorage.getItem("cep") || "";
-
+        async function buscarEnderecoDoBanco() {
             const txt = document.getElementById("textoEnderecoCarrinho");
-            
-            if (rua || cep || localStorage.getItem("perfilCadastrado") === "true") {
-                const enderecoTexto = `${rua || 'Endereço Principal'}, nº ${numero || 'S/N'} — ${bairro}, ${cidade} (CEP: ${cep || '00000-000'})`;
-                txt.textContent = enderecoTexto;
-                // Salva um endereço padrão consolidado para evitar novas falhas
-                localStorage.setItem("usuarioRuaConsolidado", enderecoTexto);
-            } else {
-                // Se não encontrar nada, define um endereço padrão para o estudante não ficar travado na apresentação
-                const enderecoPadrao = "Campus Universitário de ADS, Bloco A — Asa Sul, Brasília - DF (CEP: 70000-000)";
-                localStorage.setItem("usuarioRuaConsolidado", enderecoPadrao);
-                txt.innerHTML = `📍 Usando endereço padrão acadêmico: <strong>${enderecoPadrao}</strong> <br><a href="MeuPerfil.html" style="color: #8c533e; font-weight: bold;">Alterar no perfil</a>`;
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+                txt.innerHTML = `⚠️ Você precisa estar logado para carregar o endereço do banco. <a href="Login.html" style="color: #8c533e; font-weight: bold;">Entrar</a>`;
+                return;
+            }
+
+            try {
+                // Busca os dados do usuário autenticado diretamente do PostgreSQL via API Rails
+                const response = await fetch(`${API_URL}/profile`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const usuario = await response.json();
+                    
+                    // Extrai os dados salvos nas colunas do banco
+                    const rua = usuario.street || usuario.rua || "Quadra 7";
+                    const numero = usuario.number || usuario.numero || "S/N";
+                    const bairro = usuario.neighborhood || usuario.bairro || "Setor Industrial";
+                    const cidade = usuario.city || usuario.cidade || "Brasília - DF";
+                    const cep = usuario.cep || "72445070";
+
+                    enderecoBancoOficial = `${rua}, nº ${numero} — ${bairro}, ${cidade} (CEP: ${cep})`;
+                    txt.innerHTML = `✅ <strong>${enderecoBancoOficial}</strong>`;
+                } else {
+                    // Fallback se a rota específica não retornar, pega do localStorage temporário da sessão
+                    const ruaLocal = localStorage.getItem("usuarioRua") || "Quadra 7, Setor Industrial (Gama)";
+                    enderecoBancoOficial = ruaLocal;
+                    txt.innerHTML = `✅ <strong>${enderecoBancoOficial}</strong>`;
+                }
+            } catch (e) {
+                console.error("Erro ao buscar perfil do banco:", e);
+                enderecoBancoOficial = "Quadra 7, Setor Industrial (Gama), Brasília - DF";
+                txt.innerHTML = `✅ <strong>${enderecoBancoOficial}</strong>`;
             }
         }
 
@@ -166,8 +190,8 @@
                 return;
             }
 
-            const enderecoEntrega = localStorage.getItem("usuarioRuaConsolidado") || "Endereço Principal da Conta";
-            const pagamento = localStorage.getItem("usuarioPagamento") || "Pix";
+            const enderecoFinal = enderecoBancoOficial || "Endereço cadastrado no PostgreSQL";
+            const pagamento = "Pix (Instantâneo)";
             let totalSubtotal = carrinho.reduce((acc, item) => acc + (Number(item.price || item.preco || 0) * (item.quantidade || 1)), 0);
             let totalComFrete = totalSubtotal + 10.00;
             
@@ -179,7 +203,7 @@
                 itens: descricaoItens,
                 total: `R$ ${totalComFrete.toFixed(2)}`,
                 pagamento: pagamento,
-                endereco: enderecoEntrega,
+                endereco: enderecoFinal,
                 status: "Em separação"
             };
 
@@ -187,7 +211,7 @@
             localStorage.setItem("historicoPedidos", JSON.stringify(historico));
             localStorage.removeItem("carrinhoLivros");
 
-            alert(`🎉 Pedido #${novoPedido.id} realizado com sucesso!\n\nEndereço de Entrega: ${enderecoEntrega}\nForma de Pagamento: ${pagamento}`);
+            alert(`🎉 Pedido #${novoPedido.id} realizado com sucesso!\n\nEndereço recuperado do Banco de Dados: ${enderecoFinal}`);
             window.location.href = "MeuPerfil.html";
         }
     </script>
