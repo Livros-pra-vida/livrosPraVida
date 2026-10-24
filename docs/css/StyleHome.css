@@ -10,16 +10,17 @@ body {
     color: #29251f;
     line-height: 1.6;
     overflow-x: hidden;
+    width: 100%;
 }
 
-/* CABEÇALHO */
+/* CABEÇALHO (LARGURA TOTAL) */
 .header {
     height: auto;
     min-height: 80px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 4%;
+    padding: 12px 5%;
     background-color: #fffdf8;
     border-bottom: 1px solid #ddd6ca;
     gap: 15px;
@@ -27,6 +28,7 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
+    width: 100%;
 }
 
 /* LOGO */
@@ -48,9 +50,9 @@ body {
     border-radius: 6px;
 }
 
-/* BARRA DE PESQUISA MAIS LARGA */
+/* BARRA DE PESQUISA */
 .search-box {
-    width: 280px; /* Largura maior para acomodar confortavelmente */
+    width: 320px;
     margin: 0;
 }
 
@@ -60,7 +62,7 @@ body {
     background-color: #faf8f5;
     border: 1px solid #e0d7cd;
     border-radius: 20px;
-    padding: 4px 14px;
+    padding: 6px 16px;
     width: 100%;
 }
 
@@ -68,7 +70,7 @@ body {
     border: none;
     background: transparent;
     outline: none;
-    padding: 6px 4px;
+    padding: 4px 6px;
     width: 100%;
     font-size: 0.85rem;
     color: #333;
@@ -89,7 +91,7 @@ body {
     color: #111;
 }
 
-/* BOTÃO HAMBÚRGUER (TRÊS BARRAS) */
+/* BOTÃO HAMBÚRGUER (MOBILE) */
 #btn-menu {
     background: none;
     border: none;
@@ -110,17 +112,17 @@ body {
     border-radius: 2px;
 }
 
-/* MENU */
+/* MENU PRINCIPAL */
 .menu-principal {
     display: flex;
     align-items: center;
-    gap: 18px;
+    gap: 22px;
 }
 
 .menu-principal a {
     text-decoration: none;
     color: #29251f;
-    font-size: 0.9rem;
+    font-size: 0.92rem;
     font-weight: 500;
     white-space: nowrap;
     transition: color 0.2s ease;
@@ -130,7 +132,7 @@ body {
     color: #9b633c;
 }
 
-/* ÁREA DE CONTA E CARRINHO NO TOPO */
+/* AÇÕES DO CABEÇALHO */
 .header-actions {
     display: flex;
     align-items: center;
@@ -224,7 +226,16 @@ body {
     text-decoration: underline;
 }
 
-/* BANNER */
+/* ESTRUTURA PRINCIPAL FLUIDA (LARGURA TOTAL) */
+main {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* BANNER HERO (PONTA A PONTA) */
 .hero {
     min-height: 480px;
     display: flex;
@@ -233,6 +244,9 @@ body {
     padding: 60px 7%;
     background-color: #f0e9df;
     gap: 40px;
+    width: 100%;
+    border-radius: 0;
+    margin-top: 0;
 }
 
 .hero-content {
@@ -241,24 +255,26 @@ body {
 
 .hero h1 {
     font-family: Georgia, serif;
-    font-size: clamp(36px, 6vw, 64px);
-    line-height: 1.1;
-    margin-bottom: 25px;
+    font-size: clamp(36px, 5vw, 60px);
+    line-height: 1.15;
+    margin-bottom: 20px;
+    color: #29251f;
 }
 
 .hero p {
-    font-size: 18px;
+    font-size: 1.15rem;
     margin-bottom: 30px;
+    color: #555;
 }
 
 .hero-image {
-    width: 40%;
-    max-width: 450px;
+    width: 42%;
+    max-width: 480px;
 }
 
 .hero-image img {
     width: 100%;
-    height: 380px;
+    height: 360px;
     object-fit: cover;
     border-radius: 8px;
     display: block;
@@ -270,7 +286,8 @@ body {
     background-color: #29251f;
     color: white;
     text-decoration: none;
-    border-radius: 4px;
+    border-radius: 6px;
+    font-weight: 600;
     transition: background-color 0.2s ease;
 }
 
@@ -279,9 +296,9 @@ body {
 }
 
 .btn-acao-livro, .btn-acao-novidade {
-    margin-top: 8px;
+    margin-top: auto;
     width: 100%;
-    padding: 8px;
+    padding: 10px;
     background-color: #8c533e;
     color: #fff;
     border: none;
@@ -295,22 +312,26 @@ body {
     background-color: #6b3f2e;
 }
 
+/* CATEGORIAS */
 .categories {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     gap: 12px;
-    padding: 30px 7%;
+    padding: 35px 7%;
     background-color: #fffdf8;
+    width: 100%;
 }
 
 .categories a {
     text-decoration: none;
     color: #29251f;
     border: 1px solid #cfc6b8;
-    padding: 8px 18px;
+    padding: 8px 20px;
     border-radius: 30px;
+    font-size: 0.9rem;
     transition: all 0.2s ease;
+    background: #fff;
 }
 
 .categories a:hover {
@@ -318,292 +339,179 @@ body {
     color: #9b633c;
 }
 
+/* SECÇÕES E GRELHAS DE LIVROS */
 .section {
-    padding: 80px 7%;
+    padding: 60px 7%;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .section-title {
-    margin-bottom: 40px;
+    margin-bottom: 30px;
 }
 
 .section-title h2 {
     font-family: Georgia, serif;
-    font-size: clamp(28px, 4vw, 38px);
+    font-size: clamp(26px, 4vw, 36px);
     margin-bottom: 8px;
+    color: #29251f;
 }
 
 .section-title p {
     color: #716a60;
+    font-size: 1rem;
 }
 
 .books {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 35px;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 30px;
+    width: 100%;
 }
 
 .book {
     background-color: #fffdf8;
     border-radius: 8px;
     overflow: hidden;
-    border: 1px solid #eee;
-    padding: 20px;
+    border: 1px solid #e0d7cd;
+    padding: 18px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
 }
 
 .book img {
     width: 100%;
-    height: 420px;
+    height: 280px;
     object-fit: cover;
     display: block;
-    margin-bottom: 20px;
+    margin-bottom: 14px;
     border-radius: 6px;
 }
 
-.section-novidades {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 60px;
-}
-
-.section-novidades .section-title {
-    width: 30%;
-    margin-bottom: 0;
-}
-
-.novidades-list {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-
-.novidade-item {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 18px 0;
-    border-bottom: 1px solid #e5dfd5;
-    background: transparent;
-}
-
-.novidade-item:first-child {
-    padding-top: 0;
-}
-
-.novidade-item:last-child {
-    border-bottom: none;
-}
-
-.novidade-item img {
-    width: 70px;
-    height: 70px;
-    object-fit: cover;
-    border-radius: 6px;
-    margin-bottom: 0;
-    flex-shrink: 0;
-}
-
-.book-info {
-    flex: 1;
-    min-width: 0;
-}
-
-.book-info h3 {
-    font-size: 16px;
-    font-weight: bold;
+.book h3 {
+    font-size: 1.05rem;
     color: #29251f;
     margin-bottom: 4px;
-    word-break: break-word;
 }
 
-.book-info p {
-    font-size: 14px;
-    color: #c09d75;
-    margin-bottom: 0;
+.book p {
+    font-size: 0.88rem;
+    color: #6e655f;
+    margin-bottom: 8px;
 }
 
-.novidade-item strong {
-    font-size: 16px;
-    color: #29251f;
-    white-space: nowrap;
+.book strong {
+    color: #8c533e;
+    font-size: 1.15rem;
+    margin-bottom: 12px;
 }
 
-.btn-acao-novidade {
-    margin-left: 10px;
-    width: auto;
-    padding: 6px 12px;
-}
-
+/* BENEFÍCIOS & NEWSLETTER FLUIDOS */
 .benefits {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 30px;
     padding: 60px 7%;
     background-color: #29251f;
     color: white;
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box;
 }
 
 .benefit {
     text-align: center;
-    padding: 20px;
+    padding: 10px;
 }
 
 .benefit h3 {
     margin-bottom: 10px;
-    font-size: 20px;
+    font-size: 1.2rem;
+    color: #f0e9df;
 }
 
 .benefit p {
     color: #ddd6ca;
-}
-
-.chat {
-    max-width: 1100px;
-    margin: 80px auto;
-    padding: 50px;
-    background-color: #1B3829;
-    border: 1px solid #ddd6ca;
-    border-radius: 8px;
-}
-
-.chat-header {
-    margin-bottom: 30px;
-    color: #e2ddd5;
-}
-
-.chat-header h2 {
-    font-family: Georgia, serif;
-    font-size: 38px;
-}
-
-.messages {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-bottom: 25px;
-}
-
-.message {
-    border-bottom: 1px solid #e2ddd5;
-    padding-bottom: 15px;
-}
-
-.message-user {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 6px;
-    flex-wrap: wrap;
-}
-
-.avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.message-user strong {
-    font-size: 15px;
-    color: #e2ddd5;
-}
-
-.message-user span {
-    color: #999;
-    font-size: 13px;
-    margin-left: auto;
-}
-
-.message p {
-    color: #e2ddd5;
-    margin-top: 2px;
-    padding-left: 42px;
-}
-
-.chat-input {
-    width: 100%;
-    padding: 15px;
-    border: 1px solid #cfc6b8;
-    border-radius: 4px;
-    font-size: 15px;
-    outline: none;
-    background-color: #fff;
-}
-
-.chat-input:focus {
-    border-color: #9b633c;
+    font-size: 0.9rem;
 }
 
 .newsletter {
     text-align: center;
-    padding: 80px 7%;
+    padding: 70px 7%;
     background-color: #e9e1d5;
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box;
 }
 
 .newsletter h2 {
     font-family: Georgia, serif;
-    font-size: clamp(26px, 4vw, 35px);
+    font-size: clamp(24px, 3.5vw, 32px);
     margin-bottom: 25px;
 }
 
 .newsletter form {
     display: flex;
     justify-content: center;
-    max-width: 600px;
+    max-width: 550px;
     margin: 0 auto 12px;
-    flex-wrap: wrap;
     gap: 0;
 }
 
 .newsletter input {
     flex: 1;
     min-width: 220px;
-    padding: 15px;
+    padding: 14px 18px;
     border: 1px solid #bbb1a2;
-    border-radius: 4px 0 0 4px;
+    border-radius: 6px 0 0 6px;
     outline: none;
 }
 
 .newsletter button {
-    padding: 15px 25px;
+    padding: 14px 24px;
     border: none;
     background-color: #29251f;
     color: white;
     cursor: pointer;
-    border-radius: 0 4px 4px 0;
+    border-radius: 0 6px 6px 0;
+    font-weight: bold;
     transition: background-color 0.2s ease;
 }
 
 .newsletter button:hover {
-    background-color: #9b633c;
+    background-color: #8c533e;
 }
 
 .newsletter p {
     color: #6d665d;
-    font-size: 14px;
+    font-size: 0.88rem;
 }
 
+/* RODAPÉ (LARGURA TOTAL) */
 .footer {
+    width: 100%;
     background-color: #29251f;
     color: white;
     padding: 70px 7% 30px;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 50px;
+    margin-top: 0;
+    box-sizing: border-box;
 }
 
 .footer-brand h2 {
     font-family: Georgia, serif;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
+    font-size: 1.35rem;
 }
 
 .footer-brand p {
     color: #cfc6b8;
-    max-width: 350px;
+    font-size: 0.88rem;
+    line-height: 1.5;
 }
 
 .footer-column {
@@ -613,12 +521,15 @@ body {
 }
 
 .footer-column h3 {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    font-size: 1.05rem;
+    color: #f0e9df;
 }
 
 .footer-column a {
     color: #cfc6b8;
     text-decoration: none;
+    font-size: 0.88rem;
     transition: color 0.2s ease;
 }
 
@@ -627,9 +538,10 @@ body {
 }
 
 .footer-icon {
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
     object-fit: contain;
+    border-radius: 4px;
 }
 
 .footer-bottom {
@@ -643,9 +555,10 @@ body {
     flex-wrap: wrap;
     gap: 10px;
     color: #aaa39a;
-    font-size: 13px;
+    font-size: 0.82rem;
 }
 
+/* POPUP */
 .popup-fundo {
     display: none;
     position: fixed;
@@ -680,7 +593,6 @@ body {
 
 .popup button:hover {
     background-color: #555;
-    transform: translateY(-2px);
 }
 
 /* RESPONSIVIDADE */
@@ -725,10 +637,6 @@ body {
         padding-top: 15px;
     }
 
-    .header {
-        padding: 15px 4%;
-    }
-
     .hero {
         flex-direction: column;
         text-align: center;
@@ -741,26 +649,7 @@ body {
     }
 
     .hero-image img {
-        height: 280px;
-    }
-
-    .section-novidades {
-        flex-direction: column;
-        gap: 30px;
-    }
-
-    .section-novidades .section-title {
-        width: 100%;
-    }
-
-    .chat {
-        margin: 40px 15px;
-        padding: 25px 15px;
-    }
-
-    .message p {
-        padding-left: 0;
-        margin-top: 6px;
+        height: 260px;
     }
 
     .newsletter form {
@@ -769,20 +658,20 @@ body {
     }
 
     .newsletter input {
-        border-radius: 4px;
+        border-radius: 6px;
         width: 100%;
     }
 
     .newsletter button {
         width: 100%;
-        border-radius: 4px;
+        border-radius: 6px;
     }
 }
 
 @media (max-width: 600px) {
     .books {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 14px;
     }
 
     .book img {
@@ -790,6 +679,6 @@ body {
     }
 
     .section {
-        padding: 50px 4%;
+        padding: 40px 5%;
     }
 }
