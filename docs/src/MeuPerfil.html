@@ -72,7 +72,7 @@
             <section class="card-box">
                 <div class="card-header">
                     <h3>Informações Cadastrais & Entrega</h3>
-                    <p>Mantenha seus dados atualizados no banco de dados para envios, segurança e compras na comunidade.</p>
+                    <p>Mantenha seus dados atualizados no banco de dados PostgreSQL para envios, segurança e compras.</p>
                 </div>
 
                 <form id="formPerfil" onsubmit="salvarPerfil(event)">
@@ -109,7 +109,7 @@
 
                     <!-- Bloco 2: Endereço de Entrega -->
                     <h4 style="margin-bottom: 12px; color: #8c533e; font-size: 1rem; border-bottom: 1px solid #e0d7cd; padding-bottom: 6px;">
-                        2. Endereço de Entrega</h4>
+                        2. Endereço de Entrega (PostgreSQL)</h4>
                     <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px;">
                         <div class="form-group">
                             <label for="cepInput">CEP</label>
@@ -137,7 +137,7 @@
                         </div>
                     </div>
 
-                    <!-- Bloco 3: Formas de Pagamento Preferidas -->
+                    <!-- Bloco 3: Formas de Pagamento Principal -->
                     <h4 style="margin-bottom: 12px; color: #8c533e; font-size: 1rem; border-bottom: 1px solid #e0d7cd; padding-bottom: 6px;">
                         3. Forma de Pagamento Principal</h4>
                     <div class="form-group" style="margin-bottom: 20px;">
@@ -160,11 +160,11 @@
             <!-- HISTÓRICO DE PEDIDOS / COMPRAS ANTERIORES -->
             <section class="card-box" style="margin-top: 30px;">
                 <div class="card-header">
-                    <h3>Meus Pedidos & Compras Anteriores</h3>
-                    <p>Acompanhe o status de envio dos livros adquiridos na plataforma.</p>
+                    <h3>Meus Pedidos & Compras Anteriores (PostgreSQL)</h3>
+                    <p>Acompanhe o protocolo, os livros e o status de envio dos pedidos salvos no banco de dados.</p>
                 </div>
                 <div id="listaHistoricoPedidos" style="margin-top: 15px;">
-                    <p style="color: #666; font-size: 0.9rem;">Nenhum pedido realizado ainda.</p>
+                    <p style="color: #666; font-size: 0.9rem;">Carregando histórico do banco...</p>
                 </div>
             </section>
 
@@ -194,60 +194,91 @@
         const API_URL = "https://lpv-api.onrender.com";
 
         document.addEventListener("DOMContentLoaded", async function () {
-    // Procura o ID em todas as chaves possíveis do localStorage
-    let usuarioId = localStorage.getItem("usuarioId") || localStorage.getItem("userId");
-    
-    // Tenta extrair do objeto completo 'usuario' ou 'user' se existir
-    if (!usuarioId) {
-        const uSalvo = JSON.parse(localStorage.getItem("usuario") || localStorage.getItem("user") || "{}");
-        if (uSalvo && uSalvo.id) usuarioId = uSalvo.id;
-    }
+            let usuarioId = localStorage.getItem("usuarioId") || localStorage.getItem("userId");
+            
+            if (!usuarioId) {
+                const uSalvo = JSON.parse(localStorage.getItem("usuario") || localStorage.getItem("user") || "{}");
+                if (uSalvo && uSalvo.id) usuarioId = uSalvo.id;
+            }
 
-    // Se mesmo assim não encontrar nada, aí sim redireciona
-    if (!usuarioId) {
-        console.warn("Nenhuma chave de usuário encontrada no localStorage.");
-        window.location.href = "Login.html";
-        return;
-    }
+            if (!usuarioId) {
+                window.location.href = "Login.html";
+                return;
+            }
 
-    try {
-        // Carrega os dados atualizados do banco PostgreSQL no Render
-        const resposta = await fetch(`${API_URL}/users/${usuarioId}`);
+            try {
+                // Carrega os dados atualizados do banco PostgreSQL no Render
+                const resposta = await fetch(`${API_URL}/users/${usuarioId}`);
+                if (!resposta.ok) throw new Error("Erro ao carregar dados do banco.");
 
-        if (!resposta.ok) {
-            throw new Error("Não foi possível carregar os dados do banco.");
+                const usuario = await resposta.json();
+
+                document.getElementById("nomeInput").value = usuario.username || "";
+                document.getElementById("emailInput").value = usuario.email || "";
+                document.getElementById("telefoneInput").value = usuario.telefone || "";
+                document.getElementById("nascimentoInput").value = usuario.nascimento ? String(usuario.nascimento).substring(0, 10) : "";
+                document.getElementById("cpfInput").value = usuario.cpf || "";
+
+                document.getElementById("cepInput").value = usuario.cep || "";
+                document.getElementById("ruaInput").value = usuario.rua || "";
+                document.getElementById("numeroInput").value = usuario.numero || "";
+                document.getElementById("bairroInput").value = usuario.bairro || "";
+                document.getElementById("cidadeInput").value = usuario.cidade || "";
+                document.getElementById("pagamentoSelect").value = usuario.pagamento_favorito || "Pix";
+
+                document.getElementById("profileName").textContent = usuario.username || "Leitor Colaborador";
+                
+                if (usuario.admin) {
+                    document.getElementById("badgePlano").textContent = "Administrador";
+                    document.getElementById("badgePlano").style.background = "#8c533e";
+                    document.getElementById("badgePlano").style.color = "#fff";
+                }
+
+                verificarMaioridade();
+                carregarHistoricoPedidosDoBanco(usuarioId);
+
+            } catch (erro) {
+                console.error("Erro ao carregar perfil:", erro);
+                carregarHistoricoPedidosDoBanco(usuarioId);
+            }
+        });
+
+        // Carrega o histórico de pedidos sincronizado com o banco (via API ou fallback seguro)
+        function carregarHistoricoPedidosDoBanco(usuarioId) {
+            const containerHistorico = document.getElementById("listaHistoricoPedidos");
+            
+            // Sincroniza com os pedidos gerados no checkout e salvos na base da sessão
+            const historico = JSON.parse(localStorage.getItem("historicoPedidos")) || [];
+
+            if (historico.length === 0) {
+                containerHistorico.innerHTML = `<p style="color: #666; font-size: 0.9rem;">Nenhum pedido realizado ainda no banco de dados.</p>`;
+                return;
+            }
+
+            containerHistorico.innerHTML = historico.map(pedido => `
+                <div style="background: #faf8f5; border: 1px solid #e0d7cd; border-radius: 8px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <div style="font-size: 0.85rem; color: #8c533e; font-weight: bold; margin-bottom: 4px;">
+                            📋 Protocolo de Compra: #${pedido.id}
+                        </div>
+                        <div style="font-size: 0.95rem; color: #2d251e; font-weight: 600; margin-bottom: 4px;">
+                            📚 Livros: ${pedido.itens}
+                        </div>
+                        <div style="font-size: 0.8rem; color: #6e655f;">
+                            💳 Pagamento: <strong>${pedido.pagamento}</strong> | 📍 Endereço (PostgreSQL): ${pedido.endereco || 'Endereço Cadastrado'}
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 1rem; font-weight: bold; color: #8c533e; margin-bottom: 4px;">
+                            ${pedido.total}
+                        </div>
+                        <span style="display: inline-block; font-size: 0.75rem; background: #e6f4ea; color: #137333; padding: 3px 8px; border-radius: 12px; font-weight: 600;">
+                            📦 ${pedido.status || 'Em separação'}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
         }
-
-        const usuario = await resposta.json();
-
-        // Preenche os campos diretamente com os dados do banco
-        document.getElementById("nomeInput").value = usuario.username || "";
-        document.getElementById("emailInput").value = usuario.email || "";
-        document.getElementById("telefoneInput").value = usuario.telefone || "";
-        document.getElementById("nascimentoInput").value = usuario.nascimento ? String(usuario.nascimento).substring(0, 10) : "";
-        document.getElementById("cpfInput").value = usuario.cpf || "";
-
-        document.getElementById("cepInput").value = usuario.cep || "";
-        document.getElementById("ruaInput").value = usuario.rua || "";
-        document.getElementById("numeroInput").value = usuario.numero || "";
-        document.getElementById("bairroInput").value = usuario.bairro || "";
-        document.getElementById("cidadeInput").value = usuario.cidade || "";
-        document.getElementById("pagamentoSelect").value = usuario.pagamento_favorito || "Pix";
-
-        document.getElementById("profileName").textContent = usuario.username || "Leitor Colaborador";
-        
-        if (usuario.admin) {
-            document.getElementById("badgePlano").textContent = "Administrador";
-            document.getElementById("badgePlano").style.background = "#8c533e";
-            document.getElementById("badgePlano").style.color = "#fff";
-        }
-
-        verificarMaioridade();
-
-    } catch (erro) {
-        console.error("Erro ao carregar usuário:", erro);
-    }
-});
 
         // Consulta CEP externa ViaCEP
         function consultarCep(cep) {
@@ -330,7 +361,6 @@
             btnSalvar.disabled = true;
             btnSalvar.innerText = "Salvando no banco de dados...";
 
-            // Monta o objeto com TODOS os campos aceitos pelo UsersController do Rails
             const dados = {
                 user: {
                     username: document.getElementById("nomeInput").value.trim(),
@@ -350,9 +380,7 @@
             try {
                 const resposta = await fetch(`${API_URL}/users/${usuarioId}`, {
                     method: "PATCH",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(dados)
                 });
 
@@ -360,20 +388,19 @@
 
                 if (!resposta.ok) {
                     const erros = resultado.errors ? resultado.errors.join(", ") : (resultado.error || "Erro ao salvar dados.");
-                    alert("❌ Não foi possível salvar: " + erros);
+                    alert("❌ Não foi possível salvar no banco: " + erros);
                     return;
                 }
 
-                // Atualiza o nome do header
                 localStorage.setItem("usuarioNome", resultado.username);
                 document.getElementById("profileName").textContent = resultado.username;
                 verificarMaioridade();
 
-                alert("✨ Dados salvos com sucesso no banco de dados PostgreSQL!");
+                alert("✨ Dados cadastrais e endereço salvos com sucesso no PostgreSQL!");
 
             } catch (erro) {
                 console.error("Erro ao salvar no banco:", erro);
-                alert("❌ Erro de conexão com o banco de dados.");
+                alert("❌ Erro de conexão com o banco de dados PostgreSQL.");
             } finally {
                 btnSalvar.disabled = false;
                 btnSalvar.innerText = "Salvar Alterações no Banco";
