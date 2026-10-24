@@ -8,11 +8,9 @@
 
     <link rel="icon" type="image/png" href="../imagens/icone.png">
     
-    <!-- Estilos Globais e Especificos -->
     <link rel="stylesheet" href="../css/StyleHome.css">
     <link rel="stylesheet" href="../css/StyleCarrinho.css">
 
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -20,7 +18,6 @@
 
 <body>
 
-    <!-- CABEÇALHO COMPLETO -->
     <header class="header-carrinho">
         <a href="../index.html" class="brand-logo">
             <img src="../imagens/icone.png" alt="Logo Livros pra Vida">
@@ -29,17 +26,15 @@
         <nav class="nav-links">
             <a href="../index.html">Home</a>
             <a href="Catalogo.html">Catálogo</a>
+            <a href="ComprarTrocar.html">Comprar & Trocar</a>
         </nav>
     </header>
 
-    <!-- CONTEÚDO PRINCIPAL DO CARRINHO -->
     <main class="carrinho-main">
         <h2 class="carrinho-titulo">Meu Carrinho de Compras</h2>
 
-        <!-- Os itens serão injetados dinamicamente via JS -->
         <div id="listaCarrinho"></div>
 
-        <!-- Bloco de Endereço de Entrega Vinculado ao Perfil -->
         <div id="blocoEnderecoCarrinho" style="background: #faf8f5; border: 1px solid #e0d7cd; padding: 15px; border-radius: 8px; margin: 20px 0;">
             <h4 style="color: #8c533e; margin-bottom: 8px; font-size: 1rem;">📍 Endereço de Entrega (Cadastrado no Perfil)</h4>
             <p id="textoEnderecoCarrinho" style="font-size: 0.9rem; color: #444; margin-bottom: 8px;">Carregando endereço...</p>
@@ -57,7 +52,6 @@
         </div>
     </main>
 
-    <!-- Script com controle de quantidade, tratamento de preço, correção de imagem e persistência -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             carregarCarrinho();
@@ -79,36 +73,31 @@
             }
         }
 
-        // Função auxiliar para ajustar o caminho da imagem caso venha da Home
-        function corrigirCaminhoImagem(caminho) {
-            if (!caminho) return "../imagens/icone.png";
-            
-            if (caminho.startsWith("imagens/")) {
-                return "../" + caminho;
-            }
-            return caminho;
-        }
-
         function carregarCarrinho() {
             const lista = document.getElementById("listaCarrinho");
             let carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
 
-            // Limpa e formata o preço corretamente (remove "R$", espaços e ajusta vírgula para ponto)
+            // Filtra apenas itens válidos que possuem título e preço
             carrinho = carrinho.map(item => {
-                let precoLimpo = item.preco;
-                if (typeof precoLimpo === 'string') {
-                    precoLimpo = precoLimpo.replace('R$', '').replace(/\s/g, '').replace(',', '.');
+                let titulo = item.titulo || item.title;
+                let precoBruto = item.preco !== undefined ? item.preco : item.price;
+                if (typeof precoBruto === 'string') {
+                    precoBruto = precoBruto.replace('R$', '').replace(/\s/g, '').replace(',', '.');
                 }
+                let imagem = item.imagem || item.image_url || "https://covers.openlibrary.org/b/id/12645114-L.jpg";
+
                 return {
-                    ...item,
-                    preco: Number(precoLimpo) || 0,
+                    titulo: titulo || "Livro do Acervo",
+                    preco: Number(precoBruto) || 0,
+                    imagem: imagem,
                     quantidade: item.quantidade || 1
                 };
-            });
+            }).filter(item => item.titulo && item.preco > 0);
+
             localStorage.setItem("carrinhoLivros", JSON.stringify(carrinho));
 
             if (carrinho.length === 0) {
-                lista.innerHTML = `<p style="text-align: center; color: #666; padding: 20px;">Seu carrinho está vazio.</p>`;
+                lista.innerHTML = `<p style="text-align: center; color: #666; padding: 20px;">Seu carrinho está vazio ou continha itens inválidos.</p>`;
                 document.getElementById("valorTotal").textContent = "R$ 0,00";
                 return;
             }
@@ -117,20 +106,17 @@
             lista.innerHTML = carrinho.map((item, index) => {
                 const subtotal = item.preco * item.quantidade;
                 total += subtotal;
-                
-                const imagemTratada = corrigirCaminhoImagem(item.imagem);
 
                 return `
                     <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e0d7cd; padding: 12px 0; gap: 10px;">
                         <div style="display: flex; align-items: center; gap: 12px;">
-                            <img src="${imagemTratada}" alt="${item.titulo}" style="width: 50px; height: 70px; object-fit: cover; border-radius: 4px;">
+                            <img src="${item.imagem}" onerror="this.src='https://covers.openlibrary.org/b/id/12645114-L.jpg'" alt="${item.titulo}" style="width: 50px; height: 70px; object-fit: cover; border-radius: 4px;">
                             <div>
                                 <h4 style="font-size: 0.95rem; margin-bottom: 4px;">${item.titulo}</h4>
                                 <span style="font-size: 0.85rem; color: #8c533e; font-weight: bold;">R$ ${item.preco.toFixed(2)} un.</span>
                             </div>
                         </div>
 
-                        <!-- Seletor de Quantidade -->
                         <div style="display: flex; align-items: center; gap: 8px;">
                             <button onclick="alterarQuantidade(${index}, -1)" style="background: #f0ebe0; border: 1px solid #d9d4c9; width: 26px; height: 26px; border-radius: 4px; cursor: pointer; font-weight: bold;">-</button>
                             <span style="font-size: 0.9rem; font-weight: 600; min-width: 20px; text-align: center;">${item.quantidade}</span>
@@ -153,11 +139,7 @@
             let carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
             if (carrinho[index]) {
                 carrinho[index].quantidade = (carrinho[index].quantidade || 1) + delta;
-                
-                if (carrinho[index].quantidade <= 0) {
-                    carrinho.splice(index, 1);
-                }
-                
+                if (carrinho[index].quantidade <= 0) carrinho.splice(index, 1);
                 localStorage.setItem("carrinhoLivros", JSON.stringify(carrinho));
                 carregarCarrinho();
             }
@@ -185,10 +167,10 @@
             }
 
             const pagamento = localStorage.getItem("usuarioPagamento") || "Pix";
-            let totalSubtotal = carrinho.reduce((acc, item) => acc + (Number(item.preco) * (item.quantidade || 1)), 0);
+            let totalSubtotal = carrinho.reduce((acc, item) => acc + (Number(item.price || item.preco || 0) * (item.quantidade || 1)), 0);
             let totalComFrete = totalSubtotal + 10.00;
             
-            let descricaoItens = carrinho.map(i => `${i.quantidade}x ${i.titulo}`).join(", ");
+            let descricaoItens = carrinho.map(i => `${i.quantidade}x ${i.titulo || i.title}`).join(", ");
 
             let historico = JSON.parse(localStorage.getItem("historicoPedidos")) || [];
             const novoPedido = {
@@ -203,10 +185,9 @@
             localStorage.setItem("historicoPedidos", JSON.stringify(historico));
             localStorage.removeItem("carrinhoLivros");
 
-            alert(`🎉 Pedido #${novoPedido.id} realizado com sucesso via ${pagamento}! Acompanhe o envio no seu Perfil.`);
+            alert(`🎉 Pedido #${novoPedido.id} realizado com sucesso via ${pagamento}!`);
             window.location.href = "MeuPerfil.html";
         }
     </script>
 </body>
-
 </html>

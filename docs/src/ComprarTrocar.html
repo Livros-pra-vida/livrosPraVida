@@ -55,7 +55,6 @@
     </header>
 
     <main style="max-width: 1200px; margin: 30px auto; padding: 0 20px;">
-        <!-- PAINEL EXCLUSIVO DE ADMINISTRADOR -->
         <div id="painelAdminHeader" style="display: none; background: #2c3e50; color: #fff; padding: 15px 20px; border-radius: 8px; margin-bottom: 25px; justify-content: space-between; align-items: center;">
             <div>
                 <h3 style="margin: 0; font-size: 1.1rem; color: #f1c40f;">👑 Painel de Controle do Administrador</h3>
@@ -149,7 +148,6 @@
         function atualizarCabecalhoAuth() {
             const areaAuth = document.getElementById("areaAuthHeader");
             const fotoSalva = localStorage.getItem("usuarioFoto") || "../imagens/Background.png";
-
             if (!areaAuth) return;
 
             if (estaLogado()) {
@@ -176,7 +174,6 @@
         function atualizarContadorCarrinho() {
             const contador = document.getElementById("contadorCarrinhoHeader");
             if (!contador) return;
-
             if (carrinho.length > 0) {
                 contador.innerText = carrinho.length;
                 contador.style.display = "inline-block";
@@ -189,7 +186,6 @@
             const precoVal = parseFloat(valor) || 0;
             const comissao = precoVal * 0.05;
             const liquido = precoVal - comissao;
-            
             document.getElementById("simulacaoTaxa").innerText = 
                 `💡 Taxa da loja (5%): R$ ${comissao.toFixed(2)} | Você receberá: R$ ${liquido.toFixed(2)}`;
         }
@@ -197,17 +193,12 @@
         async function carregarFavoritosUsuario() {
             const token = localStorage.getItem("token");
             if (!token) return;
-
             try {
                 const res = await fetch(`${API_URL}/favorites`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
-                if (res.ok) {
-                    listaFavoritosIds = await res.json();
-                }
-            } catch (e) {
-                console.error("Erro ao carregar favoritos:", e);
-            }
+                if (res.ok) listaFavoritosIds = await res.json();
+            } catch (e) { console.error("Erro ao carregar favoritos:", e); }
         }
 
         async function carregarAnunciosDaAPI() {
@@ -218,14 +209,16 @@
                     listaAnuncios = Array.isArray(dados) ? dados : [];
                     renderizarAnuncios();
                 }
-            } catch (error) {
-                console.error("Erro ao carregar do servidor:", error);
-            }
+            } catch (error) { console.error("Erro ao carregar do servidor:", error); }
         }
 
         function filtrarAnuncios(texto) {
             textoBuscaP2P = texto;
             renderizarAnuncios();
+        }
+
+        function formatarMoeda(valor) {
+            return Number(valor || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         }
 
         function renderizarAnuncios() {
@@ -265,10 +258,7 @@
 
                 const precoVal = parseFloat(item.price || 0);
                 const comissao = precoVal * 0.05;
-
-                const capaUrl = (item.image_url && item.image_url.trim() !== "") 
-                    ? item.image_url 
-                    : 'https://covers.openlibrary.org/b/id/12645114-L.jpg';
+                const capaUrl = (item.image_url && item.image_url.trim() !== "") ? item.image_url : 'https://covers.openlibrary.org/b/id/12645114-L.jpg';
 
                 let painelAdminControle = "";
                 if (souAdmin) {
@@ -294,16 +284,21 @@
                     <img src="${capaUrl}" onerror="this.src='https://covers.openlibrary.org/b/id/12645114-L.jpg'" style="width: 100%; height: 220px; object-fit: cover; border-radius: 6px; margin-bottom: 10px;">
                     <h3 style="font-size: 1rem; color: #2d251e; margin: 0 0 6px 0;">${item.title}</h3>
                     <p style="font-size: 0.85rem; color: #6e655f; margin: 0 0 4px 0;">Autor: <strong>${item.author || 'Desconhecido'}</strong></p>
-                    <p style="font-size: 0.85rem; color: #8c533e; margin: 0 0 2px 0; font-weight: bold;">R$ ${precoVal.toFixed(2)}</p>
-                    <small style="font-size: 0.7rem; color: #27ae60; margin-bottom: 6px; font-weight: 600;">(Comissão 5%: R$ ${comissao.toFixed(2)})</small>
+                    <p style="font-size: 0.95rem; color: #8c533e; margin: 0 0 2px 0; font-weight: bold;">${formatarMoeda(precoVal)}</p>
+                    <small style="font-size: 0.7rem; color: #27ae60; margin-bottom: 6px; font-weight: 600;">(Comissão 5%: ${formatarMoeda(comissao)})</small>
                     <p style="font-size: 0.8rem; color: #6e655f; margin: 0 0 10px 0;">Anunciado por: 👤 <strong>${item.username || 'admin'}</strong></p>
                     
-                    <div style="display: flex; gap: 6px; margin-top: auto;">
-                        <button onclick="adicionarAnuncioAoCarrinho(${item.id})" style="flex: 2; background: #8c533e; color: #fff; border: none; padding: 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; cursor: pointer;">
-                            🛒 Comprar
-                        </button>
-                        <button onclick="alternarFavorito(${item.id}, this)" class="${estaFavoritado ? 'favoritado' : ''}" style="flex: 1; background: ${estaFavoritado ? '#e74c3c' : '#faf8f5'}; color: ${estaFavoritado ? '#fff' : '#2d251e'}; border: 1px solid #e0d7cd; padding: 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; cursor: pointer;">
-                            ${estaFavoritado ? '❤️' : '🤍'}
+                    <div style="display: flex; flex-direction: column; gap: 6px; margin-top: auto;">
+                        <div style="display: flex; gap: 6px;">
+                            <button onclick="adicionarAnuncioAoCarrinho(${item.id})" style="flex: 2; background: #8c533e; color: #fff; border: none; padding: 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; cursor: pointer;">
+                                🛒 Comprar
+                            </button>
+                            <button onclick="alternarFavorito(${item.id}, this)" class="${estaFavoritado ? 'favoritado' : ''}" style="flex: 1; background: ${estaFavoritado ? '#e74c3c' : '#faf8f5'}; color: ${estaFavoritado ? '#fff' : '#2d251e'}; border: 1px solid #e0d7cd; padding: 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; cursor: pointer;">
+                                ${estaFavoritado ? '❤️' : '🤍'}
+                            </button>
+                        </div>
+                        <button onclick="negociarComVendedor('${item.title}', '${item.username || 'Vendedor'}')" style="width: 100%; background: #2c3e50; color: #fff; border: none; padding: 7px; border-radius: 4px; font-size: 0.78rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                            💬 Negociar / Trocar com Vendedor
                         </button>
                     </div>
 
@@ -313,11 +308,27 @@
             });
         }
 
+        function negociarComVendedor(tituloLivro, nomeVendedor) {
+            if (!estaLogado()) {
+                alert("⚠️ Faça login para iniciar uma negociação no Chat!");
+                window.location.href = "Login.html";
+                return;
+            }
+            localStorage.setItem("chatDestino", nomeVendedor);
+            localStorage.setItem("chatAssunto", `Olá! Tenho interesse no livro "${tituloLivro}" anunciado no Comprar & Trocar.`);
+            window.location.href = "Chat.html";
+        }
+
         function adicionarAnuncioAoCarrinho(idAnuncio) {
             const item = listaAnuncios.find(l => l.id === idAnuncio);
             if (!item) return;
 
-            carrinho.push(item);
+            carrinho.push({
+                titulo: item.title,
+                preco: item.price,
+                imagem: item.image_url,
+                quantidade: 1
+            });
             localStorage.setItem("carrinhoLivros", JSON.stringify(carrinho));
             atualizarContadorCarrinho();
             alert(`🛒 "${item.title}" foi adicionado ao seu carrinho!`);
@@ -326,26 +337,14 @@
         async function alternarDestaqueP2PAdmin(idAnuncio, novoStatus, event) {
             if (event) event.stopPropagation();
             const token = localStorage.getItem("token");
-
             try {
                 const response = await fetch(`${API_URL}/book_listings/${idAnuncio}`, {
                     method: 'PUT',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
                     body: JSON.stringify({ book_listing: { featured: novoStatus } })
                 });
-
-                if (response.ok) {
-                    alert(novoStatus ? "⭐ Anúncio adicionado aos destaques da Página Inicial!" : "Anúncio removido dos destaques da Home.");
-                    carregarAnunciosDaAPI();
-                } else {
-                    alert("Apenas administradores podem alterar destaques.");
-                }
-            } catch (e) {
-                alert("Erro ao conectar com a API.");
-            }
+                if (response.ok) { carregarAnunciosDaAPI(); }
+            } catch (e) { alert("Erro ao conectar com a API."); }
         }
 
         async function alternarFavorito(idAnuncio, botaoElemento) {
@@ -354,71 +353,37 @@
                 window.location.href = "Login.html";
                 return;
             }
-
             const token = localStorage.getItem("token");
             const estaFavoritado = botaoElemento.classList.contains("favoritado");
-
             try {
                 if (estaFavoritado) {
-                    const response = await fetch(`${API_URL}/favorites/${idAnuncio}`, {
-                        method: 'DELETE',
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
-
-                    if (response.ok) {
-                        botaoElemento.classList.remove("favoritado");
-                        botaoElemento.style.background = "#faf8f5";
-                        botaoElemento.style.color = "#2d251e";
-                        botaoElemento.innerHTML = "🤍";
-                        listaFavoritosIds = listaFavoritosIds.filter(id => id !== idAnuncio);
-                    }
+                    await fetch(`${API_URL}/favorites/${idAnuncio}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+                    botaoElemento.classList.remove("favoritado");
+                    botaoElemento.innerHTML = "🤍";
+                    listaFavoritosIds = listaFavoritosIds.filter(id => id !== idAnuncio);
                 } else {
-                    const response = await fetch(`${API_URL}/favorites`, {
+                    await fetch(`${API_URL}/favorites`, {
                         method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        },
+                        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
                         body: JSON.stringify({ book_listing_id: idAnuncio })
                     });
-
-                    if (response.ok) {
-                        botaoElemento.classList.add("favoritado");
-                        botaoElemento.style.background = "#e74c3c";
-                        botaoElemento.style.color = "#fff";
-                        botaoElemento.innerHTML = "❤️";
-                        listaFavoritosIds.push(idAnuncio);
-                    }
+                    botaoElemento.classList.add("favoritado");
+                    botaoElemento.innerHTML = "❤️";
+                    listaFavoritosIds.push(idAnuncio);
                 }
-            } catch (erro) {
-                console.error("Erro ao atualizar favorito no servidor:", erro);
-            }
+            } catch (erro) { console.error("Erro ao atualizar favorito:", erro); }
         }
 
         async function excluirAnuncio(idAnuncio) {
-            if (!confirm("Tem certeza que deseja excluir este anúncio do PostgreSQL?")) return;
-
+            if (!confirm("Tem certeza que deseja excluir este anúncio?")) return;
             const token = localStorage.getItem("token");
-
             try {
-                const response = await fetch(`${API_URL}/book_listings/${idAnuncio}`, {
+                const res = await fetch(`${API_URL}/book_listings/${idAnuncio}`, {
                     method: 'DELETE',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
+                    headers: { 'Authorization': `Bearer ${token}` }
                 });
-
-                if (response.ok) {
-                    alert("✅ Anúncio excluído com sucesso do Banco de Dados!");
-                    carregarAnunciosDaAPI();
-                } else {
-                    const erro = await response.json();
-                    alert("❌ Não foi possível excluir: " + (erro.error || "Acesso negado."));
-                }
-            } catch (e) {
-                alert("Erro ao conectar com a API.");
-            }
+                if (res.ok) { carregarAnunciosDaAPI(); }
+            } catch (e) { alert("Erro ao conectar com a API."); }
         }
 
         function abrirModalAnuncio() {
@@ -441,62 +406,20 @@
             const autor = document.getElementById("novoAutor").value;
             const preco = document.getElementById("novoPreco").value;
             const imagemUrl = document.getElementById("novoIsbn").value;
-
             const token = localStorage.getItem("token");
 
             try {
                 const response = await fetch(`${API_URL}/book_listings`, {
                     method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        book_listing: {
-                            title: titulo,
-                            author: autor,
-                            price: parseFloat(preco) || 0,
-                            image_url: imagemUrl
-                        }
-                    })
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ book_listing: { title: titulo, author: autor, price: parseFloat(preco) || 0, image_url: imagemUrl } })
                 });
-
                 if (response.ok) {
-                    alert("✨ Anúncio cadastrado e salvo com sucesso no PostgreSQL!");
+                    alert("✨ Anúncio cadastrado com sucesso!");
                     fecharModalAnuncio();
                     carregarAnunciosDaAPI();
-                } else {
-                    alert("Erro ao criar anúncio. Faça login novamente.");
                 }
-            } catch (e) {
-                alert("Erro ao conectar com a API.");
-            }
-        }
-
-        function gerarRelatorioAdmin() {
-            let relatorio = "=== RELATÓRIO DE ADMINISTRADOR - LIVROS PRA VIDA ===\n\n";
-            relatorio += `Data do Relatório: ${new Date().toLocaleString()}\n`;
-            relatorio += `Total de Anúncios Ativos no Banco: ${listaAnuncios.length}\n\n`;
-            
-            let totalComissoes = 0;
-            relatorio += "DETALHAMENTO DOS ANÚNCIOS & COMISSÕES (5%):\n";
-
-            listaAnuncios.forEach((l, index) => {
-                const p = parseFloat(l.price || 0);
-                const c = p * 0.05;
-                totalComissoes += c;
-                relatorio += `${index + 1}. Título: ${l.title} | Preço: R$ ${p.toFixed(2)} | Comissão Plataforma (5%): R$ ${c.toFixed(2)} | Vendedor: ${l.username}\n`;
-            });
-
-            relatorio += `\nLUCRO ESTIMADO EM COMISSÕES DA PLATAFORMA: R$ ${totalComissoes.toFixed(2)}\n`;
-
-            const blob = new Blob([relatorio], { type: "text/plain;charset=utf-8" });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = `Relatorio_Sistema_${Date.now()}.txt`;
-            link.click();
-
-            alert("📊 Relatório gerado e baixado com sucesso!");
+            } catch (e) { alert("Erro ao conectar com a API."); }
         }
     </script>
 </body>
