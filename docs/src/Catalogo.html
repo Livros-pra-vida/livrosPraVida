@@ -100,7 +100,7 @@
             <button class="filter-btn" onclick="filtrarPorGenero('História/Biografia', this)">História & Biografia</button>
         </div>
 
-        <div class="grid-livros" id="gridLivros"></div>
+        <div class="grid-livros" id="gridLivros" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; margin-top: 20px;"></div>
 
         <div id="mensagemVazio" style="display: none; text-align: center; padding: 40px 20px; color: #6e655f;">
             <p style="font-size: 1.2rem; margin-bottom: 8px;">Nenhum livro cadastrado no PostgreSQL ainda.</p>
@@ -215,6 +215,14 @@
             renderizarLivros();
         }
 
+        // Função utilitária para extrair o nome do autor com segurança (string ou objeto)
+        function obterNomeAutor(autorDado) {
+            if (!autorDado) return "Autor Desconhecido";
+            if (typeof autorDado === "string") return autorDado;
+            if (typeof autorDado === "object" && autorDado.name) return autorDado.name;
+            return "Autor Desconhecido";
+        }
+
         function renderizarLivros() {
             const grid = document.getElementById("gridLivros");
             const mensagemVazio = document.getElementById("mensagemVazio");
@@ -225,34 +233,40 @@
             const livrosFiltrados = acervoLivros.filter(livro => {
                 const generoLivro = livro.genre || "";
                 const tituloLivro = livro.title || "";
-                const autorLivro = livro.author || "";
+                const autorNome = obterNomeAutor(livro.author);
 
                 const combinaGenero = (generoAtual === "Todos") || (generoLivro.toLowerCase() === generoAtual.toLowerCase());
                 const combinaTexto = tituloLivro.toLowerCase().includes(textoBuscaAtual.toLowerCase()) || 
-                                     autorLivro.toLowerCase().includes(textoBuscaAtual.toLowerCase());
+                                     autorNome.toLowerCase().includes(textoBuscaAtual.toLowerCase());
                 return combinaGenero && combinaTexto;
             });
 
-            contadorLivros.innerText = `Exibindo ${livrosFiltrados.length} livro(s)`;
+            if (contadorLivros) contadorLivros.innerText = `Exibindo ${livrosFiltrados.length} livro(s)`;
 
             if (livrosFiltrados.length === 0) {
-                mensagemVazio.style.display = "block";
+                if (mensagemVazio) mensagemVazio.style.display = "block";
                 return;
             }
 
-            mensagemVazio.style.display = "none";
+            if (mensagemVazio) mensagemVazio.style.display = "none";
             const souAdmin = ehAdmin();
 
             livrosFiltrados.forEach(livro => {
                 const card = document.createElement("div");
                 card.className = "card-livro";
+                card.style.background = "#fff";
+                card.style.border = "1px solid #e0d7cd";
+                card.style.borderRadius = "8px";
+                card.style.padding = "12px";
+                card.style.display = "flex";
+                card.style.flexDirection = "column";
 
                 const idLivro = livro.id;
-                const titulo = livro.title;
-                const autor = livro.author || "Autor Desconhecido";
+                const titulo = livro.title || "Sem Título";
+                const autor = obterNomeAutor(livro.author);
                 const genero = livro.genre || "Geral";
                 const preco = livro.price || 0;
-                const capa = livro.image_url || "../imagens/icone.png";
+                const capa = (livro.image_url && livro.image_url.trim() !== "") ? livro.image_url : "https://covers.openlibrary.org/b/id/12645114-L.jpg";
                 const nota = livro.rating || "5.0";
                 const emDestaque = livro.featured === true;
 
@@ -272,7 +286,7 @@
 
                 card.innerHTML = `
                     <div style="position: relative; cursor: pointer;" onclick="abrirModalDetalhes(${idLivro})">
-                        <img src="${capa}" alt="Capa do livro ${titulo}">
+                        <img src="${capa}" onerror="this.src='https://covers.openlibrary.org/b/id/12645114-L.jpg'" alt="Capa do livro ${titulo}" style="width: 100%; height: 220px; object-fit: cover; border-radius: 6px;">
                         <span style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: #fff; font-size: 0.75rem; padding: 2px 8px; border-radius: 10px; font-weight: 600;">★ ${nota}</span>
                     </div>
                     <div style="padding: 10px 0; cursor: pointer;" onclick="abrirModalDetalhes(${idLivro})">
@@ -474,10 +488,11 @@
             livroAtual = acervoLivros.find(l => l.id === idLivro);
             if (!livroAtual) return;
 
-            document.getElementById("modalImg").src = livroAtual.image_url || "../imagens/icone.png";
+            const autorNome = obterNomeAutor(livroAtual.author);
+            document.getElementById("modalImg").src = livroAtual.image_url || "https://covers.openlibrary.org/b/id/12645114-L.jpg";
             document.getElementById("modalGeneroTag").innerText = (livroAtual.genre || "Geral").toUpperCase();
             document.getElementById("modalTitulo").innerText = livroAtual.title;
-            document.getElementById("modalAutor").innerText = "Por " + livroAtual.author;
+            document.getElementById("modalAutor").innerText = "Por " + autorNome;
             document.getElementById("modalSinopse").innerText = livroAtual.description || "Sem sinopse cadastrada.";
             document.getElementById("modalPreco").innerText = formatarMoeda(livroAtual.price);
 
