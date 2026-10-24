@@ -72,7 +72,7 @@
                 <a href="#" id="sair" onclick="sair(event)" style="display: none;">Sair</a>
 
                 <a href="src/MeuPerfil.html" id="meuPerfil" title="Meu Perfil" style="display: none;">
-                    <img id="menuAvatar" src="imagens/Background.png" alt="Foto do Perfil" class="avatar-img">
+                    <img id="menuAvatar" src="imagens/perfil.jpg" onerror="this.src='imagens/perfil.jpg'" alt="Perfil" class="avatar-img" style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #8c533e;">
                 </a>
             </div>
         </nav>
@@ -208,7 +208,6 @@
         const API_URL = "https://lpv-api.onrender.com";
 
         document.addEventListener("DOMContentLoaded", function () {
-            // Acorda a API no Render em segundo plano assim que o usuário acessa o site
             fetch(`${API_URL}/users`).catch(() => {});
 
             atualizarHeaderAuth();
@@ -379,10 +378,9 @@
                 document.getElementById("meuPerfil").style.display = "flex";
                 document.getElementById("sair").style.display = "inline-block";
 
-                const fotoSalva = localStorage.getItem("usuarioFoto");
-                if (fotoSalva) {
-                    document.getElementById("menuAvatar").src = fotoSalva;
-                }
+                const fotoSalva = localStorage.getItem("usuarioFoto") || "imagens/perfil.jpg";
+                const avatarEl = document.getElementById("menuAvatar");
+                if (avatarEl) avatarEl.src = fotoSalva;
             } else {
                 document.getElementById("meuPerfil").style.display = "none";
                 document.getElementById("sair").style.display = "none";

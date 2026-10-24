@@ -17,30 +17,36 @@
 
 <body>
 
-    <header class="header-padrao" style="flex-direction: column; align-items: stretch; gap: 12px; padding: 15px 5%;">
+    <header style="display: flex; flex-direction: column; background: #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.06); position: sticky; top: 0; z-index: 100; width: 100%; padding: 12px 16px; gap: 12px;">
+        
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-            <a href="../index.html" class="logo-link" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #2d251e; font-weight: 700; font-size: 1.1rem;">
-                <img src="../imagens/icone.png" alt="Logo Livros pra Vida" class="logo-img" style="height: 36px; width: auto; object-fit: contain;">
+            <a href="../index.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #2d251e; font-weight: 700; font-size: 1.15rem;">
+                <img src="../imagens/icone.png" alt="Logo Livros pra Vida" style="width: 32px; height: 32px; border-radius: 6px; object-fit: cover;">
                 <span>Livros pra Vida</span>
             </a>
 
-            <div class="auth-carrinho-area" style="display: flex; align-items: center; gap: 16px;">
-                <a href="Login.html" id="entrar" class="btn-entrar" style="text-decoration: none; color: #2d251e; font-size: 0.85rem; font-weight: 500;">Entrar</a>
-                <a href="Cadastro.html" class="btn-cadastrar" id="cadastrar" style="text-decoration: none; background-color: #8c533e; color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">Cadastrar</a>
-                <a href="MeuPerfil.html" id="meuPerfil" class="perfil-link" style="display: none; align-items: center;" title="Meu Perfil">
-                    <img id="menuAvatar" src="../imagens/Background.png" alt="Avatar" class="perfil-avatar" style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #8c533e;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <a href="Carrinho.html" title="Ver Carrinho" style="position: relative; color: #2d251e; display: flex; align-items: center; text-decoration: none;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span id="contadorCarrinhoHeader" style="position: absolute; top: -4px; right: -6px; background-color: #8c533e; color: #fff; font-size: 0.65rem; font-weight: 700; padding: 2px 5px; border-radius: 10px; display: none;">0</span>
                 </a>
-                <a href="#" id="sair" onclick="sair(event)" class="btn-sair" style="display: none; text-decoration: none; color: #6e655f; font-size: 0.85rem; font-weight: 500;">Sair</a>
+
+                <div id="areaAuthHeader" style="display: flex; align-items: center; gap: 8px;"></div>
             </div>
         </div>
 
-        <nav class="nav-links" style="display: flex; justify-content: center; align-items: center; gap: 24px; width: 100%;">
-            <a href="Catalogo.html" class="nav-item" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.9rem;">Catálogo</a>
-            <a href="ComprarTrocar.html" class="nav-item" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.9rem;">Comprar & Trocar</a>
-            <a href="Novidades.html" class="nav-item active" style="text-decoration: none; color: #8c533e; font-weight: 700; font-size: 0.9rem;">Novidades</a>
-            <a href="Chat.html" class="nav-item" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.9rem;">Chat & Comunidade</a>
-            <a href="SobreNos.html" class="nav-item" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.9rem;">Sobre Nós</a>
+        <nav style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px 16px; width: 100%; padding-top: 2px;">
+            <a href="Catalogo.html" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.88rem;">Catálogo</a>
+            <a href="ComprarTrocar.html" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.88rem;">Comprar & Trocar</a>
+            <a href="Novidades.html" style="text-decoration: none; color: #8c533e; font-weight: 700; font-size: 0.88rem;">Novidades</a>
+            <a href="Chat.html" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.88rem;">Chat & Comunidade</a>
+            <a href="SobreNos.html" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.88rem;">Sobre Nós</a>
         </nav>
+
     </header>
 
     <main style="max-width: 1200px; margin: 30px auto; padding: 0 20px;">
@@ -68,9 +74,15 @@
 
     <script>
         const API_URL = "https://lpv-api.onrender.com";
+        let carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
+
+        function estaLogado() {
+            return localStorage.getItem("logado") === "true" || !!localStorage.getItem("usuario");
+        }
 
         document.addEventListener("DOMContentLoaded", function () {
-            verificarAutenticacao();
+            atualizarCabecalhoAuth();
+            atualizarContadorCarrinho();
             carregarNoticiasDoBanco();
 
             if (localStorage.getItem("isAdmin") === "true") {
@@ -78,6 +90,43 @@
                 if (painel) painel.style.display = "block";
             }
         });
+
+        function atualizarCabecalhoAuth() {
+            const areaAuth = document.getElementById("areaAuthHeader");
+            const fotoSalva = localStorage.getItem("usuarioFoto") || "../imagens/perfil.jpg";
+            if (!areaAuth) return;
+
+            if (estaLogado()) {
+                areaAuth.innerHTML = `
+                    <a href="#" onclick="realizarLogout(event)" style="text-decoration: none; color: #6e655f; font-size: 0.85rem; font-weight: 500;">Sair</a>
+                    <a href="MeuPerfil.html" title="Meu Perfil">
+                        <img src="${fotoSalva}" onerror="this.src='../imagens/perfil.jpg'" alt="Perfil" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid #8c533e;">
+                    </a>
+                `;
+            } else {
+                areaAuth.innerHTML = `
+                    <a href="Login.html" style="text-decoration: none; color: #8c533e; font-size: 0.85rem; font-weight: 600; padding: 4px 8px;">Entrar</a>
+                    <a href="Cadastro.html" style="text-decoration: none; background-color: #8c533e; color: #fff; padding: 5px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">Cadastrar</a>
+                `;
+            }
+        }
+
+        function realizarLogout(e) {
+            if (e) e.preventDefault();
+            localStorage.clear();
+            window.location.href = "../index.html";
+        }
+
+        function atualizarContadorCarrinho() {
+            const contador = document.getElementById("contadorCarrinhoHeader");
+            if (!contador) return;
+            if (carrinho.length > 0) {
+                contador.innerText = carrinho.length;
+                contador.style.display = "inline-block";
+            } else {
+                contador.style.display = "none";
+            }
+        }
 
         async function carregarNoticiasDoBanco() {
             try {
@@ -152,17 +201,13 @@
             try {
                 const response = await fetch(`${API_URL}/news/${idNoticia}`, {
                     method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ news: { featured: novoStatus } })
                 });
 
                 if (response.ok) {
                     alert(novoStatus ? "⭐ Notícia destacada com sucesso na Página Inicial!" : "Notícia removida dos destaques da Home.");
                     carregarNoticiasDoBanco();
-                } else {
-                    alert("Não foi possível alterar o destaque da notícia.");
                 }
             } catch (e) {
                 alert("Erro ao alterar destaque.");
@@ -185,17 +230,9 @@
             try {
                 const response = await fetch(`${API_URL}/news`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        news: {
-                            title: titulo,
-                            source: fonte,
-                            link_url: link,
-                            image_url: imagem,
-                            description: desc
-                        }
+                        news: { title: titulo, source: fonte, link_url: link, image_url: imagem, description: desc }
                     })
                 });
 
@@ -203,8 +240,6 @@
                     alert("✨ Notícia publicada e salva no PostgreSQL!");
                     document.getElementById("formNovaNoticia").reset();
                     carregarNoticiasDoBanco();
-                } else {
-                    alert("Erro ao publicar notícia no banco de dados.");
                 }
             } catch (e) {
                 alert("Erro ao conectar com a API.");
@@ -219,10 +254,7 @@
             if (!confirm("Deseja remover esta notícia do banco de dados?")) return;
 
             try {
-                const response = await fetch(`${API_URL}/news/${id}`, {
-                    method: 'DELETE'
-                });
-
+                const response = await fetch(`${API_URL}/news/${id}`, { method: 'DELETE' });
                 if (response.ok) {
                     alert("🗑️ Notícia removida do PostgreSQL!");
                     carregarNoticiasDoBanco();
@@ -230,21 +262,6 @@
             } catch (e) {
                 alert("Erro ao excluir notícia.");
             }
-        }
-
-        function verificarAutenticacao() {
-            if (localStorage.getItem("logado") === "true") {
-                document.getElementById("entrar").style.display = "none";
-                document.getElementById("cadastrar").style.display = "none";
-                document.getElementById("meuPerfil").style.display = "flex";
-                document.getElementById("sair").style.display = "inline-block";
-            }
-        }
-
-        function sair(e) {
-            e.preventDefault();
-            localStorage.clear();
-            window.location.href = "../index.html";
         }
     </script>
 </body>
