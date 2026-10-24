@@ -7,52 +7,66 @@
     <title>Entrar - Livros pra Vida</title>
 
     <link rel="icon" type="image/png" href="../imagens/icone.png">
-    <link rel="stylesheet" href="../css/StyleLogin.css">
+    <link rel="stylesheet" href="../css/StyleCadLog.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-    <div class="login-container">
-        <a href="../index.html" class="logo">
+    <header>
+        <a href="../index.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
             <img src="../imagens/icone.png" alt="Logo Livros pra Vida">
             <span>Livros pra Vida</span>
         </a>
+    </header>
 
-        <h1>Entrar</h1>
-        <p class="subtitle">Precisa criar uma conta? <a href="Cadastro.html">Criar conta</a></p>
-
-        <form id="formLogin" onsubmit="fazerLogin(event)">
-            <div class="form-group">
-                <label for="loginInput">Nome de usuário ou e-mail</label>
-                <input type="text" id="loginInput" required placeholder="Digite seu e-mail ou usuário" autocomplete="username">
+    <main>
+        <section>
+            <div class="title">
+                <h1>Entrar</h1>
+                <p>Precisa criar uma conta? <a href="Cadastro.html">Criar conta</a></p>
             </div>
 
-            <div class="form-group">
-                <label for="senha">Senha</label>
-                <div class="input-password-wrapper">
-                    <input type="password" id="senha" required placeholder="Digite sua senha" autocomplete="current-password">
-                    <button type="button" class="btn-toggle-password" onclick="alternarVisibilidadeSenha()" aria-label="Mostrar/Ocultar Senha">
-                        👁️
-                    </button>
+            <form id="formLogin">
+                <label>
+                    Nome de usuário ou e-mail
+                    <input type="text" id="loginInput" required placeholder="Digite seu e-mail ou usuário" autocomplete="username">
+                </label>
+
+                <label>
+                    Senha
+                    <div class="password">
+                        <input type="password" id="senha" required placeholder="Digite sua senha" autocomplete="current-password">
+                        <button type="button" onclick="alternarVisibilidadeSenha()" aria-label="Mostrar/Ocultar Senha">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </label>
+
+                <div class="forgot-password-container">
+                    <a href="#" class="forgot-password-link" onclick="alert('Instruções enviadas se o e-mail existir no sistema.')">Esqueceu sua senha?</a>
                 </div>
-            </div>
 
-            <div class="form-options">
-                <a href="#" class="forgot-password" onclick="alert('Instruções enviadas se o e-mail existir no sistema.')">Esqueceu sua senha?</a>
-            </div>
+                <button type="submit" class="login" id="btnSubmit">Entrar</button>
+            </form>
+        </section>
 
-            <button type="submit" class="btn-submit" id="btnSubmit">Entrar</button>
-        </form>
-
-        <footer class="login-footer">
+        <footer>
             <p>"Toda história começa com uma página."</p>
-            <p>© 2026 Livros pra Vida</p>
+            <div class="benefits">
+                <span>✓ Compra e Troca P2P</span>
+                <span>✓ Chat em Tempo Real</span>
+                <span>✓ Comunidade Literária</span>
+            </div>
+            <small>© 2026 Livros pra Vida. Todos os direitos reservados.</small>
         </footer>
-    </div>
+    </main>
 
     <script>
         const API_URL = "https://lpv-api.onrender.com";
@@ -62,7 +76,7 @@
             campo.type = campo.type === "password" ? "text" : "password";
         }
 
-        async function fazerLogin(event) {
+        document.getElementById("formLogin").addEventListener("submit", async function (event) {
             event.preventDefault();
 
             const loginValue = document.getElementById("loginInput").value.trim();
@@ -110,7 +124,7 @@
                 btnSubmit.disabled = false;
                 btnSubmit.innerText = "Entrar";
             }
-        }
+        });
     </script>
 </body>
 
