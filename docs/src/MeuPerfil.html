@@ -194,59 +194,60 @@
         const API_URL = "https://lpv-api.onrender.com";
 
         document.addEventListener("DOMContentLoaded", async function () {
-            const usuarioId = localStorage.getItem("usuarioId");
-            const logado = localStorage.getItem("logado") === "true";
+    // Procura o ID em todas as chaves possíveis do localStorage
+    let usuarioId = localStorage.getItem("usuarioId") || localStorage.getItem("userId");
+    
+    // Tenta extrair do objeto completo 'usuario' ou 'user' se existir
+    if (!usuarioId) {
+        const uSalvo = JSON.parse(localStorage.getItem("usuario") || localStorage.getItem("user") || "{}");
+        if (uSalvo && uSalvo.id) usuarioId = uSalvo.id;
+    }
 
-            if (!logado || !usuarioId) {
-                alert("❌ Você precisa estar logado.");
-                window.location.href = "Login.html";
-                return;
-            }
+    // Se mesmo assim não encontrar nada, aí sim redireciona
+    if (!usuarioId) {
+        console.warn("Nenhuma chave de usuário encontrada no localStorage.");
+        window.location.href = "Login.html";
+        return;
+    }
 
-            try {
-                // Carrega todos os dados atualizados do banco PostgreSQL
-                const resposta = await fetch(`${API_URL}/users/${usuarioId}`);
+    try {
+        // Carrega os dados atualizados do banco PostgreSQL no Render
+        const resposta = await fetch(`${API_URL}/users/${usuarioId}`);
 
-                if (!resposta.ok) {
-                    throw new Error("Não foi possível carregar os dados do banco.");
-                }
+        if (!resposta.ok) {
+            throw new Error("Não foi possível carregar os dados do banco.");
+        }
 
-                const usuario = await resposta.json();
+        const usuario = await resposta.json();
 
-                // Preenche o formulário com o que veio do banco de dados
-                document.getElementById("nomeInput").value = usuario.username || "";
-                document.getElementById("emailInput").value = usuario.email || "";
-                document.getElementById("telefoneInput").value = usuario.telefone || "";
-                document.getElementById("nascimentoInput").value = usuario.nascimento ? String(usuario.nascimento).substring(0, 10) : "";
-                document.getElementById("cpfInput").value = usuario.cpf || "";
+        // Preenche os campos diretamente com os dados do banco
+        document.getElementById("nomeInput").value = usuario.username || "";
+        document.getElementById("emailInput").value = usuario.email || "";
+        document.getElementById("telefoneInput").value = usuario.telefone || "";
+        document.getElementById("nascimentoInput").value = usuario.nascimento ? String(usuario.nascimento).substring(0, 10) : "";
+        document.getElementById("cpfInput").value = usuario.cpf || "";
 
-                document.getElementById("cepInput").value = usuario.cep || "";
-                document.getElementById("ruaInput").value = usuario.rua || "";
-                document.getElementById("numeroInput").value = usuario.numero || "";
-                document.getElementById("bairroInput").value = usuario.bairro || "";
-                document.getElementById("cidadeInput").value = usuario.cidade || "";
-                document.getElementById("pagamentoSelect").value = usuario.pagamento_favorito || "Pix";
+        document.getElementById("cepInput").value = usuario.cep || "";
+        document.getElementById("ruaInput").value = usuario.rua || "";
+        document.getElementById("numeroInput").value = usuario.numero || "";
+        document.getElementById("bairroInput").value = usuario.bairro || "";
+        document.getElementById("cidadeInput").value = usuario.cidade || "";
+        document.getElementById("pagamentoSelect").value = usuario.pagamento_favorito || "Pix";
 
-                document.getElementById("profileName").textContent = usuario.username || "Leitor Colaborador";
-                
-                if (usuario.admin) {
-                    document.getElementById("badgePlano").textContent = "Administrador";
-                    document.getElementById("badgePlano").style.background = "#8c533e";
-                    document.getElementById("badgePlano").style.color = "#fff";
-                }
+        document.getElementById("profileName").textContent = usuario.username || "Leitor Colaborador";
+        
+        if (usuario.admin) {
+            document.getElementById("badgePlano").textContent = "Administrador";
+            document.getElementById("badgePlano").style.background = "#8c533e";
+            document.getElementById("badgePlano").style.color = "#fff";
+        }
 
-                verificarMaioridade();
+        verificarMaioridade();
 
-            } catch (erro) {
-                console.error("Erro ao carregar usuário:", erro);
-                alert("❌ Erro ao conectar com o banco de dados.");
-            }
-
-            const fotoSalva = localStorage.getItem("usuarioFoto");
-            if (fotoSalva) {
-                document.getElementById("userAvatar").src = fotoSalva;
-            }
-        });
+    } catch (erro) {
+        console.error("Erro ao carregar usuário:", erro);
+    }
+});
 
         // Consulta CEP externa ViaCEP
         function consultarCep(cep) {
