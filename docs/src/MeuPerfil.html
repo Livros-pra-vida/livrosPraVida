@@ -246,8 +246,6 @@
         // Carrega o histórico de pedidos sincronizado com o banco (via API ou fallback seguro)
         function carregarHistoricoPedidosDoBanco(usuarioId) {
             const containerHistorico = document.getElementById("listaHistoricoPedidos");
-            
-            // Sincroniza com os pedidos gerados no checkout e salvos na base da sessão
             const historico = JSON.parse(localStorage.getItem("historicoPedidos")) || [];
 
             if (historico.length === 0) {
@@ -255,29 +253,37 @@
                 return;
             }
 
-            containerHistorico.innerHTML = historico.map(pedido => `
-                <div style="background: #faf8f5; border: 1px solid #e0d7cd; border-radius: 8px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                    <div>
-                        <div style="font-size: 0.85rem; color: #8c533e; font-weight: bold; margin-bottom: 4px;">
-                            📋 Protocolo de Compra: #${pedido.id}
+            containerHistorico.innerHTML = historico.map(pedido => {
+                // Pega a imagem do pedido ou usa uma capa padrão da OpenLibrary se não houver
+                const imagemCapa = pedido.imagem || "https://covers.openlibrary.org/b/id/12645114-L.jpg";
+
+                return `
+                    <div style="background: #faf8f5; border: 1px solid #e0d7cd; border-radius: 8px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <img src="${imagemCapa}" onerror="this.src='https://covers.openlibrary.org/b/id/12645114-L.jpg'" alt="Capa do Livro" style="width: 50px; height: 70px; object-fit: cover; border-radius: 4px; border: 1px solid #d9d4c9;">
+                            <div>
+                                <div style="font-size: 0.85rem; color: #8c533e; font-weight: bold; margin-bottom: 4px;">
+                                    📋 Protocolo de Compra: #${pedido.id}
+                                </div>
+                                <div style="font-size: 0.95rem; color: #2d251e; font-weight: 600; margin-bottom: 4px;">
+                                    📚 ${pedido.itens}
+                                </div>
+                                <div style="font-size: 0.8rem; color: #6e655f;">
+                                    💳 Pagamento: <strong>${pedido.pagamento}</strong> | 📍 Endereço (PostgreSQL): ${pedido.endereco || 'Endereço Cadastrado'}
+                                </div>
+                            </div>
                         </div>
-                        <div style="font-size: 0.95rem; color: #2d251e; font-weight: 600; margin-bottom: 4px;">
-                            📚 Livros: ${pedido.itens}
-                        </div>
-                        <div style="font-size: 0.8rem; color: #6e655f;">
-                            💳 Pagamento: <strong>${pedido.pagamento}</strong> | 📍 Endereço (PostgreSQL): ${pedido.endereco || 'Endereço Cadastrado'}
+                        <div style="text-align: right;">
+                            <div style="font-size: 1rem; font-weight: bold; color: #8c533e; margin-bottom: 4px;">
+                                ${pedido.total}
+                            </div>
+                            <span style="display: inline-block; font-size: 0.75rem; background: #e6f4ea; color: #137333; padding: 3px 8px; border-radius: 12px; font-weight: 600;">
+                                📦 ${pedido.status || 'Em separação'}
+                            </span>
                         </div>
                     </div>
-                    <div style="text-align: right;">
-                        <div style="font-size: 1rem; font-weight: bold; color: #8c533e; margin-bottom: 4px;">
-                            ${pedido.total}
-                        </div>
-                        <span style="display: inline-block; font-size: 0.75rem; background: #e6f4ea; color: #137333; padding: 3px 8px; border-radius: 12px; font-weight: 600;">
-                            📦 ${pedido.status || 'Em separação'}
-                        </span>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         // Consulta CEP externa ViaCEP
