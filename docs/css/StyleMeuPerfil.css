@@ -67,7 +67,7 @@ body {
     font-family: 'Playfair Display', Georgia, serif;
     font-size: 1.35rem;
     font-weight: 700;
-    color: var(--primary);
+    color: black;
     white-space: nowrap;
 }
 
