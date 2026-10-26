@@ -19,14 +19,17 @@
     --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
+
+
 body {
+    font-family: Arial, Helvetica, sans-serif;
     background-color: var(--bg-body);
     color: var(--text-dark);
     min-height: 100vh;
@@ -36,13 +39,14 @@ body {
     overflow-x: hidden;
 }
 
+
 /* HEADER E NAVEGAÇÃO */
 .header {
     background-color: var(--bg-card);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 5%;
+    padding: 17px 4%;
     box-shadow: var(--shadow-sm);
     position: sticky;
     top: 0;
@@ -55,21 +59,34 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
+    font-size: 22px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #29251f;
+    white-space: nowrap;
 }
 
 .logo img {
-    height: 40px;
-    width: auto;
+    width: 35px;
+    height: 35px;
+    object-fit: contain;
+    border-radius: 6px;
     transition: var(--transition);
+    position: relative;
+    top: 2px;
+    transform: translateY(3px);
+
 }
 
-.logo span {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: 1.35rem;
-    font-weight: 700;
-    color: black;
+
+span {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 22px;
+    font-weight: bold;
+    color: #29251f;
     white-space: nowrap;
 }
+
 
 .menu {
     display: flex;
@@ -200,12 +217,13 @@ body {
     transform: scale(1.08);
 }
 
-.profile-card h2 {
-    font-family: 'Playfair Display', serif;
+
+.card-header h3 {
+    font-family: Georgia, serif;
     font-size: 1.4rem;
     color: var(--text-dark);
-    word-break: break-word;
 }
+
 
 .role-badge {
     display: inline-block;
