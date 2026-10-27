@@ -151,7 +151,7 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            if (localStorage.getItem("logado") === "true") {
+            if (localStorage.getItem("usuario")) {
                 document.getElementById("entrar").style.display = "none";
                 document.getElementById("cadastrar").style.display = "none";
                 document.getElementById("meuPerfil").style.display = "flex";
@@ -175,7 +175,10 @@
         }
 
         function sair() {
+            localStorage.removeItem("usuario");
+            localStorage.removeItem("token");
             localStorage.removeItem("logado");
+            localStorage.removeItem("usuarioNome");
             window.location.href = "../index.html";
         }
     </script>

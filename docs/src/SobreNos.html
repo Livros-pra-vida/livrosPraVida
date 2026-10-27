@@ -131,7 +131,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const menu = document.getElementById("menuNavegacao");
-            const estaLogado = localStorage.getItem("logado") === "true" || localStorage.getItem("usuarioNome");
+            const estaLogado = !!localStorage.getItem("usuario");
             const fotoPerfil = localStorage.getItem("usuarioFoto") || "../imagens/Background.png";
 
             if (estaLogado) {
@@ -153,6 +153,8 @@
 
         function sair(event) {
             if (event) event.preventDefault();
+            localStorage.removeItem("usuario");
+            localStorage.removeItem("token");
             localStorage.removeItem("logado");
             localStorage.removeItem("usuarioNome");
             window.location.href = "../index.html";

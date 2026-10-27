@@ -164,7 +164,16 @@
             const consumer = createConsumer(
                 `${API.replace("https", "wss")}/cable?token=${encodeURIComponent(token)}`
             );
+            let conectado = false;
             const canal = consumer.subscriptions.create("ChatChannel", {
+                connected() {
+                    conectado = true;
+                    aviso.style.display = "none";
+                },
+                disconnected() {
+                    conectado = false;
+                    mostrarAviso("Conexão com o chat perdida. Tentando reconectar...");
+                },
                 received: addMessage
             });
 
@@ -172,6 +181,10 @@
                 e.preventDefault();
                 const content = input.value.trim();
                 if (!content) return;
+                if (!conectado) {
+                    mostrarAviso("Ainda sem conexão com o chat. Sua mensagem não foi enviada, tente de novo em instantes.");
+                    return;
+                }
                 canal.perform("speak", { content });
                 input.value = "";
             });

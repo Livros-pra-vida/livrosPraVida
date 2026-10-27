@@ -291,7 +291,7 @@
         });
 
         function verificarAutenticacaoHeader() {
-            if (localStorage.getItem("logado") === "true") {
+            if (localStorage.getItem("usuario")) {
                 const elEntrar = document.getElementById("entrar");
                 const elCadastrar = document.getElementById("cadastrar");
                 const elPerfil = document.getElementById("meuPerfil");
@@ -385,7 +385,7 @@
                 return;
             }
 
-            const nomeUsuarioLogado = localStorage.getItem("usuarioNome") || "";
+            const nomeUsuarioLogado = nomeDoUsuario() || "";
 
             filtrados.forEach(item => {
                 let textoBotao = "Negociar";
@@ -506,7 +506,7 @@
         }
 
         function abrirModalAnuncio() {
-            if (localStorage.getItem("logado") !== "true") {
+            if (!localStorage.getItem("usuario")) {
                 alert("⚠️ Você precisa estar logado para anunciar um livro!");
                 window.location.href = "Login.html";
                 return;
@@ -628,7 +628,7 @@
             const inputArquivo = document.getElementById("novaFotoArquivo");
             let isbnOuLink = document.getElementById("novoIsbn").value.trim();
 
-            const nomeUsuario = localStorage.getItem("usuarioNome") || "Leitor Anônimo";
+            const nomeUsuario = nomeDoUsuario() || "Leitor Anônimo";
 
             const prosseguirComImagem = (imagemUrl) => {
                 const novoItem = {
@@ -672,8 +672,20 @@
             }
         }
 
+        function nomeDoUsuario() {
+            try {
+                const u = JSON.parse(localStorage.getItem("usuario"));
+                return (u && (u.username || u.nome)) || localStorage.getItem("usuarioNome");
+            } catch (e) {
+                return localStorage.getItem("usuarioNome");
+            }
+        }
+
         function sair() {
+            localStorage.removeItem("usuario");
+            localStorage.removeItem("token");
             localStorage.removeItem("logado");
+            localStorage.removeItem("usuarioNome");
             window.location.href = "../index.html";
         }
     </script>

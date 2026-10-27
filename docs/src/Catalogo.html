@@ -161,7 +161,7 @@
 
         function verificarLogin() {
             const usuarioLogado = localStorage.getItem("usuarioLogado");
-            const logadoUniversal = localStorage.getItem("logado"); 
+            const logadoUniversal = localStorage.getItem("usuario") ? "true" : null;
             
             if (!usuarioLogado && logadoUniversal !== "true") {
                 alert("⚠️ Você precisa estar logado no site para realizar uma compra!");
@@ -174,7 +174,7 @@
         function atualizarCabecalhoAuth() {
             const areaAuth = document.getElementById("areaAuthHeader");
             const usuarioLogado = localStorage.getItem("usuarioLogado");
-            const logadoUniversal = localStorage.getItem("logado");
+            const logadoUniversal = localStorage.getItem("usuario") ? "true" : null;
             const fotoSalva = localStorage.getItem("usuarioFoto") || "../imagens/Background.png";
 
             if (usuarioLogado || logadoUniversal === "true") {
@@ -194,7 +194,10 @@
 
         function realizarLogout() {
             localStorage.removeItem("usuarioLogado");
+            localStorage.removeItem("usuario");
+            localStorage.removeItem("token");
             localStorage.removeItem("logado");
+            localStorage.removeItem("usuarioNome");
         }
 
         function atualizarContadorCarrinho() {
