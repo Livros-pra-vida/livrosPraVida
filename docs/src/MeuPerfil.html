@@ -241,7 +241,17 @@
 
             try {
                 // Busca os dados atualizados do usuário no banco
-                const resposta = await fetch(`${API_URL}/users/${usuarioSalvo.id}`);
+                const resposta = await fetch(`${API_URL}/users/${usuarioSalvo.id}`, {
+                    headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
+                });
+
+                if (resposta.status === 401) {
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("usuario");
+                    alert("Sua sessão expirou. Faça login novamente.");
+                    window.location.href = "Login.html";
+                    return;
+                }
 
                 if (!resposta.ok) {
                     throw new Error("Não foi possível carregar o usuário.");
@@ -399,7 +409,8 @@
                     {
                         method: "PATCH",
                         headers: {
-                            "Content-Type": "application/json"
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${localStorage.getItem("token")}`
                         },
                         body: JSON.stringify(dados)
                     }
