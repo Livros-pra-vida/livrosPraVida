@@ -15,37 +15,26 @@
             <a href="../index.html"><img src="../imagens/icone.png" alt="Logo"></a>
             <span>Livros pra Vida</span>
         </div>
-        <nav class="menu">
-            <a href="Catalogo.html">Catálogo</a>
-            <a href="ComprarTrocar.html">Comprar & Trocar</a>
-            <a href="Novidades.html">Novidades</a>
-            <a href="Chat.html" class="active">Chat & Comunidade</a>
-            <a href="SobreNos.html">Sobre Nós</a>
-
-            <a href="Login.html" id="entrar" class="login-button">Entrar</a>
-            <a href="Cadastro.html" id="cadastrar" class="signup-button">Cadastrar</a>
-
-            <a href="MeuPerfil.html" id="meuPerfil" class="perfil-avatar-btn" style="display:none;">
-                <img id="menuAvatar" src="../imagens/Background.png" alt="Perfil" class="avatar-circle">
-            </a>
-            <a href="#" id="sair" onclick="sair()" style="display:none;" class="btn-sair">Sair</a>
+        <nav class="menu" id="menuNavegacao">
+            <!-- Preenchido dinamicamente via JS -->
         </nav>
     </header>
 
     <main class="container">
         <h1 style="margin-bottom: 20px;">Central de Comunicação & Fórum</h1>
 
-        <!-- Abas de Navegação -->
-        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
             <button id="btnTabGlobal" onclick="trocarAba('global')"
-                style="padding: 10px 20px; background: #8c533e; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">🌍
-                Comunidade Global (Fórum)</button>
+                style="padding: 10px 20px; background: #8c533e; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">
+                Comunidade Global (Fórum)
+            </button>
             <button id="btnTabPrivado" onclick="trocarAba('privado')"
-                style="padding: 10px 20px; background: #8c533e; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">💬
-                Minhas Negociações (Privadas)</button>
+                style="padding: 10px 20px; background: #8c533e; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">
+                Minhas Negociações (Privadas)
+            </button>
         </div>
 
-        <!-- ================= CHAT GLOBAL (tempo real) ================= -->
+        <!-- ================= CHAT GLOBAL ================= -->
         <div id="secaoGlobal" class="chat-section" style="display: block;">
             <div id="avisoGlobal"
                 style="display: none; text-align: center; padding: 15px; margin-bottom: 15px; color: #666; background: #fff; border-radius: 8px; border: 1px dashed #e0d7cd;">
@@ -54,20 +43,19 @@
                 <div class="messages" id="messages"></div>
                 <form class="input-area" id="form">
                     <input type="text" id="input" maxlength="500" autocomplete="off"
-                        placeholder="Digite sua mensagem...">
+                        placeholder="Digite sua mensagem para o fórum...">
                     <button type="submit">Enviar</button>
                 </form>
             </div>
         </div>
 
-        <!-- ================= CHAT PRIVADO (localStorage) ================= -->
+        <!-- ================= CHAT PRIVADO ================= -->
         <div id="secaoPrivado" class="chat-section" style="display: none;">
             <div id="infoNegociacao"
                 style="display: none; background: #fff; border: 1px solid #e0d7cd; padding: 10px 15px; border-radius: 6px; margin-bottom: 15px; font-size: 0.9rem; color: #2d251e;">
-                📌 Conversando sobre o livro: <strong id="livroNegociacaoTitulo"></strong>
+                Conversando sobre o livro: <strong id="livroNegociacaoTitulo"></strong>
             </div>
 
-            <!-- Lista de conversas privadas ativas -->
             <div id="listaConversas" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;">
                 <!-- Preenchido dinamicamente via JS -->
             </div>
@@ -77,9 +65,7 @@
                     id="tituloChatPrivado">
                     Conversa Privada
                 </div>
-                <div class="messages" id="chatPrivadoMessages">
-                    <!-- Mensagens do privado -->
-                </div>
+                <div class="messages" id="chatPrivadoMessages"></div>
                 <div class="input-area">
                     <input type="text" id="chatPrivadoInput" placeholder="Digite sua mensagem..."
                         onkeypress="checarEnterPrivado(event)">
@@ -95,14 +81,11 @@
         </div>
     </main>
 
-    <!-- =====================================================================
-         CHAT GLOBAL: conexão em tempo real com a API (Action Cable)
-         ===================================================================== -->
     <script type="module">
         import { createConsumer } from "https://esm.sh/@rails/actioncable@7";
 
         const API = "https://lpv-api.onrender.com";
-        const TOKEN_KEY = "token"; // CONFIRMAR: nome da chave do localStorage onde o login guarda o token
+        const TOKEN_KEY = "token";
 
         const list = document.getElementById("messages");
         const form = document.getElementById("form");
@@ -165,14 +148,21 @@
                 `${API.replace("https", "wss")}/cable?token=${encodeURIComponent(token)}`
             );
             let conectado = false;
+            let jaConectou = false;
+            let falhas = 0;
             const canal = consumer.subscriptions.create("ChatChannel", {
                 connected() {
                     conectado = true;
+                    jaConectou = true;
+                    falhas = 0;
                     aviso.style.display = "none";
                 },
                 disconnected() {
                     conectado = false;
-                    mostrarAviso("Conexão com o chat perdida. Tentando reconectar...");
+                    falhas++;
+                    mostrarAviso(!jaConectou && falhas >= 3
+                        ? "Não foi possível entrar no chat. Saia e entre novamente na sua conta."
+                        : "Conexão com o chat perdida. Tentando reconectar...");
                 },
                 received: addMessage
             });
@@ -191,24 +181,23 @@
         }
     </script>
 
-    <!-- =====================================================================
-         ABAS, LOGIN NO MENU E CHAT PRIVADO
-         ===================================================================== -->
     <script>
         let destinatarioAtual = null;
         let livroAtual = null;
 
-        // O site considera "logado" quem tem o objeto "usuario" salvo (mesma regra do index.html e MeuPerfil)
+        function estaLogado() {
+            return !!localStorage.getItem("usuario");
+        }
+
         function getUsuario() {
             try { return JSON.parse(localStorage.getItem("usuario")); } catch (e) { return null; }
         }
-        function estaLogado() { return !!getUsuario(); }
+
         function nomeUsuario() {
             const u = getUsuario();
             return (u && (u.username || u.usuario || u.nome)) || localStorage.getItem("usuarioNome") || "Eu";
         }
 
-        // Escapa texto antes de colocar em innerHTML (evita XSS)
         function esc(s) {
             return String(s).replace(/[&<>"']/g, c => ({
                 '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
@@ -216,16 +205,33 @@
         }
 
         document.addEventListener("DOMContentLoaded", function () {
+            const menu = document.getElementById("menuNavegacao");
+            const fotoPerfil = localStorage.getItem("usuarioFoto") || "../imagens/perfil.jpg";
+
             if (estaLogado()) {
-                document.getElementById("entrar").style.display = "none";
-                document.getElementById("cadastrar").style.display = "none";
-                document.getElementById("meuPerfil").style.display = "flex";
-                document.getElementById("sair").style.display = "inline-block";
-                const foto = localStorage.getItem("usuarioFoto");
-                if (foto) document.getElementById("menuAvatar").src = foto;
+                menu.innerHTML = `
+                    <a href="Catalogo.html">Catálogo</a>
+                    <a href="ComprarTrocar.html">Comprar & Trocar</a>
+                    <a href="Novidades.html">Novidades</a>
+                    <a href="Chat.html" class="active">Chat & Comunidade</a>
+                    <a href="SobreNos.html">Sobre Nós</a>
+                    <a href="#" onclick="sair(event)" class="btn-sair">Sair</a>
+                    <a href="MeuPerfil.html" class="profile-nav-link" title="Meu Perfil">
+                        <img src="${fotoPerfil}" onerror="this.src='../imagens/perfil.jpg'" alt="Meu Perfil" class="profile-nav-avatar" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid #8c533e;">
+                    </a>
+                `;
+            } else {
+                menu.innerHTML = `
+                    <a href="Catalogo.html">Catálogo</a>
+                    <a href="ComprarTrocar.html">Comprar & Trocar</a>
+                    <a href="Novidades.html">Novidades</a>
+                    <a href="Chat.html" class="active">Chat & Comunidade</a>
+                    <a href="SobreNos.html">Sobre Nós</a>
+                    <a href="Login.html" class="login-button">Entrar</a>
+                    <a href="Cadastro.html" class="signup-button">Cadastrar</a>
+                `;
             }
 
-            // Clique nas conversas da lista (evita onclick com aspas no HTML)
             document.getElementById("listaConversas").addEventListener("click", function (e) {
                 const item = e.target.closest("[data-chave]");
                 if (!item) return;
@@ -234,7 +240,6 @@
                 if (c) abrirChatPrivado(c.destinatario, c.livro);
             });
 
-            // Parâmetros vindos do Comprar & Trocar
             const urlParams = new URLSearchParams(window.location.search);
             const msgAutomatica = urlParams.get('msg');
             const livroParam = urlParams.get('livro');
@@ -258,7 +263,6 @@
             if (aba === 'privado') carregarListaConversasPrivadas();
         }
 
-        // --- CHAT PRIVADO ---
         function salvarConversaNoHistorico(destinatario, livro, primeiraMsg) {
             const meuNome = nomeUsuario();
             let conversas = JSON.parse(localStorage.getItem("chatsPrivados")) || {};
@@ -297,7 +301,7 @@
                     <div style="${estiloItem}" data-chave="${esc(chave)}">
                         <div>
                             <strong style="color: #2d251e;">${esc(c.destinatario)}</strong><br>
-                            <small style="color: #666;">📖 Livro: ${esc(c.livro)}</small>
+                            <small style="color: #666;">Livro: ${esc(c.livro)}</small>
                         </div>
                         <span style="font-size: 0.8rem; background: #8c533e; color: #fff; padding: 5px 10px; border-radius: 4px;">Conversar</span>
                     </div>
@@ -376,10 +380,16 @@
             if (event.key === "Enter") enviarMensagemPrivada();
         }
 
-        function sair() {
+        function sair(event) {
+            if (event) event.preventDefault();
             localStorage.removeItem("usuario");
+            localStorage.removeItem("token");
             localStorage.removeItem("logado");
-            localStorage.removeItem("token"); // mesmo nome de TOKEN_KEY no script do chat global
+            localStorage.removeItem("usuarioId");
+            localStorage.removeItem("usuarioNome");
+            localStorage.removeItem("usuarioEmail");
+            localStorage.removeItem("isAdmin");
+            localStorage.removeItem("usuarioFoto");
             window.location.href = "../index.html";
         }
     </script>

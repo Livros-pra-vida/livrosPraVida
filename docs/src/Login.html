@@ -4,21 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Livros pra Vida - Entrar</title>
+    <title>Entrar - Livros pra Vida</title>
 
-    <link rel="icon" href="../imagens/icone.png" type="image/png">
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
-        rel="stylesheet">
+    <link rel="icon" type="image/png" href="../imagens/icone.png">
     <link rel="stylesheet" href="../css/StyleCadLog.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
     <header>
-        <a href="../index.html">
-            <img src="../imagens/pngHome.png" alt="Logo Livros pra Vida">
+        <a href="../index.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
+            <img src="../imagens/icone.png" alt="Logo Livros pra Vida">
+            <span>Livros pra Vida</span>
         </a>
     </header>
 
@@ -29,168 +30,99 @@
                 <p>Precisa criar uma conta? <a href="Cadastro.html">Criar conta</a></p>
             </div>
 
-            <form onsubmit="realizarLogin(event)">
-
+            <form id="formLogin">
                 <label>
                     Nome de usuário ou e-mail
-                    <input type="text" id="loginUsuario" placeholder="E-mail" required>
+                    <input type="text" id="loginInput" required placeholder="Digite seu e-mail ou usuário" autocomplete="username">
                 </label>
 
                 <label>
                     Senha
                     <div class="password">
-                        <input type="password" id="loginSenha" placeholder="Senha" required>
-                        <!-- Botão integrado com o CSS existente, usando SVG direto para nunca quebrar -->
-                        <button type="button" id="btnOlho" onclick="alternarVisibilidade('loginSenha')">
-                            <svg id="iconeOlho" viewBox="0 0 24 24">
-                                <path
-                                    d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
-                                </path>
-                                <line x1="1" y1="1" x2="23" y2="23"></line>
+                        <input type="password" id="senha" required placeholder="Digite sua senha" autocomplete="current-password">
+                        <button type="button" onclick="alternarVisibilidadeSenha()" aria-label="Mostrar/Ocultar Senha">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
                             </svg>
                         </button>
                     </div>
                 </label>
 
                 <div class="forgot-password-container">
-                    <a href="#" class="forgot-password-link" onclick="esqueciSenha(event)">Esqueceu sua senha?</a>
+                    <a href="#" class="forgot-password-link" onclick="alert('Instruções enviadas se o e-mail existir no sistema.'); return false;">Esqueceu sua senha?</a>
                 </div>
 
-                <button class="login" type="submit">
-                    Entrar
-                </button>
-
+                <button type="submit" class="login" id="btnSubmit">Entrar</button>
             </form>
-
-            <script>
-                // Função para alternar a visibilidade da senha e o ícone do olho
-                function alternarVisibilidade(inputId) {
-                    const campo = document.getElementById(inputId);
-                    const icone = document.getElementById("iconeOlho");
-
-                    if (campo.type === "password") {
-                        campo.type = "text";
-                        // Olho aberto
-                        icone.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
-                    } else {
-                        campo.type = "password";
-                        // Olho fechado (riscado)
-                        icone.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
-                    }
-                }
-
-                // Função de Login
-                async function realizarLogin(event) {
-                    event.preventDefault();
-
-                    const email = document.getElementById("loginUsuario").value.trim();
-                    const senha = document.getElementById("loginSenha").value;
-
-                    try {
-                        const resposta = await fetch("https://lpv-api.onrender.com/users/login", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify({
-                                email: email,
-                                password: senha
-                            })
-                        });
-
-                        const dados = await resposta.json();
-
-                        console.log("Resposta da API:", dados);
-
-                        if (resposta.ok) {
-                            // Salva os dados do usuário logado
-                            localStorage.setItem("usuario", JSON.stringify(dados.user));
-                            // token usado pelo chat global (a API precisa devolver "token" no login)
-                            if (dados.token) {
-                                localStorage.setItem("token", dados.token);
-                            } else {
-                                localStorage.removeItem("token");
-                            }
-
-                            alert("✅ Login realizado com sucesso!");
-                            window.location.href = "../index.html";
-                        } else {
-                            console.error(dados);
-                            alert("❌ E-mail ou senha incorretos.");
-                        }
-
-                    } catch (erro) {
-                        console.error(erro);
-                        alert("❌ Não foi possível conectar com a API.");
-                    }
-                }
-
-                // Fluxo profissional de recuperação de senha com E-mail + Código de Verificação
-                function esqueciSenha(event) {
-                    event.preventDefault();
-
-                    const emailCadastrado = localStorage.getItem("usuarioEmail");
-                    const nomeCadastrado = localStorage.getItem("usuarioNome");
-
-                    // Passo 1: Solicitar o e-mail cadastrado
-                    const emailInformado = prompt("Digite o E-MAIL cadastrado na sua conta para iniciar a recuperação:");
-
-                    if (!emailInformado) return; // Se cancelar, encerra
-
-                    if (!emailCadastrado) {
-                        alert("Nenhum cadastro encontrado neste navegador. Por favor, crie uma conta primeiro.");
-                        return;
-                    }
-
-                    // Valida se o e-mail confere
-                    if (emailInformado.trim().toLowerCase() !== emailCadastrado.trim().toLowerCase()) {
-                        alert("❌ E-mail não encontrado ou incorreto. Certifique-se de digitar o mesmo e-mail do cadastro.");
-                        return;
-                    }
-
-                    // Passo 2: Gerar um código de segurança de 4 dígitos simulando o envio
-                    const codigoGerado = Math.floor(1000 + Math.random() * 9000).toString();
-
-                    alert(`📩 [Simulação de E-mail Enviado]\n\nOlá, ${nomeCadastrado || 'Usuário'}!\nEnviamos um código de segurança para: ${emailCadastrado}\n\n👉 SEU CÓDIGO DE VERIFICAÇÃO É: ${codigoGerado}`);
-
-                    // Passo 3: Pedir para o usuário digitar o código recebido
-                    const codigoDigitado = prompt("Digite o código de 4 dígitos enviado para o seu e-mail:");
-
-                    if (!codigoDigitado) {
-                        alert("Operação cancelada.");
-                        return;
-                    }
-
-                    // Passo 4: Validar o código
-                    if (codigoDigitado.trim() === codigoGerado) {
-
-                        // Passo 5: Código correto! Liberar nova senha
-                        const novaSenha = prompt("✅ Código verificado com sucesso!\n\nDigite a sua NOVA senha:");
-
-                        if (novaSenha) {
-                            if (novaSenha.length < 4) {
-                                alert("A nova senha deve conter pelo menos 4 caracteres.");
-                                return;
-                            }
-
-                            localStorage.setItem("usuarioSenha", novaSenha);
-                            alert("🎉 Senha redefinida com sucesso! Agora você já pode entrar com sua nova senha.");
-                        }
-
-                    } else {
-                        alert("❌ Código de verificação inválido. A operação foi cancelada por segurança.");
-                    }
-                }
-            </script>
         </section>
 
         <footer>
             <p>"Toda história começa com uma página."</p>
-            <small>© 2026 Livros pra Vida</small>
+            <div class="benefits">
+                <span>✓ Compra e Troca P2P</span>
+                <span>✓ Chat em Tempo Real</span>
+                <span>✓ Comunidade Literária</span>
+            </div>
+            <small>© 2026 Livros pra Vida. Todos os direitos reservados.</small>
         </footer>
-
     </main>
 
+    <script>
+         const API_URL = "https://lpv-api.onrender.com";
+
+function alternarVisibilidadeSenha() {
+    const campo = document.getElementById("senha");
+    campo.type = campo.type === "password" ? "text" : "password";
+}
+
+document.getElementById("formLogin").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const loginValue = document.getElementById("loginInput").value.trim();
+    const passwordValue = document.getElementById("senha").value;
+    const btnSubmit = document.getElementById("btnSubmit");
+
+    btnSubmit.disabled = true;
+    btnSubmit.innerText = "Entrando...";
+
+    try {
+        const response = await fetch(`${API_URL}/users/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: loginValue,
+                password: passwordValue
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            localStorage.setItem("usuario", JSON.stringify(data.user));
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("logado", "true");
+            localStorage.setItem("usuarioId", data.user.id);
+            localStorage.setItem("usuarioNome", data.user.username);
+            localStorage.setItem("usuarioEmail", data.user.email);
+            localStorage.setItem("isAdmin", data.user.admin ? "true" : "false");
+
+            alert(`Bem-vindo(a) de volta, ${data.user.username}!`);
+            window.location.href = "../index.html";
+        } else {
+            alert("Erro ao entrar: " + (data.error || "Usuário ou senha incorretos."));
+        }
+    } catch (error) {
+        console.error("Erro no login:", error);
+        alert("Não foi possível conectar ao servidor. Se ele estava inativo, aguarde um minuto e tente de novo.");
+    } finally {
+        btnSubmit.disabled = false;
+        btnSubmit.innerText = "Entrar";
+    }
+});
+    </script>
 </body>
 
 </html>

@@ -127,16 +127,23 @@
         <small>© 2026 Livros pra Vida. Todos os direitos reservados.</small>
     </footer>
 
-    <!-- LÓGICA DO MENU DINÂMICO -->
-    <script>
+        <script>
+        function estaLogado() {
+            return !!localStorage.getItem("usuario");
+        }
+
         document.addEventListener("DOMContentLoaded", function () {
             const menu = document.getElementById("menuNavegacao");
-            const estaLogado = !!localStorage.getItem("usuario");
             const fotoPerfil = localStorage.getItem("usuarioFoto") || "../imagens/Background.png";
 
-            if (estaLogado) {
+            if (estaLogado()) {
                 menu.innerHTML = `
                     <a href="../index.html">Início</a>
+                    <a href="Catalogo.html">Catálogo</a>
+                    <a href="ComprarTrocar.html">Comprar & Trocar</a>
+                    <a href="Novidades.html">Novidades</a>
+                    <a href="Chat.html">Chat & Comunidade</a>
+                    <a href="SobreNos.html" class="active">Sobre Nós</a>
                     <a href="#" onclick="sair(event)" class="btn-sair">Sair</a>
                     <a href="MeuPerfil.html" class="profile-nav-link" title="Meu Perfil">
                         <img src="${fotoPerfil}" alt="Meu Perfil" class="profile-nav-avatar">
@@ -145,6 +152,11 @@
             } else {
                 menu.innerHTML = `
                     <a href="../index.html">Início</a>
+                    <a href="Catalogo.html">Catálogo</a>
+                    <a href="ComprarTrocar.html">Comprar & Trocar</a>
+                    <a href="Novidades.html">Novidades</a>
+                    <a href="Chat.html">Chat & Comunidade</a>
+                    <a href="SobreNos.html" class="active">Sobre Nós</a>
                     <a href="Login.html" class="login-button">Entrar</a>
                     <a href="Cadastro.html" class="signup-button">Cadastrar</a>
                 `;
@@ -156,7 +168,11 @@
             localStorage.removeItem("usuario");
             localStorage.removeItem("token");
             localStorage.removeItem("logado");
+            localStorage.removeItem("usuarioId");
             localStorage.removeItem("usuarioNome");
+            localStorage.removeItem("usuarioEmail");
+            localStorage.removeItem("isAdmin");
+            localStorage.removeItem("usuarioFoto");
             window.location.href = "../index.html";
         }
     </script>

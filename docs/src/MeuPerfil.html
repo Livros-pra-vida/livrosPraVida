@@ -7,9 +7,7 @@
     <title>Meu Perfil - Livros pra Vida</title>
 
     <link rel="icon" type="image/png" href="../imagens/icone.png">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/StyleMeuPerfil.css">
 </head>
 
@@ -36,19 +34,16 @@
         <!-- CARTÃO LATERAL: PERFIL E REPUTAÇÃO -->
         <aside class="profile-card">
             <div class="avatar-wrapper">
-                <img src="../imagens/perfil.jpg" alt="Foto do Usuário" id="userAvatar" class="avatar-img">
-                <button class="btn-change-avatar" onclick="document.getElementById('avatarUpload').click()"
-                    title="Alterar foto">📷</button>
-                <input type="file" id="avatarUpload" accept="image/*" style="display: none;"
-                    onchange="uploadFotoPerfil(event)">
+                <img src="../imagens/perfil.jpg" alt="Foto do Usuário" id="userAvatar" class="avatar-img" onerror="this.src='../imagens/perfil.jpg'">
+                <button class="btn-change-avatar" onclick="document.getElementById('avatarUpload').click()" title="Alterar foto">📷</button>
+                <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="uploadFotoPerfil(event)">
             </div>
 
             <h2 id="profileName">Leitor Colaborador</h2>
             <span id="badgePlano" class="role-badge">Membro Colaborador</span>
 
             <!-- Status de Maioridade -->
-            <div id="statusIdade"
-                style="margin-top: 10px; font-size: 0.8rem; padding: 4px 8px; border-radius: 4px; display: inline-block; background: #e0d7cd; color: #2d251e;">
+            <div id="statusIdade" style="margin-top: 10px; font-size: 0.8rem; padding: 4px 8px; border-radius: 4px; display: inline-block; background: #e0d7cd; color: #2d251e;">
                 Verificando idade...
             </div>
 
@@ -77,94 +72,77 @@
             <section class="card-box">
                 <div class="card-header">
                     <h3>Informações Cadastrais & Entrega</h3>
-                    <p>Mantenha seus dados atualizados para envios, segurança e compras na comunidade.</p>
+                    <p>Mantenha seus dados atualizados para envios, segurança e compras.</p>
                 </div>
 
                 <form id="formPerfil" onsubmit="salvarPerfil(event)">
 
                     <!-- Bloco 1: Dados Pessoais -->
-                    <h4
-                        style="margin-bottom: 12px; color: #8c533e; font-size: 1rem; border-bottom: 1px solid #e0d7cd; padding-bottom: 6px;">
+                    <h4 style="margin-bottom: 12px; color: #8c533e; font-size: 1rem; border-bottom: 1px solid #e0d7cd; padding-bottom: 6px;">
                         1. Dados Pessoais</h4>
-                    <div class="form-grid"
-                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                    <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
                         <div class="form-group" style="grid-column: span 2;">
-                            <label for="nomeInput">Nome Completo</label>
-                            <input type="text" id="nomeInput" required placeholder="Seu nome completo"
-                                style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                            <label for="nomeInput">Nome de Usuário</label>
+                            <input type="text" id="nomeInput" required placeholder="Seu nome de usuário" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
                         </div>
 
                         <div class="form-group">
                             <label for="emailInput">E-mail Cadastrado</label>
-                            <input type="email" id="emailInput" required placeholder="seuemail@dominio.com"
-                                style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                            <input type="email" id="emailInput" required placeholder="seuemail@dominio.com" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
                         </div>
 
                         <div class="form-group">
                             <label for="telefoneInput">Telefone / WhatsApp</label>
-                            <input type="tel" id="telefoneInput" placeholder="(00) 00000-0000"
-                                style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                            <input type="tel" id="telefoneInput" maxlength="11" placeholder="00000000000" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
                         </div>
 
                         <div class="form-group">
-                            <label for="nascimentoInput">Data de Nascimento (Verificação de Idade)</label>
-                            <input type="date" id="nascimentoInput" required
-                                style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                            <label for="nascimentoInput">Data de Nascimento</label>
+                            <input type="date" id="nascimentoInput" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
                         </div>
 
                         <div class="form-group">
-                            <label for="cpfInput">CPF</label>
-                            <input type="text" id="cpfInput" placeholder="000.000.000-00"
-                                style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                            <label for="cpfInput">CPF (somente números)</label>
+                            <input type="text" id="cpfInput" maxlength="11" placeholder="00000000000" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
                         </div>
                     </div>
 
                     <!-- Bloco 2: Endereço de Entrega -->
-                    <h4
-                        style="margin-bottom: 12px; color: #8c533e; font-size: 1rem; border-bottom: 1px solid #e0d7cd; padding-bottom: 6px;">
+                    <h4 style="margin-bottom: 12px; color: #8c533e; font-size: 1rem; border-bottom: 1px solid #e0d7cd; padding-bottom: 6px;">
                         2. Endereço de Entrega</h4>
-                    <div class="form-grid"
-                        style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                    <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px;">
                         <div class="form-group">
                             <label for="cepInput">CEP</label>
-                            <input type="text" id="cepInput" placeholder="00000-000" maxlength="9"
-                                onblur="consultarCep(this.value)"
-                                style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                            <input type="text" id="cepInput" placeholder="00000000" maxlength="8" onblur="consultarCep(this.value)" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
                         </div>
 
                         <div class="form-group" style="grid-column: span 2;">
                             <label for="ruaInput">Endereço (Rua, Avenida...)</label>
-                            <input type="text" id="ruaInput" placeholder="Nome da rua ou logradouro"
-                                style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                            <input type="text" id="ruaInput" placeholder="Nome da rua ou logradouro" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
                         </div>
 
                         <div class="form-group">
                             <label for="numeroInput">Número</label>
-                            <input type="text" id="numeroInput" placeholder="Ex: 101"
-                                style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                            <input type="text" id="numeroInput" placeholder="Ex: 101" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
                         </div>
 
                         <div class="form-group">
                             <label for="bairroInput">Bairro</label>
-                            <input type="text" id="bairroInput" placeholder="Bairro"
-                                style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                            <input type="text" id="bairroInput" placeholder="Bairro" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
                         </div>
 
                         <div class="form-group">
                             <label for="cidadeInput">Cidade / UF</label>
-                            <input type="text" id="cidadeInput" placeholder="Ex: Brasília - DF"
-                                style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                            <input type="text" id="cidadeInput" placeholder="Ex: Brasília - DF" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
                         </div>
                     </div>
 
-                    <!-- Bloco 3: Formas de Pagamento Preferidas -->
-                    <h4
-                        style="margin-bottom: 12px; color: #8c533e; font-size: 1rem; border-bottom: 1px solid #e0d7cd; padding-bottom: 6px;">
+                    <!-- Bloco 3: Formas de Pagamento Principal -->
+                    <h4 style="margin-bottom: 12px; color: #8c533e; font-size: 1rem; border-bottom: 1px solid #e0d7cd; padding-bottom: 6px;">
                         3. Forma de Pagamento Principal</h4>
                     <div class="form-group" style="margin-bottom: 20px;">
                         <label for="pagamentoSelect">Método Favorito</label>
-                        <select id="pagamentoSelect"
-                            style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px; background: #fff;">
+                        <select id="pagamentoSelect" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px; background: #fff;">
                             <option value="Pix">Pix (Instantâneo)</option>
                             <option value="Cartão de Crédito">Cartão de Crédito</option>
                             <option value="Boleto Bancário">Boleto Bancário</option>
@@ -172,9 +150,9 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn-save"
-                            style="background: #8c533e; color: #fff; padding: 10px 20px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Salvar
-                            Alterações</button>
+                        <button type="submit" id="btnSalvarPerfil" class="btn-save" style="background: #8c533e; color: #fff; padding: 10px 20px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                            Salvar Alterações
+                        </button>
                     </div>
                 </form>
             </section>
@@ -183,10 +161,10 @@
             <section class="card-box" style="margin-top: 30px;">
                 <div class="card-header">
                     <h3>Meus Pedidos & Compras Anteriores</h3>
-                    <p>Acompanhe o status de envio dos livros adquiridos na plataforma.</p>
+                    <p>Acompanhe o protocolo, os livros e o status de envio dos seus pedidos.</p>
                 </div>
                 <div id="listaHistoricoPedidos" style="margin-top: 15px;">
-                    <!-- Preenchido via JavaScript -->
+                    <p style="color: #666; font-size: 0.9rem;">Carregando histórico...</p>
                 </div>
             </section>
 
@@ -198,26 +176,11 @@
                 </div>
 
                 <div class="books-mini-grid" style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px;">
-                    <div class="mini-book-card"
-                        style="border: 1px solid #e0d7cd; padding: 10px; border-radius: 6px; width: 140px; text-align: center;">
-                        <span class="tag-negocio tag-troca"
-                            style="font-size: 0.75rem; background: #e6f4ea; color: #137333; padding: 2px 6px; border-radius: 4px;">Troca</span>
-                        <img src="../imagens/midnight-library.jpg" alt="A Biblioteca da Meia-Noite"
-                            style="width: 100%; height: 100px; object-fit: cover; margin: 8px 0;">
+                    <div class="mini-book-card" style="border: 1px solid #e0d7cd; padding: 10px; border-radius: 6px; width: 140px; text-align: center;">
+                        <span class="tag-negocio tag-troca" style="font-size: 0.75rem; background: #e6f4ea; color: #137333; padding: 2px 6px; border-radius: 4px;">Troca</span>
+                        <img src="../imagens/midnight-library.jpg" alt="A Biblioteca da Meia-Noite" style="width: 100%; height: 100px; object-fit: cover; margin: 8px 0;">
                         <h4 style="font-size: 0.85rem; margin-bottom: 8px;">A Biblioteca da Meia-Noite</h4>
-                        <button class="btn-action-card"
-                            style="font-size: 0.75rem; padding: 4px 8px; background: #8c533e; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Gerenciar</button>
-                    </div>
-
-                    <div class="mini-book-card"
-                        style="border: 1px solid #e0d7cd; padding: 10px; border-radius: 6px; width: 140px; text-align: center;">
-                        <span class="tag-negocio tag-doacao"
-                            style="font-size: 0.75rem; background: #e8f0fe; color: #1a73e8; padding: 2px 6px; border-radius: 4px;">Doação</span>
-                        <img src="../imagens/sapiens.jpg" alt="Sapiens"
-                            style="width: 100%; height: 100px; object-fit: cover; margin: 8px 0;">
-                        <h4 style="font-size: 0.85rem; margin-bottom: 8px;">Sapiens</h4>
-                        <button class="btn-action-card"
-                            style="font-size: 0.75rem; padding: 4px 8px; background: #8c533e; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Gerenciar</button>
+                        <button class="btn-action-card" style="font-size: 0.75rem; padding: 4px 8px; background: #8c533e; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Gerenciar</button>
                     </div>
                 </div>
             </section>
@@ -226,9 +189,19 @@
 
     </main>
 
-    <!-- SCRIPT DE PERFIL E VIACEP -->
     <script>
         const API_URL = "https://lpv-api.onrender.com";
+
+        function limparSessao() {
+            localStorage.removeItem("usuario");
+            localStorage.removeItem("token");
+            localStorage.removeItem("logado");
+            localStorage.removeItem("usuarioId");
+            localStorage.removeItem("usuarioNome");
+            localStorage.removeItem("usuarioEmail");
+            localStorage.removeItem("isAdmin");
+            localStorage.removeItem("usuarioFoto");
+        }
 
         document.addEventListener("DOMContentLoaded", async function () {
             const usuarioSalvo = JSON.parse(localStorage.getItem("usuario"));
@@ -240,14 +213,12 @@
             }
 
             try {
-                // Busca os dados atualizados do usuário no banco
                 const resposta = await fetch(`${API_URL}/users/${usuarioSalvo.id}`, {
                     headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
                 });
 
                 if (resposta.status === 401) {
-                    localStorage.removeItem("token");
-                    localStorage.removeItem("usuario");
+                    limparSessao();
                     alert("Sua sessão expirou. Faça login novamente.");
                     window.location.href = "Login.html";
                     return;
@@ -258,11 +229,8 @@
                 }
 
                 const usuario = await resposta.json();
-
-                // Atualiza o usuário armazenado localmente
                 localStorage.setItem("usuario", JSON.stringify(usuario));
 
-                // Dados pessoais vindos da API
                 document.getElementById("nomeInput").value = usuario.username || "";
                 document.getElementById("emailInput").value = usuario.email || "";
                 document.getElementById("telefoneInput").value = usuario.telefone || "";
@@ -271,24 +239,26 @@
                     : "";
                 document.getElementById("cpfInput").value = usuario.cpf || "";
 
+                if (usuario.admin) {
+                    const badge = document.getElementById("badgePlano");
+                    badge.textContent = "Administrador";
+                    badge.style.background = "#8c533e";
+                    badge.style.color = "#fff";
+                }
             } catch (erro) {
                 console.error("Erro ao carregar usuário:", erro);
-                alert("Não foi possível carregar seus dados da API.");
+                alert("Não foi possível carregar seus dados.");
             }
 
-            // Endereço e pagamento continuam no localStorage
+            // Endereço, pagamento e foto ficam salvos no navegador
             document.getElementById("cepInput").value = localStorage.getItem("usuarioCep") || "";
             document.getElementById("ruaInput").value = localStorage.getItem("usuarioRua") || "";
             document.getElementById("numeroInput").value = localStorage.getItem("usuarioNumero") || "";
             document.getElementById("bairroInput").value = localStorage.getItem("usuarioBairro") || "";
             document.getElementById("cidadeInput").value = localStorage.getItem("usuarioCidade") || "";
-            document.getElementById("pagamentoSelect").value =
-                localStorage.getItem("usuarioPagamento") || "Pix";
+            document.getElementById("pagamentoSelect").value = localStorage.getItem("usuarioPagamento") || "Pix";
 
-            const fotoSalva = localStorage.getItem("usuarioFoto");
-            document.getElementById("userAvatar").src =
-                fotoSalva || "../imagens/perfil.jpg";
-
+            document.getElementById("userAvatar").src = localStorage.getItem("usuarioFoto") || "../imagens/perfil.jpg";
             document.getElementById("profileName").textContent =
                 document.getElementById("nomeInput").value || "Leitor Colaborador";
 
@@ -318,23 +288,43 @@
 
         function carregarHistoricoPedidos() {
             const container = document.getElementById("listaHistoricoPedidos");
-            const pedidos = JSON.parse(localStorage.getItem("historicoPedidos")) || [];
+            const historico = JSON.parse(localStorage.getItem("historicoPedidos")) || [];
 
-            if (pedidos.length === 0) {
+            if (historico.length === 0) {
                 container.innerHTML = `<p style="color: #666; font-size: 0.9rem;">Nenhum pedido realizado ainda.</p>`;
                 return;
             }
 
-            container.innerHTML = pedidos.map(p => `
-                <div style="border: 1px solid #e0d7cd; padding: 12px; border-radius: 6px; margin-bottom: 10px; background: #faf8f5;">
-                    <div style="display: flex; justify-content: space-between; font-weight: 600; font-size: 0.9rem; color: #8c533e;">
-                        <span>Pedido #${p.id}</span>
-                        <span style="color: #137333; background: #e6f4ea; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">${p.status}</span>
+            container.innerHTML = historico.map(pedido => {
+                const imagemCapa = pedido.imagem || "https://covers.openlibrary.org/b/id/12645114-L.jpg";
+
+                return `
+                    <div style="background: #faf8f5; border: 1px solid #e0d7cd; border-radius: 8px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <img src="${imagemCapa}" onerror="this.src='https://covers.openlibrary.org/b/id/12645114-L.jpg'" alt="Capa do Livro" style="width: 50px; height: 70px; object-fit: cover; border-radius: 4px; border: 1px solid #d9d4c9;">
+                            <div>
+                                <div style="font-size: 0.85rem; color: #8c533e; font-weight: bold; margin-bottom: 4px;">
+                                    Protocolo de Compra: #${pedido.id}
+                                </div>
+                                <div style="font-size: 0.95rem; color: #2d251e; font-weight: 600; margin-bottom: 4px;">
+                                    ${pedido.itens}
+                                </div>
+                                <div style="font-size: 0.8rem; color: #6e655f;">
+                                    Pagamento: <strong>${pedido.pagamento}</strong> | Endereço: ${pedido.endereco || "Endereço cadastrado"}
+                                </div>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 1rem; font-weight: bold; color: #8c533e; margin-bottom: 4px;">
+                                ${pedido.total}
+                            </div>
+                            <span style="display: inline-block; font-size: 0.75rem; background: #e6f4ea; color: #137333; padding: 3px 8px; border-radius: 12px; font-weight: 600;">
+                                ${pedido.status || "Em separação"}
+                            </span>
+                        </div>
                     </div>
-                    <p style="font-size: 0.85rem; color: #444; margin: 6px 0;">Itens: ${p.itens}</p>
-                    <p style="font-size: 0.8rem; color: #666;">Total: ${p.total} | Pagamento: ${p.pagamento}</p>
-                </div>
-            `).join('');
+                `;
+            }).join("");
         }
 
         function uploadFotoPerfil(event) {
@@ -355,7 +345,7 @@
             const badgeIdade = document.getElementById("statusIdade");
 
             if (!dataNasc) {
-                badgeIdade.textContent = "⚠️ Data de nascimento não informada";
+                badgeIdade.textContent = "Data de nascimento não informada";
                 badgeIdade.style.background = "#fce8e6";
                 badgeIdade.style.color = "#c5221f";
                 return;
@@ -370,11 +360,11 @@
             }
 
             if (idade >= 18) {
-                badgeIdade.textContent = `✔ Maior de idade (${idade} anos)`;
+                badgeIdade.textContent = `Maior de idade (${idade} anos)`;
                 badgeIdade.style.background = "#e6f4ea";
                 badgeIdade.style.color = "#137333";
             } else {
-                badgeIdade.textContent = `⚠️ Menor de idade (${idade} anos)`;
+                badgeIdade.textContent = `Menor de idade (${idade} anos)`;
                 badgeIdade.style.background = "#fef7e0";
                 badgeIdade.style.color = "#b06000";
             }
@@ -386,74 +376,80 @@
             event.preventDefault();
 
             const usuarioSalvo = JSON.parse(localStorage.getItem("usuario"));
+            const btnSalvar = document.getElementById("btnSalvarPerfil");
 
             if (!usuarioSalvo || !usuarioSalvo.id) {
                 alert("Não foi possível identificar o usuário. Faça login novamente.");
                 return;
             }
 
-            // Envia somente os dados pessoais para a API
+            btnSalvar.disabled = true;
+            btnSalvar.innerText = "Salvando...";
+
+            // Só os dados pessoais vão para a API; endereço e pagamento ficam no navegador
             const dados = {
                 user: {
-                    username: document.getElementById("nomeInput").value,
-                    email: document.getElementById("emailInput").value,
-                    telefone: document.getElementById("telefoneInput").value,
+                    username: document.getElementById("nomeInput").value.trim(),
+                    email: document.getElementById("emailInput").value.trim(),
+                    telefone: document.getElementById("telefoneInput").value.trim().replace(/\D/g, ""),
                     nascimento: document.getElementById("nascimentoInput").value,
-                    cpf: document.getElementById("cpfInput").value
+                    cpf: document.getElementById("cpfInput").value.trim().replace(/\D/g, "")
                 }
             };
 
             try {
-                const resposta = await fetch(
-                    `${API_URL}/users/${usuarioSalvo.id}`,
-                    {
-                        method: "PATCH",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": `Bearer ${localStorage.getItem("token")}`
-                        },
-                        body: JSON.stringify(dados)
-                    }
-                );
+                const resposta = await fetch(`${API_URL}/users/${usuarioSalvo.id}`, {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    },
+                    body: JSON.stringify(dados)
+                });
+
+                if (resposta.status === 401) {
+                    limparSessao();
+                    alert("Sua sessão expirou. Faça login novamente.");
+                    window.location.href = "Login.html";
+                    return;
+                }
 
                 if (!resposta.ok) {
-                    const erro = await resposta.text();
+                    const erro = await resposta.json().catch(() => ({}));
                     console.error("Erro da API:", erro);
-                    alert("Não foi possível salvar os dados pessoais.");
+                    alert("Não foi possível salvar: " + (erro.errors ? erro.errors.join(", ") : (erro.error || "verifique os dados informados.")));
                     return;
                 }
 
                 const usuarioAtualizado = await resposta.json();
                 localStorage.setItem("usuario", JSON.stringify(usuarioAtualizado));
 
-                // Mantém endereço e pagamento localmente
-                localStorage.setItem("usuarioCep", document.getElementById("cepInput").value);
-                localStorage.setItem("usuarioRua", document.getElementById("ruaInput").value);
-                localStorage.setItem("usuarioNumero", document.getElementById("numeroInput").value);
-                localStorage.setItem("usuarioBairro", document.getElementById("bairroInput").value);
-                localStorage.setItem("usuarioCidade", document.getElementById("cidadeInput").value);
+                localStorage.setItem("usuarioCep", document.getElementById("cepInput").value.trim());
+                localStorage.setItem("usuarioRua", document.getElementById("ruaInput").value.trim());
+                localStorage.setItem("usuarioNumero", document.getElementById("numeroInput").value.trim());
+                localStorage.setItem("usuarioBairro", document.getElementById("bairroInput").value.trim());
+                localStorage.setItem("usuarioCidade", document.getElementById("cidadeInput").value.trim());
                 localStorage.setItem("usuarioPagamento", document.getElementById("pagamentoSelect").value);
 
-                // Mantém os dados pessoais em sincronia no navegador
                 localStorage.setItem("usuarioNome", dados.user.username);
                 localStorage.setItem("usuarioEmail", dados.user.email);
-                localStorage.setItem("usuarioTelefone", dados.user.telefone);
-                localStorage.setItem("usuarioNascimento", dados.user.nascimento);
-                localStorage.setItem("usuarioCpf", dados.user.cpf);
 
                 document.getElementById("profileName").textContent = dados.user.username;
                 verificarMaioridade();
 
-                alert("✨ Perfil atualizado com sucesso!");
+                alert("Perfil atualizado com sucesso!");
 
             } catch (erro) {
                 console.error("Erro ao salvar perfil:", erro);
-                alert("Erro de conexão com a API.");
+                alert("Erro de conexão com o servidor.");
+            } finally {
+                btnSalvar.disabled = false;
+                btnSalvar.innerText = "Salvar Alterações";
             }
         }
 
         function sair() {
-            localStorage.removeItem("logado");
+            limparSessao();
             window.location.href = "../index.html";
         }
     </script>
