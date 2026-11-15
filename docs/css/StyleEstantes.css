@@ -1,0 +1,217 @@
+/* Página "Minhas Estantes". Carregue DEPOIS de StyleMeuPerfil.css (usa as mesmas variáveis).
+   Obs.: StyleMeuPerfil.css define um estilo global para <span> (22px, negrito),
+   por isso os spans usados aqui redefinem tamanho, peso e cor explicitamente. */
+
+[hidden] {
+    display: none !important;
+}
+
+.estantes-lateral {
+    height: fit-content;
+}
+
+/* LISTA DE ESTANTES */
+.lista-estantes {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 22px;
+}
+
+.lista-estantes .vazio {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    padding: 6px 2px;
+}
+
+.item-estante {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: #faf8f5;
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 0.92rem;
+    color: var(--text-dark);
+    transition: var(--transition);
+}
+
+.item-estante:hover {
+    border-color: var(--primary);
+}
+
+.item-estante.ativa {
+    background: var(--primary-light);
+    border-color: var(--primary);
+    font-weight: 600;
+}
+
+.item-nome {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.92rem;
+    font-weight: inherit;
+    color: inherit;
+}
+
+.item-contagem {
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    color: var(--primary);
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 2px 8px;
+}
+
+/* FORMULÁRIO LATERAL */
+.form-lateral {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 18px;
+}
+
+.form-lateral h4 {
+    font-size: 1rem;
+    color: var(--primary);
+}
+
+/* PAINEL DA ESTANTE */
+.painel-estante {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.cabecalho-estante {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.cabecalho-estante h3 {
+    word-break: break-word;
+}
+
+.coluna-cheia {
+    grid-column: 1 / -1;
+}
+
+/* LIVROS */
+.lista-livros {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.lista-livros .vazio {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.livro-linha {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    background: #faf8f5;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 12px 16px;
+}
+
+.livro-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.livro-info strong {
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    word-break: break-word;
+}
+
+.livro-autor {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.livro-meta {
+    font-size: 0.78rem;
+    color: var(--text-light);
+}
+
+.livro-meta .nota {
+    font-size: inherit;
+    font-weight: 600;
+    color: #f39c12;
+}
+
+/* BOTÕES */
+.btn-perigo,
+.btn-remover {
+    background: transparent;
+    border: 1.5px solid var(--danger);
+    color: var(--danger);
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-perigo {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+}
+
+.btn-remover {
+    padding: 6px 12px;
+    font-size: 0.78rem;
+    flex-shrink: 0;
+}
+
+.btn-perigo:hover,
+.btn-remover:hover {
+    background: var(--danger);
+    color: #fff;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* AVISOS */
+.aviso {
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    border: 1px solid transparent;
+}
+
+.aviso.ok {
+    background: #e6f4ea;
+    color: #137333;
+    border-color: #c6e5cf;
+}
+
+.aviso.erro {
+    background: #fce8e6;
+    color: #c5221f;
+    border-color: #f5c6c2;
+}

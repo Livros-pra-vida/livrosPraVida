@@ -75,6 +75,7 @@
                 <a href="src/Login.html" id="entrar">Entrar</a>
                 <a href="src/Cadastro.html" id="cadastrar" class="btn-cadastrar">Cadastrar</a>
 
+                <a href="src/Estantes.html" id="minhasEstantes" style="display: none;">Minhas Estantes</a>
                 <a href="#" id="sair" onclick="sair()" style="display: none;">Sair</a>
                 <a href="src/MeuPerfil.html" id="meuPerfil" title="Meu Perfil" style="display: none;">
                     <img id="menuAvatar" src="imagens/Background.png" alt="Foto do Perfil" class="avatar-img">
@@ -358,6 +359,7 @@
             document.getElementById("cadastrar").style.display = "none";
             document.getElementById("meuPerfil").style.display = "flex";
             document.getElementById("sair").style.display = "inline-block";
+            document.getElementById("minhasEstantes").style.display = "inline-block";
 
             const fotoSalva = localStorage.getItem("usuarioFoto");
 
@@ -370,6 +372,7 @@
 
             document.getElementById("meuPerfil").style.display = "none";
             document.getElementById("sair").style.display = "none";
+            document.getElementById("minhasEstantes").style.display = "none";
             document.getElementById("entrar").style.display = "inline-block";
             document.getElementById("cadastrar").style.display = "inline-block";
         }
