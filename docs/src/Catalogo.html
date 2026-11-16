@@ -97,6 +97,12 @@
                         <h3 id="modalTitulo" style="margin-top: 0; color: #2d251e; font-size: 1.4rem;"></h3>
                         <p id="modalAutor" class="autor" style="color: #6e655f; font-weight: 500; margin-bottom: 12px;"></p>
                         <p id="modalSinopse" class="sinopse" style="line-height: 1.5; color: #4a423a; margin-bottom: 15px; font-size: 0.9rem;"></p>
+                        <div id="modalAvaliacao" class="avaliacao-box" style="display: none;">
+                            <p id="modalAvaliacaoMedia" class="avaliacao-media"></p>
+                            <div id="modalEstrelas" class="estrelas" role="group" aria-label="Sua avaliação"></div>
+                            <div id="modalAvaliacaoAcoes" class="avaliacao-acoes"></div>
+                            <p id="modalAvaliacaoMsg" class="avaliacao-msg" role="status" aria-live="polite"></p>
+                        </div>
                         <div id="modalPreco" class="preco" style="font-size: 1.4rem; font-weight: 700; color: #8c533e; margin-bottom: 15px;"></div>
                         <button class="btn-comprar-modal" onclick="irParaPagamento()" style="width: 100%; padding: 12px; background-color: #8c533e; color: #fff; border: none; border-radius: 6px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: background 0.2s;">Comprar Agora</button>
                     </div>
@@ -151,6 +157,13 @@
         // Carrega livros cadastrados no LocalStorage e junta com os padrões
         const livrosSalvosLocal = JSON.parse(localStorage.getItem("livrosCadastrados")) || [];
         const acervoLivros = [...livrosSalvosLocal, ...livrosPadrao];
+
+        // ---------- Avaliações públicas (vêm da API; a lista de livros continua sendo esta página) ----------
+        const API_URL = "https://lpv-api.onrender.com";
+        const TIMEOUT_MS = 60000; // o servidor gratuito pode demorar para acordar
+        let estadoAvaliacoes = "carregando"; // "carregando" | "ok" | "erro"
+        let avaliando = false;               // evita clique duplo enquanto salva
+        let previaEstrelas = 0;              // estrelas destacadas ao passar o mouse
 
         let generoAtual = "Todos";
         let textoBuscaAtual = "";
@@ -245,12 +258,12 @@
                 card.className = "card-livro";
 
                 const capaLivro = livro.imagem || "../imagens/icone.png";
-                const notaLivro = livro.nota || "5.0";
+                const textoNota = textoSeloNota(livro);
 
                 card.innerHTML = `
                     <div style="position: relative; cursor: pointer;" onclick="abrirModalDetalhes(${livro.id})">
                         <img src="${capaLivro}" alt="Capa do livro ${livro.titulo}">
-                        <span style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: #fff; font-size: 0.75rem; padding: 2px 8px; border-radius: 10px; font-weight: 600;">★ ${notaLivro}</span>
+                        ${textoNota ? `<span class="selo-nota" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: #fff; font-size: 0.75rem; padding: 2px 8px; border-radius: 10px; font-weight: 600;">${textoNota}</span>` : ""}
                     </div>
                     <div style="padding: 10px 0; cursor: pointer;" onclick="abrirModalDetalhes(${livro.id})">
                         <span style="font-size: 0.75rem; color: #8c533e; font-weight: 600;">${livro.genero}</span>
@@ -273,6 +286,253 @@
                 `;
                 grid.appendChild(card);
             });
+        }
+
+        // ---------- Avaliações ----------
+
+        // Só os livros oficiais do catálogo (livrosPadrao) recebem avaliação.
+        // Livros cadastrados pelo usuário no navegador não existem no servidor.
+        function ehLivroDoCatalogo(livro) {
+            return livrosPadrao.includes(livro);
+        }
+
+        function usuarioTemToken() {
+            return !!localStorage.getItem("token");
+        }
+
+        function formatarMedia(valor) {
+            return Number(valor).toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+        }
+
+        // Texto do selo no canto da capa. Retorna "" quando não há o que mostrar.
+        function textoSeloNota(livro) {
+            if (!ehLivroDoCatalogo(livro)) return `★ ${livro.nota || "5.0"}`; // livro local: comportamento antigo
+            if (estadoAvaliacoes !== "ok") return "";                          // ainda carregando ou API fora do ar
+            if (!livro.qtdAvaliacoes) return "Sem avaliações";
+            return `★ ${formatarMedia(livro.mediaAvaliacao)} (${livro.qtdAvaliacoes})`;
+        }
+
+        async function chamarApi(caminho, { method = "GET", corpo } = {}) {
+            const token = localStorage.getItem("token");
+            const controller = new AbortController();
+            const temporizador = setTimeout(() => controller.abort(), TIMEOUT_MS);
+            let resposta;
+
+            try {
+                resposta = await fetch(`${API_URL}${caminho}`, {
+                    method,
+                    headers: {
+                        ...(token ? { "Authorization": `Bearer ${token}` } : {}),
+                        ...(corpo ? { "Content-Type": "application/json" } : {})
+                    },
+                    body: corpo ? JSON.stringify(corpo) : undefined,
+                    signal: controller.signal
+                });
+            } catch (erro) {
+                const e = new Error(erro.name === "AbortError"
+                    ? "O servidor demorou a responder. Tente novamente."
+                    : "Sem conexão com o servidor.");
+                e.rede = true;
+                throw e;
+            } finally {
+                clearTimeout(temporizador);
+            }
+
+            const dados = await resposta.json().catch(() => null);
+            if (!resposta.ok) {
+                const mensagem = (dados && Array.isArray(dados.errors) && dados.errors.join(", "))
+                    || (dados && typeof dados.error === "string" && dados.error)
+                    || "Não foi possível concluir. Tente novamente.";
+                const e = new Error(mensagem);
+                e.status = resposta.status;
+                throw e;
+            }
+            return dados;
+        }
+
+        // Copia o resumo (média, quantidade, minha nota) para o livro do catálogo correspondente
+        function aplicarResumo(resumo) {
+            const alvo = String(resumo.title || "").trim().toLowerCase();
+            const livro = livrosPadrao.find(l =>
+                l.catalogId === resumo.id || (!l.catalogId && l.titulo.trim().toLowerCase() === alvo));
+            if (!livro) return null;
+
+            livro.catalogId = resumo.id;
+            livro.mediaAvaliacao = resumo.average_rating;
+            livro.qtdAvaliacoes = resumo.ratings_count;
+            livro.minhaNota = resumo.my_rating;
+            return livro;
+        }
+
+        async function carregarAvaliacoes() {
+            estadoAvaliacoes = "carregando";
+            renderizarAvaliacaoModal();
+            try {
+                const lista = await chamarApi("/catalog_books");
+                lista.forEach(aplicarResumo);
+                estadoAvaliacoes = "ok";
+            } catch (erro) {
+                console.warn("Não foi possível carregar as avaliações:", erro.message);
+                estadoAvaliacoes = "erro";
+            }
+            renderizarLivros();
+            renderizarAvaliacaoModal();
+        }
+
+        function definirMensagemAvaliacao(texto, tipo) {
+            const msg = document.getElementById("modalAvaliacaoMsg");
+            msg.textContent = texto || "";
+            msg.className = "avaliacao-msg" + (tipo ? ` ${tipo}` : "");
+        }
+
+        function criarBotaoLink(texto, aoClicar) {
+            const botao = document.createElement("button");
+            botao.type = "button";
+            botao.className = "btn-link";
+            botao.textContent = texto;
+            botao.addEventListener("click", aoClicar);
+            return botao;
+        }
+
+        // Desenha o bloco de avaliação do modal conforme o estado (carregando, erro, visitante, logado)
+        function renderizarAvaliacaoModal() {
+            const caixa = document.getElementById("modalAvaliacao");
+            if (!caixa) return;
+
+            const livro = livroAtual;
+            if (!livro || !ehLivroDoCatalogo(livro)) {
+                caixa.style.display = "none";
+                return;
+            }
+            caixa.style.display = "block";
+
+            const media = document.getElementById("modalAvaliacaoMedia");
+            const estrelas = document.getElementById("modalEstrelas");
+            const acoes = document.getElementById("modalAvaliacaoAcoes");
+            estrelas.replaceChildren();
+            acoes.replaceChildren();
+
+            if (estadoAvaliacoes === "carregando") {
+                media.textContent = "Carregando avaliações... (pode levar um pouco se o servidor estava inativo)";
+                return;
+            }
+
+            if (estadoAvaliacoes === "erro" || !livro.catalogId) {
+                media.textContent = "As avaliações estão indisponíveis no momento.";
+                acoes.append(criarBotaoLink("Tentar de novo", carregarAvaliacoes));
+                return;
+            }
+
+            // Média pública
+            media.replaceChildren();
+            if (livro.qtdAvaliacoes) {
+                const forte = document.createElement("strong");
+                forte.textContent = `★ ${formatarMedia(livro.mediaAvaliacao)}`;
+                media.append(forte, ` · ${livro.qtdAvaliacoes} ${livro.qtdAvaliacoes === 1 ? "avaliação" : "avaliações"}`);
+            } else {
+                media.textContent = "Ainda sem avaliações. Seja o primeiro a avaliar!";
+            }
+
+            // Estrelas (a nota do usuário, ou a prévia enquanto o mouse passa por cima)
+            const logado = usuarioTemToken();
+            const destaque = previaEstrelas || livro.minhaNota || 0;
+
+            for (let n = 1; n <= 5; n++) {
+                const estrela = document.createElement("button");
+                estrela.type = "button";
+                estrela.className = "estrela" + (n <= destaque ? " cheia" : "");
+                estrela.textContent = "★";
+                estrela.disabled = !logado || avaliando;
+                estrela.setAttribute("aria-label", `Dar nota ${n} de 5`);
+                estrela.setAttribute("aria-pressed", String(livro.minhaNota === n));
+                estrela.addEventListener("click", () => avaliarLivro(livro, n));
+                estrela.addEventListener("mouseenter", () => { previaEstrelas = n; pintarEstrelas(); });
+                estrela.addEventListener("focus", () => { previaEstrelas = n; pintarEstrelas(); });
+                estrelas.append(estrela);
+            }
+            estrelas.onmouseleave = () => { previaEstrelas = 0; pintarEstrelas(); };
+            estrelas.onfocusout = () => { previaEstrelas = 0; pintarEstrelas(); };
+
+            if (!logado) {
+                const aviso = document.createElement("span");
+                aviso.textContent = "Para avaliar, ";
+                const link = document.createElement("a");
+                link.href = "Login.html";
+                link.textContent = "entre na sua conta";
+                link.style.color = "#8c533e";
+                aviso.append(link, ".");
+                acoes.append(aviso);
+            } else if (livro.minhaNota) {
+                acoes.append(`Sua nota: ${livro.minhaNota} de 5`,
+                             criarBotaoLink("Remover minha nota", () => removerAvaliacao(livro)));
+            } else {
+                acoes.append("Clique em uma estrela para avaliar.");
+            }
+        }
+
+        // Só repinta as estrelas (usado na prévia do mouse), sem recriar os botões
+        function pintarEstrelas() {
+            const livro = livroAtual;
+            if (!livro) return;
+            const destaque = previaEstrelas || livro.minhaNota || 0;
+            document.querySelectorAll("#modalEstrelas .estrela").forEach((estrela, i) => {
+                estrela.classList.toggle("cheia", i + 1 <= destaque);
+            });
+        }
+
+        function tratarErroAvaliacao(erro, livro) {
+            if (erro.status === 401) {
+                // O token venceu: encerra a sessão local para o cabeçalho refletir isso
+                realizarLogout();
+                atualizarCabecalhoAuth();
+                definirMensagemAvaliacao("Sua sessão expirou. Entre novamente para avaliar.", "erro");
+            } else {
+                definirMensagemAvaliacao(erro.message, "erro");
+            }
+        }
+
+        async function salvarAvaliacao(livro, requisicao, mensagemSucesso) {
+            if (avaliando) return;
+            avaliando = true;
+            definirMensagemAvaliacao("Salvando...");
+            renderizarAvaliacaoModal();
+
+            try {
+                const resumo = await requisicao();
+                aplicarResumo(resumo);
+                renderizarLivros(); // atualiza o selo no card
+                if (livroAtual === livro) {
+                    avaliando = false;
+                    renderizarAvaliacaoModal();
+                    definirMensagemAvaliacao(mensagemSucesso, "ok");
+                }
+            } catch (erro) {
+                if (livroAtual === livro) {
+                    avaliando = false;
+                    tratarErroAvaliacao(erro, livro); // antes de redesenhar: no 401 isso encerra a sessão local
+                    renderizarAvaliacaoModal();
+                } else if (erro.status === 401) {
+                    tratarErroAvaliacao(erro, livro);
+                }
+            } finally {
+                avaliando = false;
+            }
+        }
+
+        function avaliarLivro(livro, nota) {
+            if (!usuarioTemToken()) {
+                definirMensagemAvaliacao("Entre na sua conta para avaliar.", "erro");
+                return;
+            }
+            return salvarAvaliacao(livro,
+                () => chamarApi(`/catalog_books/${livro.catalogId}/rating`, { method: "PUT", corpo: { rating: { score: nota } } }),
+                "Obrigado! Sua nota foi salva.");
+        }
+
+        function removerAvaliacao(livro) {
+            return salvarAvaliacao(livro,
+                () => chamarApi(`/catalog_books/${livro.catalogId}/rating`, { method: "DELETE" }),
+                "Sua nota foi removida.");
         }
 
         function adicionarAoCarrinho(idLivro, event) {
@@ -319,6 +579,10 @@
             document.getElementById("modalSinopse").innerText = livroAtual.sinopse || "Sem sinopse cadastrada.";
             document.getElementById("modalPreco").innerText = formatarMoeda(livroAtual.preco);
 
+            previaEstrelas = 0;
+            definirMensagemAvaliacao("");
+            renderizarAvaliacaoModal();
+
             document.getElementById("etapaDetalhes").style.display = "block";
             document.getElementById("etapaPagamento").style.display = "none";
 
@@ -340,6 +604,8 @@
         }
 
         function fecharModal() {
+            livroAtual = null;
+            previaEstrelas = 0;
             document.getElementById("modalLivro").style.display = "none";
             document.getElementById("formPagamento").reset();
             document.body.style.overflow = "auto";
@@ -373,6 +639,7 @@
             atualizarCabecalhoAuth();
             renderizarLivros();
             atualizarContadorCarrinho();
+            carregarAvaliacoes();
         });
     </script>
 </body>
