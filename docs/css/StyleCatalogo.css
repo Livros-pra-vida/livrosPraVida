@@ -338,3 +338,92 @@ header, .header-container {
         gap: 20px;
     }
 }
+
+/* --- AVALIAÇÃO PÚBLICA (estrelas no detalhe do livro) --- */
+.avaliacao-box {
+    margin: 0 0 15px;
+    padding: 10px 12px;
+    background: #faf8f5;
+    border: 1px solid #e0d7cd;
+    border-radius: 8px;
+}
+
+.avaliacao-media {
+    margin: 0 0 6px;
+    font-size: 0.85rem;
+    color: #4a423a;
+}
+
+.avaliacao-media strong {
+    color: #8c533e;
+}
+
+.estrelas {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+}
+
+.estrela {
+    background: none;
+    border: none;
+    padding: 2px 3px;
+    font-size: 1.7rem;
+    line-height: 1;
+    color: #d8cfc4;
+    cursor: pointer;
+    transition: transform 0.1s, color 0.1s;
+}
+
+.estrela.cheia {
+    color: #f39c12;
+}
+
+.estrela:hover:not(:disabled) {
+    transform: scale(1.15);
+}
+
+.estrela:focus-visible {
+    outline: 2px solid #8c533e;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+.estrela:disabled {
+    cursor: default;
+}
+
+.avaliacao-acoes {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+    font-size: 0.8rem;
+    color: #6e655f;
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #8c533e;
+    font-size: 0.8rem;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.avaliacao-msg {
+    margin: 6px 0 0;
+    min-height: 1.1em;
+    font-size: 0.8rem;
+    color: #6e655f;
+}
+
+.avaliacao-msg.ok {
+    color: #137333;
+}
+
+.avaliacao-msg.erro {
+    color: #c5221f;
+}

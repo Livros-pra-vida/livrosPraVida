@@ -1,5 +1,6 @@
 let categoriaAtual = 'todos';
 
+// Esconde os cards que não combinam com o texto digitado e a aba escolhida.
 function filtrarLivros() {
     const input = document.getElementById('searchInput');
     if (!input) return;
@@ -34,6 +35,7 @@ function filtrarLivros() {
     });
 }
 
+// Troca a aba de categoria ativa e refaz a filtragem.
 function filtrarCategoria(categoria, elemento) {
     categoriaAtual = categoria.toLowerCase();
 

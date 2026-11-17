@@ -77,6 +77,10 @@
             <button class="filter-btn" onclick="filtrarPorGenero('História/Biografia', this)">História & Biografia</button>
         </div>
 
+        <div id="barraAdminCatalogo" style="display: none; margin-top: 16px;">
+            <button type="button" class="admin-btn-principal" onclick="abrirModalNovoLivro()">+ Adicionar livro ao catálogo</button>
+        </div>
+
         <div class="grid-livros" id="gridLivros" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; margin-top: 20px;"></div>
 
         <div id="mensagemVazio" style="display: none; text-align: center; padding: 40px 20px; color: #6e655f;">
@@ -84,6 +88,45 @@
             <button onclick="limparFiltros()" style="background: #8c533e; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600;">Limpar Filtros</button>
         </div>
     </main>
+
+    <div id="modalNovoLivro" class="admin-fundo" style="display: none;" onclick="if (event.target === this) fecharModalNovoLivro()">
+        <form id="formNovoLivro" class="admin-caixa" onsubmit="cadastrarLivroCatalogo(event)">
+            <h3>Adicionar livro ao catálogo</h3>
+            <p style="font-size: 0.85rem; color: #6e655f; margin: 4px 0 12px;">O livro aparece para todos os usuários.</p>
+            <label style="display: block; font-size: 0.85rem; margin-bottom: 10px;">Título
+                <input type="text" id="novoLivroTitulo" required maxlength="200" style="width: 100%; padding: 8px 10px; border: 1px solid #e0d7cd; border-radius: 6px; margin-top: 4px; box-sizing: border-box;">
+            </label>
+            <label style="display: block; font-size: 0.85rem; margin-bottom: 10px;">Autor
+                <input type="text" id="novoLivroAutor" required maxlength="200" style="width: 100%; padding: 8px 10px; border: 1px solid #e0d7cd; border-radius: 6px; margin-top: 4px; box-sizing: border-box;">
+            </label>
+            <label style="display: block; font-size: 0.85rem; margin-bottom: 10px;">Gênero
+                <select id="novoLivroGenero" required style="width: 100%; padding: 8px 10px; border: 1px solid #e0d7cd; border-radius: 6px; margin-top: 4px; background: #fff; box-sizing: border-box;">
+                    <option value="Ação/Aventura">Ação &amp; Aventura</option>
+                    <option value="Romance">Romance</option>
+                    <option value="Drama">Drama</option>
+                    <option value="Ficção Científica">Ficção Científica</option>
+                    <option value="Fantasia">Fantasia</option>
+                    <option value="Terror/Mistério">Terror &amp; Mistério</option>
+                    <option value="Desenvolvimento/Filosofia">Desenvolvimento &amp; Filosofia</option>
+                    <option value="História/Biografia">História &amp; Biografia</option>
+                </select>
+            </label>
+            <label style="display: block; font-size: 0.85rem; margin-bottom: 10px;">Preço (R$)
+                <input type="text" id="novoLivroPreco" required inputmode="decimal" placeholder="Ex: 39,90" pattern="[0-9]+([.,][0-9]{1,2})?" title="Use só números, por exemplo 39,90" style="width: 100%; padding: 8px 10px; border: 1px solid #e0d7cd; border-radius: 6px; margin-top: 4px; box-sizing: border-box;">
+            </label>
+            <label style="display: block; font-size: 0.85rem; margin-bottom: 10px;">ISBN ou link da capa (opcional)
+                <input type="text" id="novoLivroCapa" placeholder="Ex: 9788595081529 ou https://..." style="width: 100%; padding: 8px 10px; border: 1px solid #e0d7cd; border-radius: 6px; margin-top: 4px; box-sizing: border-box;">
+            </label>
+            <label style="display: block; font-size: 0.85rem; margin-bottom: 10px;">Sinopse (opcional)
+                <textarea id="novoLivroSinopse" rows="3" maxlength="2000" style="width: 100%; padding: 8px 10px; border: 1px solid #e0d7cd; border-radius: 6px; margin-top: 4px; box-sizing: border-box; font-family: inherit;"></textarea>
+            </label>
+            <p id="mensagemNovoLivro" class="admin-msg erro" role="alert"></p>
+            <div class="admin-acoes">
+                <button type="button" class="admin-btn-neutro" onclick="fecharModalNovoLivro()">Cancelar</button>
+                <button type="submit" id="botaoSalvarLivro" class="admin-btn-principal">Salvar livro</button>
+            </div>
+        </form>
+    </div>
 
     <div id="modalLivro" class="modal-overlay" onclick="fecharModalFora(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
@@ -96,7 +139,14 @@
                         <span id="modalGeneroTag" style="display: inline-block; background: #f5efe9; color: #8c533e; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 12px; margin-bottom: 8px;"></span>
                         <h3 id="modalTitulo" style="margin-top: 0; color: #2d251e; font-size: 1.4rem;"></h3>
                         <p id="modalAutor" class="autor" style="color: #6e655f; font-weight: 500; margin-bottom: 12px;"></p>
+                        <p id="modalPublicadoPor" style="display: none; font-size: 0.8rem; color: #6e655f; margin: -6px 0 12px;"></p>
                         <p id="modalSinopse" class="sinopse" style="line-height: 1.5; color: #4a423a; margin-bottom: 15px; font-size: 0.9rem;"></p>
+                        <div id="modalAvaliacao" class="avaliacao-box" style="display: none;">
+                            <p id="modalAvaliacaoMedia" class="avaliacao-media"></p>
+                            <div id="modalEstrelas" class="estrelas" role="group" aria-label="Sua avaliação"></div>
+                            <div id="modalAvaliacaoAcoes" class="avaliacao-acoes"></div>
+                            <p id="modalAvaliacaoMsg" class="avaliacao-msg" role="status" aria-live="polite"></p>
+                        </div>
                         <div id="modalPreco" class="preco" style="font-size: 1.4rem; font-weight: 700; color: #8c533e; margin-bottom: 15px;"></div>
                         <button class="btn-comprar-modal" onclick="irParaPagamento()" style="width: 100%; padding: 12px; background-color: #8c533e; color: #fff; border: none; border-radius: 6px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: background 0.2s;">Comprar Agora</button>
                     </div>
@@ -134,33 +184,47 @@
         </div>
     </div>
 
+    <script src="../js/admin.js"></script>
     <script>
-        const livrosPadrao = [
-            { id: 1, titulo: "O Código Da Vinci", autor: "Dan Brown", genero: "Ação/Aventura", preco: 42.90, nota: "4.8", imagem: "https://covers.openlibrary.org/b/isbn/9780307474278-L.jpg", sinopse: "Um assassinato no Museu do Louvre traz à tona uma conspiração para ocultar um segredo sagrado protegido por uma sociedade secreta durante séculos." },
-            { id: 2, titulo: "Anjos e Demônios", autor: "Dan Brown", genero: "Ação/Aventura", preco: 39.90, nota: "4.7", imagem: "https://covers.openlibrary.org/b/isbn/9780743493468-L.jpg", sinopse: "Robert Langdon tenta deter uma antiga fraternidade secreta que ameaça destruir a Cidade do Vaticano usando uma nova arma devastadora." },
-            { id: 3, titulo: "A Ilha do Tesouro", autor: "R. L. Stevenson", genero: "Ação/Aventura", preco: 29.90, nota: "4.5", imagem: "https://covers.openlibrary.org/b/isbn/9780451527042-L.jpg", sinopse: "O jovem Jim Hawkins encontra um mapa do tesouro e embarca em uma aventura inesquecível enfrentando piratas e o temível Long John Silver." },
-            { id: 4, titulo: "Orgulho e Preconceito", autor: "Jane Austen", genero: "Romance", preco: 34.90, nota: "4.9", imagem: "https://covers.openlibrary.org/b/isbn/9780141439518-L.jpg", sinopse: "Uma história clássica sobre a relação entre a perspicaz Elizabeth Bennet e o orgulhoso Sr. Darcy na Inglaterra do século XIX." },
-            { id: 5, titulo: "É Assim que Começa", autor: "Colleen Hoover", genero: "Romance", preco: 49.90, nota: "4.6", imagem: "https://covers.openlibrary.org/b/isbn/9781668001226-L.jpg", sinopse: "Lily Bloom continua navegando pelos desafios da vida após se separar, descobrindo novos caminhos e reencontrando o seu primeiro amor." },
-            { id: 6, titulo: "A Menina que Roubava Livros", autor: "Markus Zusak", genero: "Drama", preco: 42.00, nota: "4.9", imagem: "https://covers.openlibrary.org/b/isbn/9780375842207-L.jpg", sinopse: "Narrado pela Morte, acompanha a história da jovem Liesel Meminger durante a Segunda Guerra Mundial, encontrando alento nos livros que rouba." },
-            { id: 7, titulo: "Duna", autor: "Frank Herbert", genero: "Ficção Científica", preco: 69.90, nota: "4.8", imagem: "https://covers.openlibrary.org/b/isbn/9780441172719-L.jpg", sinopse: "Em um planeta desértico disputado por famílias nobres, o jovem Paul Atreides enfrenta política, religião e a natureza para cumprir seu destino." },
-            { id: 8, titulo: "O Hobbit", autor: "J.R.R. Tolkien", genero: "Fantasia", preco: 49.90, nota: "4.9", imagem: "https://covers.openlibrary.org/b/isbn/9780547928227-L.jpg", sinopse: "Bilbo Bolseiro é arrastado para uma jornada épica com anões e o mago Gandalf para reconquistar o tesouro guardado pelo dragão Smaug." },
-            { id: 9, titulo: "O Iluminado", autor: "Stephen King", genero: "Terror/Mistério", preco: 54.90, nota: "4.7", imagem: "https://covers.openlibrary.org/b/isbn/9780307743657-L.jpg", sinopse: "Jack Torrance aceita o emprego de caseiro num hotel isolado durante o inverno, mas forças misteriosas começam a afetar sua sanidade." },
-            { id: 10, titulo: "O Alquimista", autor: "Paulo Coelho", genero: "Desenvolvimento/Filosofia", preco: 34.90, nota: "4.6", imagem: "https://covers.openlibrary.org/b/isbn/9780062315007-L.jpg", sinopse: "A jornada do jovem pastor Santiago em busca de um tesouro nas pirâmides do Egito, aprendendo a escutar o seu coração e seguir seus sonhos." }
-        ];
+        // O acervo vem da API (GET /catalog_books): o administrador adiciona e exclui livros para todo mundo.
+        let acervoLivros = [];
 
-        // Carrega livros cadastrados no LocalStorage e junta com os padrões
-        const livrosSalvosLocal = JSON.parse(localStorage.getItem("livrosCadastrados")) || [];
-        const acervoLivros = [...livrosSalvosLocal, ...livrosPadrao];
+        // Converte um livro vindo da API para o formato usado nesta página.
+        function livroDaApi(r) {
+            return {
+                id: r.id,
+                catalogId: r.id,
+                titulo: r.title,
+                autor: r.author_name,
+                genero: r.genre,
+                preco: Number(r.price) || 0,
+                imagem: r.image_url,
+                sinopse: r.synopsis,
+                mediaAvaliacao: r.average_rating,
+                qtdAvaliacoes: r.ratings_count,
+                minhaNota: r.my_rating,
+                publicadoPor: r.published_by || null // só vem para o administrador
+            };
+        }
+
+        // ---------- Avaliações públicas (vêm da API; a lista de livros continua sendo esta página) ----------
+        const API_URL = "https://lpv-api.onrender.com";
+        const TIMEOUT_MS = 60000; // o servidor gratuito pode demorar para acordar
+        let estadoAvaliacoes = "carregando"; // estado do carregamento do catálogo e das notas: "carregando" | "ok" | "erro"
+        let avaliando = false;               // evita clique duplo enquanto salva
+        let previaEstrelas = 0;              // estrelas destacadas ao passar o mouse
 
         let generoAtual = "Todos";
         let textoBuscaAtual = "";
         let livroAtual = null;
         let carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
 
+        // Formata um número como dinheiro (R$ 0,00).
         function formatarMoeda(valor) {
             return Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         }
 
+        // Confere se há usuário logado; se não houver, avisa e manda para o login.
         function verificarLogin() {
             const usuarioLogado = localStorage.getItem("usuarioLogado");
             const logadoUniversal = localStorage.getItem("usuario") ? "true" : null;
@@ -173,11 +237,14 @@
             return true;
         }
 
+        // Troca os links do topo conforme o usuário esteja logado ou não.
         function atualizarCabecalhoAuth() {
             const areaAuth = document.getElementById("areaAuthHeader");
             const usuarioLogado = localStorage.getItem("usuarioLogado");
             const logadoUniversal = localStorage.getItem("usuario") ? "true" : null;
-            const fotoSalva = localStorage.getItem("usuarioFoto") || "../imagens/Background.png";
+            
+            // CORREÇÃO: Padronizado para buscar "usuarioFoto" (mesma chave do MeuPerfil.html)
+            const fotoSalva = localStorage.getItem("usuarioFoto") || "../imagens/perfil.jpg";
 
             if (usuarioLogado || logadoUniversal === "true") {
                 areaAuth.innerHTML = `
@@ -194,6 +261,7 @@
             }
         }
 
+        // Encerra a sessão e volta para o login.
         function realizarLogout() {
             localStorage.removeItem("usuarioLogado");
             localStorage.removeItem("usuario");
@@ -206,6 +274,7 @@
             localStorage.removeItem("usuarioFoto");
         }
 
+        // Mostra no ícone do carrinho a quantidade de itens.
         function atualizarContadorCarrinho() {
             const contador = document.getElementById("contadorCarrinhoHeader");
             if (!contador) return;
@@ -218,11 +287,31 @@
             }
         }
 
+        // Desenha os cards do catálogo aplicando os filtros, com o selo de nota pública.
+        // Para o administrador, cada card também mostra quem cadastrou o livro e o botão de excluir.
         function renderizarLivros() {
             const grid = document.getElementById("gridLivros");
             const mensagemVazio = document.getElementById("mensagemVazio");
             const contadorLivros = document.getElementById("contadorLivros");
             grid.innerHTML = "";
+            mensagemVazio.style.display = "none";
+
+            if (estadoAvaliacoes === "carregando" && acervoLivros.length === 0) {
+                contadorLivros.innerText = "Carregando livros...";
+                grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #6e655f; padding: 30px;">Carregando o catálogo... (pode levar um pouco se o servidor estava inativo)</p>`;
+                return;
+            }
+
+            if (estadoAvaliacoes === "erro" && acervoLivros.length === 0) {
+                contadorLivros.innerText = "Catálogo indisponível";
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #6e655f; padding: 30px;">
+                    <p>Não foi possível carregar o catálogo agora.</p>
+                    <button type="button" onclick="carregarCatalogo()" style="background: #8c533e; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600;">Tentar de novo</button>
+                </div>`;
+                return;
+            }
+
+            const admin = Admin.ehAdmin();
 
             const livrosFiltrados = acervoLivros.filter(livro => {
                 const combinaGenero = (generoAtual === "Todos") || (livro.genero === generoAtual);
@@ -238,36 +327,42 @@
                 return;
             }
 
-            mensagemVazio.style.display = "none";
-
             livrosFiltrados.forEach(livro => {
                 const card = document.createElement("div");
                 card.className = "card-livro";
 
-                const capaLivro = livro.imagem || "../imagens/icone.png";
-                const notaLivro = livro.nota || "5.0";
+                const capaLivro = Admin.urlImagem(livro.imagem, "../imagens/icone.png");
+                const textoNota = textoSeloNota(livro);
+                const id = Number(livro.id);
+
+                const linhaAdmin = admin ? `
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px; padding: 6px 0; font-size: 0.75rem; color: #6e655f;">
+                        <span>${livro.publicadoPor ? `Cadastrado por ${Admin.nomeHtml(livro.publicadoPor.name, livro.publicadoPor.id)}` : "Livro original da loja"}</span>
+                        <button type="button" class="admin-btn-perigo" onclick="excluirLivro(${id})" title="Excluir este livro do catálogo">Excluir</button>
+                    </div>` : "";
 
                 card.innerHTML = `
-                    <div style="position: relative; cursor: pointer;" onclick="abrirModalDetalhes(${livro.id})">
-                        <img src="${capaLivro}" alt="Capa do livro ${livro.titulo}">
-                        <span style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: #fff; font-size: 0.75rem; padding: 2px 8px; border-radius: 10px; font-weight: 600;">★ ${notaLivro}</span>
+                    <div style="position: relative; cursor: pointer;" onclick="abrirModalDetalhes(${id})">
+                        <img src="${Admin.esc(capaLivro)}" alt="Capa do livro ${Admin.esc(livro.titulo)}">
+                        ${textoNota ? `<span class="selo-nota" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: #fff; font-size: 0.75rem; padding: 2px 8px; border-radius: 10px; font-weight: 600;">${textoNota}</span>` : ""}
                     </div>
-                    <div style="padding: 10px 0; cursor: pointer;" onclick="abrirModalDetalhes(${livro.id})">
-                        <span style="font-size: 0.75rem; color: #8c533e; font-weight: 600;">${livro.genero}</span>
-                        <h3 style="margin: 4px 0; font-size: 1rem; color: #2d251e;">${livro.titulo}</h3>
-                        <p class="autor" style="margin: 0; font-size: 0.85rem; color: #6e655f;">${livro.autor}</p>
+                    <div style="padding: 10px 0; cursor: pointer;" onclick="abrirModalDetalhes(${id})">
+                        <span style="font-size: 0.75rem; color: #8c533e; font-weight: 600;">${Admin.esc(livro.genero)}</span>
+                        <h3 style="margin: 4px 0; font-size: 1rem; color: #2d251e;">${Admin.esc(livro.titulo)}</h3>
+                        <p class="autor" style="margin: 0; font-size: 0.85rem; color: #6e655f;">${Admin.esc(livro.autor)}</p>
                     </div>
+                    ${linhaAdmin}
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 8px; gap: 6px;">
                         <div class="preco" style="font-weight: 700; color: #8c533e; font-size: 0.95rem;">${formatarMoeda(livro.preco)}</div>
                         <div style="display: flex; gap: 6px;">
-                            <button type="button" onclick="adicionarAoCarrinho(${livro.id}, event)" title="Adicionar ao Carrinho" style="padding: 6px 10px; background: #8c533e; border: none; border-radius: 4px; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;">
+                            <button type="button" onclick="adicionarAoCarrinho(${id}, event)" title="Adicionar ao Carrinho" style="padding: 6px 10px; background: #8c533e; border: none; border-radius: 4px; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="9" cy="21" r="1"></circle>
                                     <circle cx="20" cy="21" r="1"></circle>
                                     <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                                 </svg>
                             </button>
-                            <button type="button" onclick="abrirModalDetalhes(${livro.id})" style="padding: 6px 10px; background: #faf8f5; border: 1px solid #e0d7cd; border-radius: 4px; font-size: 0.8rem; font-weight: 600; color: #2d251e; cursor: pointer;">Detalhes</button>
+                            <button type="button" onclick="abrirModalDetalhes(${id})" style="padding: 6px 10px; background: #faf8f5; border: 1px solid #e0d7cd; border-radius: 4px; font-size: 0.8rem; font-weight: 600; color: #2d251e; cursor: pointer;">Detalhes</button>
                         </div>
                     </div>
                 `;
@@ -275,6 +370,255 @@
             });
         }
 
+        // ---------- Avaliações ----------
+
+        // Diz se o usuário tem token de login (necessário para avaliar).
+        function usuarioTemToken() {
+            return !!localStorage.getItem("token");
+        }
+
+        // Formata a média das notas (ex.: 4,5).
+        function formatarMedia(valor) {
+            return Number(valor).toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+        }
+
+        // Texto do selo no canto da capa. Retorna "" quando não há o que mostrar.
+        function textoSeloNota(livro) {
+            if (estadoAvaliacoes !== "ok") return "";                          // ainda carregando ou API fora do ar
+            if (!livro.qtdAvaliacoes) return "Sem avaliações";
+            return `★ ${formatarMedia(livro.mediaAvaliacao)} (${livro.qtdAvaliacoes})`;
+        }
+
+        // Chamada à API com token e limite de 60 s (o servidor gratuito pode demorar a acordar).
+        async function chamarApi(caminho, { method = "GET", corpo } = {}) {
+            const token = localStorage.getItem("token");
+            const controller = new AbortController();
+            const temporizador = setTimeout(() => controller.abort(), TIMEOUT_MS);
+            let resposta;
+
+            try {
+                resposta = await fetch(`${API_URL}${caminho}`, {
+                    method,
+                    headers: {
+                        ...(token ? { "Authorization": `Bearer ${token}` } : {}),
+                        ...(corpo ? { "Content-Type": "application/json" } : {})
+                    },
+                    body: corpo ? JSON.stringify(corpo) : undefined,
+                    signal: controller.signal
+                });
+            } catch (erro) {
+                const e = new Error(erro.name === "AbortError"
+                    ? "O servidor demorou a responder. Tente novamente."
+                    : "Sem conexão com o servidor.");
+                e.rede = true;
+                throw e;
+            } finally {
+                clearTimeout(temporizador);
+            }
+
+            const dados = await resposta.json().catch(() => null);
+            if (!resposta.ok) {
+                const mensagem = (dados && Array.isArray(dados.errors) && dados.errors.join(", "))
+                    || (dados && typeof dados.error === "string" && dados.error)
+                    || "Não foi possível concluir. Tente novamente.";
+                const e = new Error(mensagem);
+                e.status = resposta.status;
+                throw e;
+            }
+            return dados;
+        }
+
+        // Copia o resumo de avaliações (média, quantidade, minha nota) para o livro correspondente do acervo.
+        function aplicarResumo(resumo) {
+            const livro = acervoLivros.find(l => l.id === resumo.id);
+            if (!livro) return null;
+
+            livro.mediaAvaliacao = resumo.average_rating;
+            livro.qtdAvaliacoes = resumo.ratings_count;
+            livro.minhaNota = resumo.my_rating;
+            return livro;
+        }
+
+        // Busca na API o catálogo completo (com médias e a nota do usuário) e redesenha a página.
+        async function carregarCatalogo() {
+            estadoAvaliacoes = "carregando";
+            renderizarLivros();
+            renderizarAvaliacaoModal();
+            try {
+                const lista = await chamarApi("/catalog_books");
+                acervoLivros = lista.map(livroDaApi);
+                estadoAvaliacoes = "ok";
+            } catch (erro) {
+                console.warn("Não foi possível carregar o catálogo:", erro.message);
+                estadoAvaliacoes = "erro";
+            }
+            renderizarLivros();
+            renderizarAvaliacaoModal();
+        }
+
+        // Mostra uma mensagem (sucesso/erro) no bloco de avaliação do modal.
+        function definirMensagemAvaliacao(texto, tipo) {
+            const msg = document.getElementById("modalAvaliacaoMsg");
+            msg.textContent = texto || "";
+            msg.className = "avaliacao-msg" + (tipo ? ` ${tipo}` : "");
+        }
+
+        // Cria um botão com aparência de link.
+        function criarBotaoLink(texto, aoClicar) {
+            const botao = document.createElement("button");
+            botao.type = "button";
+            botao.className = "btn-link";
+            botao.textContent = texto;
+            botao.addEventListener("click", aoClicar);
+            return botao;
+        }
+
+        // Desenha o bloco de avaliação do modal conforme o estado (carregando, erro, visitante, logado)
+        function renderizarAvaliacaoModal() {
+            const caixa = document.getElementById("modalAvaliacao");
+            if (!caixa) return;
+
+            const livro = livroAtual;
+            if (!livro) {
+                caixa.style.display = "none";
+                return;
+            }
+            caixa.style.display = "block";
+
+            const media = document.getElementById("modalAvaliacaoMedia");
+            const estrelas = document.getElementById("modalEstrelas");
+            const acoes = document.getElementById("modalAvaliacaoAcoes");
+            estrelas.replaceChildren();
+            acoes.replaceChildren();
+
+            if (estadoAvaliacoes === "carregando") {
+                media.textContent = "Carregando avaliações... (pode levar um pouco se o servidor estava inativo)";
+                return;
+            }
+
+            if (estadoAvaliacoes === "erro" || !livro.catalogId) {
+                media.textContent = "As avaliações estão indisponíveis no momento.";
+                acoes.append(criarBotaoLink("Tentar de novo", carregarCatalogo));
+                return;
+            }
+
+            // Média pública
+            media.replaceChildren();
+            if (livro.qtdAvaliacoes) {
+                const forte = document.createElement("strong");
+                forte.textContent = `★ ${formatarMedia(livro.mediaAvaliacao)}`;
+                media.append(forte, ` · ${livro.qtdAvaliacoes} ${livro.qtdAvaliacoes === 1 ? "avaliação" : "avaliações"}`);
+            } else {
+                media.textContent = "Ainda sem avaliações. Seja o primeiro a avaliar!";
+            }
+
+            // Estrelas (a nota do usuário, ou a prévia enquanto o mouse passa por cima)
+            const logado = usuarioTemToken();
+            const destaque = previaEstrelas || livro.minhaNota || 0;
+
+            for (let n = 1; n <= 5; n++) {
+                const estrela = document.createElement("button");
+                estrela.type = "button";
+                estrela.className = "estrela" + (n <= destaque ? " cheia" : "");
+                estrela.textContent = "★";
+                estrela.disabled = !logado || avaliando;
+                estrela.setAttribute("aria-label", `Dar nota ${n} de 5`);
+                estrela.setAttribute("aria-pressed", String(livro.minhaNota === n));
+                estrela.addEventListener("click", () => avaliarLivro(livro, n));
+                estrela.addEventListener("mouseenter", () => { previaEstrelas = n; pintarEstrelas(); });
+                estrela.addEventListener("focus", () => { previaEstrelas = n; pintarEstrelas(); });
+                estrelas.append(estrela);
+            }
+            estrelas.onmouseleave = () => { previaEstrelas = 0; pintarEstrelas(); };
+            estrelas.onfocusout = () => { previaEstrelas = 0; pintarEstrelas(); };
+
+            if (!logado) {
+                const aviso = document.createElement("span");
+                aviso.textContent = "Para avaliar, ";
+                const link = document.createElement("a");
+                link.href = "Login.html";
+                link.textContent = "entre na sua conta";
+                link.style.color = "#8c533e";
+                aviso.append(link, ".");
+                acoes.append(aviso);
+            } else if (livro.minhaNota) {
+                acoes.append(`Sua nota: ${livro.minhaNota} de 5`,
+                             criarBotaoLink("Remover minha nota", () => removerAvaliacao(livro)));
+            } else {
+                acoes.append("Clique em uma estrela para avaliar.");
+            }
+        }
+
+        // Só repinta as estrelas (usado na prévia do mouse), sem recriar os botões
+        function pintarEstrelas() {
+            const livro = livroAtual;
+            if (!livro) return;
+            const destaque = previaEstrelas || livro.minhaNota || 0;
+            document.querySelectorAll("#modalEstrelas .estrela").forEach((estrela, i) => {
+                estrela.classList.toggle("cheia", i + 1 <= destaque);
+            });
+        }
+
+        // Traduz o erro da API em mensagem para o usuário (ex.: sessão expirada).
+        function tratarErroAvaliacao(erro, livro) {
+            if (erro.status === 401) {
+                // O token venceu: encerra a sessão local para o cabeçalho refletir isso
+                realizarLogout();
+                atualizarCabecalhoAuth();
+                definirMensagemAvaliacao("Sua sessão expirou. Entre novamente para avaliar.", "erro");
+            } else {
+                definirMensagemAvaliacao(erro.message, "erro");
+            }
+        }
+
+        // Executa a chamada de avaliação (enviar/remover), atualiza o livro e mostra o resultado.
+        async function salvarAvaliacao(livro, requisicao, mensagemSucesso) {
+            if (avaliando) return;
+            avaliando = true;
+            definirMensagemAvaliacao("Salvando...");
+            renderizarAvaliacaoModal();
+
+            try {
+                const resumo = await requisicao();
+                aplicarResumo(resumo);
+                renderizarLivros(); // atualiza o selo no card
+                if (livroAtual === livro) {
+                    avaliando = false;
+                    renderizarAvaliacaoModal();
+                    definirMensagemAvaliacao(mensagemSucesso, "ok");
+                }
+            } catch (erro) {
+                if (livroAtual === livro) {
+                    avaliando = false;
+                    tratarErroAvaliacao(erro, livro); // antes de redesenhar: no 401 isso encerra a sessão local
+                    renderizarAvaliacaoModal();
+                } else if (erro.status === 401) {
+                    tratarErroAvaliacao(erro, livro);
+                }
+            } finally {
+                avaliando = false;
+            }
+        }
+
+        // Envia a nota (1 a 5) do usuário para o livro.
+        function avaliarLivro(livro, nota) {
+            if (!usuarioTemToken()) {
+                definirMensagemAvaliacao("Entre na sua conta para avaliar.", "erro");
+                return;
+            }
+            return salvarAvaliacao(livro,
+                () => chamarApi(`/catalog_books/${livro.catalogId}/rating`, { method: "PUT", corpo: { rating: { score: nota } } }),
+                "Obrigado! Sua nota foi salva.");
+        }
+
+        // Remove a nota do usuário para o livro.
+        function removerAvaliacao(livro) {
+            return salvarAvaliacao(livro,
+                () => chamarApi(`/catalog_books/${livro.catalogId}/rating`, { method: "DELETE" }),
+                "Sua nota foi removida.");
+        }
+
+        // Coloca o livro clicado no carrinho (localStorage) e atualiza o contador.
         function adicionarAoCarrinho(idLivro, event) {
             if (event) event.stopPropagation();
 
@@ -288,6 +632,7 @@
             alert(`"${livro.titulo}" foi adicionado ao seu carrinho!`);
         }
 
+        // Filtra os livros por gênero e destaca o botão.
         function filtrarPorGenero(genero, botao) {
             generoAtual = genero;
             document.querySelectorAll(".filter-btn").forEach(btn => btn.classList.remove("active"));
@@ -295,11 +640,13 @@
             renderizarLivros();
         }
 
+        // Filtra os livros pelo texto digitado.
         function filtrarPorTexto(texto) {
             textoBuscaAtual = texto;
             renderizarLivros();
         }
 
+        // Remove todos os filtros e mostra o catálogo completo.
         function limparFiltros() {
             generoAtual = "Todos";
             textoBuscaAtual = "";
@@ -308,16 +655,100 @@
             if (primeiroBotao) filtrarPorGenero('Todos', primeiroBotao);
         }
 
+        // ---------- Administrador: adicionar e excluir livros ----------
+
+        // (Admin) Exclui um livro do catálogo para todos os usuários, depois de confirmar.
+        async function excluirLivro(id) {
+            const livro = acervoLivros.find(l => l.id === id);
+            if (!livro || !Admin.ehAdmin()) return;
+            if (!confirm(`Excluir "${livro.titulo}" do catálogo?\n\nAs avaliações desse livro também serão apagadas. Isso não pode ser desfeito.`)) return;
+
+            try {
+                await chamarApi(`/catalog_books/${id}`, { method: "DELETE" });
+            } catch (erro) {
+                alert(erro.message);
+                return;
+            }
+            acervoLivros = acervoLivros.filter(l => l.id !== id);
+            if (livroAtual && livroAtual.id === id) fecharModal();
+            renderizarLivros();
+            Admin.avisar(`"${livro.titulo}" foi excluído do catálogo.`);
+        }
+
+        // (Admin) Abre o formulário de novo livro.
+        function abrirModalNovoLivro() {
+            if (!Admin.ehAdmin()) return;
+            document.getElementById("mensagemNovoLivro").textContent = "";
+            document.getElementById("modalNovoLivro").style.display = "flex";
+            document.getElementById("novoLivroTitulo").focus();
+        }
+
+        // (Admin) Fecha o formulário de novo livro.
+        function fecharModalNovoLivro() {
+            document.getElementById("modalNovoLivro").style.display = "none";
+        }
+
+        // (Admin) Envia o novo livro para a API; se der certo, ele aparece no catálogo de todos.
+        async function cadastrarLivroCatalogo(event) {
+            event.preventDefault();
+            const botao = document.getElementById("botaoSalvarLivro");
+            const aviso = document.getElementById("mensagemNovoLivro");
+            const valor = id => document.getElementById(id).value.trim();
+
+            // "ISBN ou link da capa": link http(s) vale como está; número vira capa da Open Library
+            const capa = valor("novoLivroCapa");
+            const imagem = !capa ? "" : (/^https?:\/\//i.test(capa) ? capa : `https://covers.openlibrary.org/b/isbn/${encodeURIComponent(capa)}-L.jpg`);
+
+            botao.disabled = true;
+            aviso.textContent = "Salvando...";
+            try {
+                const criado = await chamarApi("/catalog_books", {
+                    method: "POST",
+                    corpo: { catalog_book: {
+                        title: valor("novoLivroTitulo"),
+                        author_name: valor("novoLivroAutor"),
+                        genre: document.getElementById("novoLivroGenero").value,
+                        price: valor("novoLivroPreco").replace(",", "."),
+                        image_url: imagem,
+                        synopsis: valor("novoLivroSinopse")
+                    } }
+                });
+                acervoLivros.push(livroDaApi(criado));
+                document.getElementById("formNovoLivro").reset();
+                fecharModalNovoLivro();
+                renderizarLivros();
+                Admin.avisar(`"${criado.title}" foi adicionado ao catálogo.`);
+            } catch (erro) {
+                aviso.textContent = erro.message;
+            } finally {
+                botao.disabled = false;
+            }
+        }
+
+        // Abre o modal com os detalhes do livro e o bloco de avaliação.
         function abrirModalDetalhes(idLivro) {
             livroAtual = acervoLivros.find(l => l.id === idLivro);
             if (!livroAtual) return;
 
-            document.getElementById("modalImg").src = livroAtual.imagem || "../imagens/icone.png";
+            document.getElementById("modalImg").src = Admin.urlImagem(livroAtual.imagem, "../imagens/icone.png");
             document.getElementById("modalGeneroTag").innerText = (livroAtual.genero || "Geral").toUpperCase();
             document.getElementById("modalTitulo").innerText = livroAtual.titulo;
             document.getElementById("modalAutor").innerText = "Por " + livroAtual.autor;
             document.getElementById("modalSinopse").innerText = livroAtual.sinopse || "Sem sinopse cadastrada.";
+            const publicado = document.getElementById("modalPublicadoPor");
+            if (Admin.ehAdmin()) {
+                publicado.innerHTML = livroAtual.publicadoPor
+                    ? `Cadastrado por ${Admin.nomeHtml(livroAtual.publicadoPor.name, livroAtual.publicadoPor.id)}`
+                    : "Livro original da loja";
+                publicado.style.display = "block";
+            } else {
+                publicado.style.display = "none";
+            }
             document.getElementById("modalPreco").innerText = formatarMoeda(livroAtual.preco);
+
+            previaEstrelas = 0;
+            definirMensagemAvaliacao("");
+            renderizarAvaliacaoModal();
 
             document.getElementById("etapaDetalhes").style.display = "block";
             document.getElementById("etapaPagamento").style.display = "none";
@@ -326,6 +757,7 @@
             document.body.style.overflow = "hidden";
         }
 
+        // Passa do modal de detalhes para a etapa de pagamento.
         function irParaPagamento() {
             if (!verificarLogin()) return;
 
@@ -334,17 +766,22 @@
             document.getElementById("etapaPagamento").style.display = "block";
         }
 
+        // Volta da etapa de pagamento para os detalhes.
         function voltarParaDetalhes() {
             document.getElementById("etapaPagamento").style.display = "none";
             document.getElementById("etapaDetalhes").style.display = "block";
         }
 
+        // Fecha o modal e limpa o livro selecionado.
         function fecharModal() {
+            livroAtual = null;
+            previaEstrelas = 0;
             document.getElementById("modalLivro").style.display = "none";
             document.getElementById("formPagamento").reset();
             document.body.style.overflow = "auto";
         }
 
+        // Fecha o modal ao clicar fora da caixa.
         function fecharModalFora(event) {
             if (event.target.id === "modalLivro") {
                 fecharModal();
@@ -357,6 +794,7 @@
             }
         });
 
+        // Confirma a forma de pagamento escolhida, mostra a mensagem de compra e fecha o modal (não grava pedido).
         function confirmarPagamento(event) {
             event.preventDefault();
             if (!verificarLogin()) return;
@@ -369,10 +807,14 @@
             fecharModal();
         }
 
+        // Ao abrir a página: ajusta o cabeçalho e o carrinho, mostra os controles de admin e carrega o catálogo da API.
         document.addEventListener("DOMContentLoaded", function() {
             atualizarCabecalhoAuth();
             renderizarLivros();
             atualizarContadorCarrinho();
+            document.getElementById("barraAdminCatalogo").style.display = Admin.ehAdmin() ? "block" : "none";
+            Admin.ativarCliques(document.body, carregarCatalogo); // admin clica no nome de quem cadastrou -> perfil
+            carregarCatalogo();
         });
     </script>
 </body>

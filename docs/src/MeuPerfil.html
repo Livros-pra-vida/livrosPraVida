@@ -24,6 +24,7 @@
 
         <nav class="menu">
             <a href="../index.html">Início</a>
+            <a href="Estantes.html">Minhas Estantes</a>
             <a href="#" onclick="sair()" class="btn-sair-top">Sair</a>
         </nav>
     </header>
@@ -192,6 +193,7 @@
     <script>
         const API_URL = "https://lpv-api.onrender.com";
 
+        // Apaga os dados de sessão do navegador (usado ao sair ou se o token vencer).
         function limparSessao() {
             localStorage.removeItem("usuario");
             localStorage.removeItem("token");
@@ -203,6 +205,7 @@
             localStorage.removeItem("usuarioFoto");
         }
 
+        // Ao abrir o perfil: busca os dados do usuário na API e preenche o formulário (endereço, pagamento e foto vêm do navegador).
         document.addEventListener("DOMContentLoaded", async function () {
             const usuarioSalvo = JSON.parse(localStorage.getItem("usuario"));
 
@@ -286,6 +289,7 @@
                 .catch(() => alert("Erro ao buscar o CEP. Verifique sua conexão."));
         }
 
+        // Desenha o histórico de pedidos guardado no navegador (ou avisa que não há pedidos).
         function carregarHistoricoPedidos() {
             const container = document.getElementById("listaHistoricoPedidos");
             const historico = JSON.parse(localStorage.getItem("historicoPedidos")) || [];
@@ -327,6 +331,7 @@
             }).join("");
         }
 
+        // Lê a foto escolhida, mostra no perfil e guarda no navegador (localStorage).
         function uploadFotoPerfil(event) {
             const file = event.target.files[0];
             if (file) {
@@ -340,6 +345,7 @@
             }
         }
 
+        // Calcula a idade pela data de nascimento e mostra o selo de maior/menor de idade.
         function verificarMaioridade() {
             const dataNasc = document.getElementById("nascimentoInput").value;
             const badgeIdade = document.getElementById("statusIdade");
@@ -372,6 +378,7 @@
 
         document.getElementById("nascimentoInput").addEventListener("change", verificarMaioridade);
 
+        // Salva os dados pessoais na API (PATCH /users/:id) e o restante no navegador.
         async function salvarPerfil(event) {
             event.preventDefault();
 
@@ -448,6 +455,7 @@
             }
         }
 
+        // Encerra a sessão e volta para o login.
         function sair() {
             limparSessao();
             window.location.href = "../index.html";

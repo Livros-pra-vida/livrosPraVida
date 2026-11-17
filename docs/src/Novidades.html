@@ -163,15 +163,18 @@
     </main>
 
     <script>
+        // Diz se há um usuário logado.
         function estaLogado() {
             return !!localStorage.getItem("usuario");
         }
 
+        // Ao abrir a página: ajusta o cabeçalho e o contador do carrinho.
         document.addEventListener("DOMContentLoaded", function () {
             atualizarCabecalhoAuth();
             atualizarContadorCarrinho();
         });
 
+        // Troca os links do topo conforme o usuário esteja logado ou não.
         function atualizarCabecalhoAuth() {
             const areaAuth = document.getElementById("areaAuthHeader");
             const fotoSalva = localStorage.getItem("usuarioFoto") || "../imagens/perfil.jpg";
@@ -192,6 +195,7 @@
             }
         }
 
+        // Mostra no ícone do carrinho a quantidade de itens.
         function atualizarContadorCarrinho() {
             const carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
             const contador = document.getElementById("contadorCarrinhoHeader");
@@ -204,6 +208,7 @@
             }
         }
 
+        // Encerra a sessão e volta para o login.
         function realizarLogout(e) {
             if (e) e.preventDefault();
             localStorage.removeItem("usuario");
@@ -217,6 +222,7 @@
             window.location.href = "../index.html";
         }
 
+        // Mostra só as notícias da categoria escolhida e destaca o botão ativo.
         function filtrarNoticias(categoria, evento) {
             document.querySelectorAll('.tab-novidade').forEach(btn => btn.classList.remove('active'));
             evento.target.classList.add('active');

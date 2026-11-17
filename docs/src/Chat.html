@@ -81,6 +81,7 @@
         </div>
     </main>
 
+    <script src="../js/admin.js"></script>
     <script type="module">
         import { createConsumer } from "https://esm.sh/@rails/actioncable@7";
 
@@ -92,22 +93,83 @@
         const input = document.getElementById("input");
         const aviso = document.getElementById("avisoGlobal");
 
+        // Exibe uma mensagem de aviso/erro na área do chat.
         function mostrarAviso(texto) {
             aviso.textContent = texto;
             aviso.style.display = "block";
         }
 
+        // Desenha uma mensagem no chat público (usa textContent, seguro contra XSS).
+        // Para o administrador, o nome vira botão que abre o perfil e a mensagem ganha o botão de apagar.
         function addMessage(m) {
+            if (m.deleted) { removerMensagem(m.id); return; }   // aviso de mensagem apagada (tempo real)
+            if (m.id && list.querySelector(`[data-msg-id="${m.id}"]`)) return; // já está na tela
+
+            const admin = Admin.ehAdmin();
             const div = document.createElement("div");
             div.className = "msg";
-            const nome = document.createElement("strong");
-            nome.textContent = m.username + ": ";
+            if (m.id) div.dataset.msgId = m.id;
+            if (m.user_id) div.dataset.userId = m.user_id;
+
+            let nome;
+            if (admin && m.user_id) {
+                nome = document.createElement("button");
+                nome.type = "button";
+                nome.className = "admin-usuario";
+                nome.dataset.adminUid = m.user_id;
+                nome.dataset.adminNome = m.username;
+                nome.title = "Ver perfil (administrador)";
+                nome.textContent = m.username;
+            } else {
+                nome = document.createElement("strong");
+                nome.textContent = m.username;
+            }
+            const dois = document.createElement("strong");
+            dois.textContent = ": ";
             const texto = document.createElement("span");
             texto.textContent = m.content; // textContent: seguro contra XSS
-            div.append(nome, texto);
+            div.append(nome, dois, texto);
+
+            if (admin && m.id) {
+                const apagar = document.createElement("button");
+                apagar.type = "button";
+                apagar.className = "admin-btn-perigo";
+                apagar.textContent = "Apagar";
+                apagar.title = "Apagar esta mensagem (administrador)";
+                apagar.style.marginLeft = "8px";
+                apagar.style.padding = "1px 8px";
+                apagar.addEventListener("click", () => apagarMensagem(m.id));
+                div.append(apagar);
+            }
+
             list.append(div);
             list.scrollTop = list.scrollHeight;
         }
+
+        // Tira uma mensagem da tela (quando foi apagada).
+        function removerMensagem(id) {
+            list.querySelectorAll(`[data-msg-id="${id}"]`).forEach(el => el.remove());
+        }
+
+        // (Admin) Apaga a mensagem de qualquer pessoa (DELETE /messages/:id), depois de confirmar.
+        async function apagarMensagem(id) {
+            if (!confirm("Apagar esta mensagem para todos?")) return;
+            try {
+                await Admin.chamar(`/messages/${id}`, { method: "DELETE" });
+                removerMensagem(id);
+            } catch (erro) {
+                if (erro.status === 404) { removerMensagem(id); return; } // já tinha sido apagada
+                alert(erro.message);
+            }
+        }
+
+        // (Admin) Depois de excluir uma conta, some da tela tudo o que essa pessoa escreveu.
+        function removerMensagensDoUsuario(userId) {
+            list.querySelectorAll(`[data-user-id="${userId}"]`).forEach(el => el.remove());
+        }
+
+        // O admin clica no nome de quem escreveu para ver o perfil (e poder excluir a conta).
+        Admin.ativarCliques(list, removerMensagensDoUsuario);
 
         const token = localStorage.getItem(TOKEN_KEY);
 
@@ -164,7 +226,7 @@
                         ? "Não foi possível entrar no chat. Saia e entre novamente na sua conta."
                         : "Conexão com o chat perdida. Tentando reconectar...");
                 },
-                received: addMessage
+                received: addMessage // addMessage também trata o aviso { deleted: true }
             });
 
             form.addEventListener("submit", (e) => {
@@ -185,25 +247,30 @@
         let destinatarioAtual = null;
         let livroAtual = null;
 
+        // Diz se há um usuário logado.
         function estaLogado() {
             return !!localStorage.getItem("usuario");
         }
 
+        // Lê do localStorage os dados do usuário logado.
         function getUsuario() {
             try { return JSON.parse(localStorage.getItem("usuario")); } catch (e) { return null; }
         }
 
+        // Devolve o nome do usuário logado para mostrar nas mensagens.
         function nomeUsuario() {
             const u = getUsuario();
             return (u && (u.username || u.usuario || u.nome)) || localStorage.getItem("usuarioNome") || "Eu";
         }
 
+        // Escapa caracteres especiais do texto antes de colocá-lo no HTML (evita injeção de código).
         function esc(s) {
             return String(s).replace(/[&<>"']/g, c => ({
                 '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
             }[c]));
         }
 
+        // Ao abrir o chat: prepara as abas e a lista de conversas privadas.
         document.addEventListener("DOMContentLoaded", function () {
             const menu = document.getElementById("menuNavegacao");
             const fotoPerfil = localStorage.getItem("usuarioFoto") || "../imagens/perfil.jpg";
@@ -257,12 +324,14 @@
             carregarListaConversasPrivadas();
         });
 
+        // Alterna entre o chat público e as conversas privadas.
         function trocarAba(aba) {
             document.getElementById('secaoGlobal').style.display = aba === 'global' ? 'block' : 'none';
             document.getElementById('secaoPrivado').style.display = aba === 'privado' ? 'block' : 'none';
             if (aba === 'privado') carregarListaConversasPrivadas();
         }
 
+        // Registra a conversa privada na lista de conversas do navegador.
         function salvarConversaNoHistorico(destinatario, livro, primeiraMsg) {
             const meuNome = nomeUsuario();
             let conversas = JSON.parse(localStorage.getItem("chatsPrivados")) || {};
@@ -281,6 +350,7 @@
             }
         }
 
+        // Desenha a lista lateral de conversas privadas.
         function carregarListaConversasPrivadas() {
             const listaEl = document.getElementById("listaConversas");
             let conversas = JSON.parse(localStorage.getItem("chatsPrivados")) || {};
@@ -309,6 +379,7 @@
             }).join('');
         }
 
+        // Abre a conversa privada com um usuário sobre um livro.
         function abrirChatPrivado(destinatario, livro) {
             destinatarioAtual = destinatario;
             livroAtual = livro;
@@ -326,6 +397,7 @@
             carregarListaConversasPrivadas();
         }
 
+        // Mostra as mensagens da conversa privada aberta.
         function carregarMensagensPrivadas() {
             if (!destinatarioAtual || !livroAtual) return;
 
@@ -344,6 +416,7 @@
             container.scrollTop = container.scrollHeight;
         }
 
+        // Envia a mensagem digitada na conversa privada.
         function enviarMensagemPrivada() {
             if (!estaLogado()) {
                 alert("Você precisa estar logado para enviar mensagens!");
@@ -376,10 +449,12 @@
             }
         }
 
+        // Envia a mensagem privada ao apertar Enter.
         function checarEnterPrivado(event) {
             if (event.key === "Enter") enviarMensagemPrivada();
         }
 
+        // Encerra a sessão e volta para o login.
         function sair(event) {
             if (event) event.preventDefault();
             localStorage.removeItem("usuario");

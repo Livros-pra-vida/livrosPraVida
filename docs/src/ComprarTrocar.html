@@ -194,62 +194,44 @@
         </div>
     </footer>
 
+    <script src="../js/admin.js"></script>
     <script>
-        if (!localStorage.getItem("anunciosComunidadeClean_v9")) {
-            localStorage.removeItem("anunciosComunidade");
-            localStorage.setItem("anunciosComunidadeClean_v9", "true");
+        // Os anúncios vêm da API (GET /book_listings): todos os usuários veem a mesma lista
+        // e o administrador pode excluir qualquer anúncio.
+        let listaAnuncios = [];
+        let estadoAnuncios = "carregando"; // "carregando" | "ok" | "erro"
+        const IMAGEM_PADRAO = "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=400&q=80";
+
+        // Converte um anúncio vindo da API para o formato usado nesta página.
+        function anuncioDaApi(r) {
+            return {
+                id: r.id,
+                titulo: r.title,
+                autor: r.author_name,
+                modalidade: r.modality,
+                preco: r.price ? formatarMoeda(r.price) : "",
+                regiao: r.region,
+                status: r.status,
+                vendedor: r.seller || "Leitor",
+                vendedorId: r.seller_id, // nulo nos anúncios de exemplo (anunciante sem conta)
+                avaliacao: r.reputation,
+                imagem: r.image_url
+            };
         }
 
-        let listaAnuncios = JSON.parse(localStorage.getItem("anunciosComunidade")) || [
-            { 
-                id: 1, 
-                titulo: "A Biblioteca da Meia-Noite", 
-                autor: "Matt Haig", 
-                modalidade: "Troca", 
-                preco: "", 
-                regiao: "Taguatinga", 
-                status: "Disponivel", 
-                vendedor: "Carla Mendes", 
-                avaliacao: "4.9 (14 trocas)", 
-                imagem: "https://http2.mlstatic.com/D_NQ_NP_906176-MLA114707539172_082026-O.webp"
-            },
-            { 
-                id: 2, 
-                titulo: "Sapiens: Uma Breve História", 
-                autor: "Yuval N. Harari", 
-                modalidade: "Doação", 
-                preco: "", 
-                regiao: "Águas Claras", 
-                status: "Disponivel", 
-                vendedor: "Marcos Vinicius", 
-                avaliacao: "5.0 (8 trocas)", 
-                imagem: "https://m.media-amazon.com/images/I/71-ghLb8qML._AC_UF1000,1000_QL80_.jpg"
-            },
-            { 
-                id: 3, 
-                titulo: "Duna", 
-                autor: "Frank Herbert", 
-                modalidade: "Venda", 
-                preco: "R$ 35,00", 
-                regiao: "Asa Sul / Norte", 
-                status: "Em Negociacao", 
-                vendedor: "Beatriz Lima", 
-                avaliacao: "4.7 (21 vendas)", 
-                imagem: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlWw1rpe1Ny4V2JUHvKFh_rPmIFDA1kvLlc2eiUxk--Q_E9nX4B9NzMzY&s=10"
-            },
-            { 
-                id: 4, 
-                titulo: "O Pequeno Príncipe", 
-                autor: "Antoine de Saint-Exupéry", 
-                modalidade: "Troca", 
-                preco: "", 
-                regiao: "Taguatinga", 
-                status: "Disponivel", 
-                vendedor: "Lucas Gabriel", 
-                avaliacao: "4.8 (5 trocas)", 
-                imagem: "https://cdl-static.s3-sa-east-1.amazonaws.com/covers/gg/9788537814666/o-pequeno-principe-edicao-bolso-de-luxo-traducao-de-andre-telles-e-rodrigo-lacerda-vencedores-do-premio-jabuti.jpg" // Literatura Infantil / Ilustração
+        // Busca os anúncios na API e redesenha a lista.
+        async function carregarAnuncios() {
+            estadoAnuncios = "carregando";
+            renderizarAnuncios();
+            try {
+                listaAnuncios = (await Admin.chamar("/book_listings")).map(anuncioDaApi);
+                estadoAnuncios = "ok";
+            } catch (erro) {
+                console.warn("Não foi possível carregar os anúncios:", erro.message);
+                estadoAnuncios = "erro";
             }
-        ];
+            renderizarAnuncios();
+        }
 
         let favoritos = JSON.parse(localStorage.getItem("favoritosComunidade")) || [];
         let alertasDesejos = JSON.parse(localStorage.getItem("alertasDesejosComunidade")) || [];
@@ -259,12 +241,15 @@
         let textoBusca = "";
         let idLivroSelecionadoParaStatus = null;
 
+        // Ao abrir a página: ajusta o cabeçalho, o carrinho e desenha os anúncios.
         document.addEventListener("DOMContentLoaded", function () {
             atualizarContadorCarrinho();
             atualizarCabecalhoAuth();
-            renderizarAnuncios();
+            Admin.ativarCliques(document.body, carregarAnuncios); // admin clica no nome do anunciante -> perfil
+            carregarAnuncios();
         });
 
+        // Troca os links do topo conforme o usuário esteja logado ou não.
         function atualizarCabecalhoAuth() {
             const areaAuth = document.getElementById("areaAuthHeader");
             const fotoSalva = localStorage.getItem("usuarioFoto") || "../imagens/perfil.jpg";
@@ -285,6 +270,7 @@
             }
         }
 
+        // Mostra no ícone do carrinho a quantidade de itens.
         function atualizarContadorCarrinho() {
             const carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
             const contador = document.getElementById("contadorCarrinhoHeader");
@@ -298,6 +284,7 @@
             }
         }
 
+        // Alterna entre ver os anúncios em grade ou em lista.
         function mudarModoExibicao(modo) {
             modoExibicao = modo;
             const btnGrade = document.getElementById("btnModoGrade");
@@ -318,6 +305,7 @@
             renderizarAnuncios();
         }
 
+        // Desenha os anúncios aplicando os filtros de busca, modalidade e região.
         function renderizarAnuncios() {
             const grid = document.getElementById("gridAnuncios");
             if (!grid) return;
@@ -349,12 +337,26 @@
                 return passaModalidade && passaRegiao && passaBusca;
             });
 
+            if (estadoAnuncios === "carregando" && listaAnuncios.length === 0) {
+                grid.innerHTML = `<p style="text-align: center; color: #6e655f; padding: 30px; grid-column: 1/-1;">Carregando anúncios... (pode levar um pouco se o servidor estava inativo)</p>`;
+                return;
+            }
+
+            if (estadoAnuncios === "erro" && listaAnuncios.length === 0) {
+                grid.innerHTML = `<div style="text-align: center; color: #6e655f; padding: 30px; grid-column: 1/-1;">
+                    <p>Não foi possível carregar os anúncios agora.</p>
+                    <button type="button" onclick="carregarAnuncios()" style="background: #8c533e; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600;">Tentar de novo</button>
+                </div>`;
+                return;
+            }
+
             if (filtrados.length === 0) {
                 grid.innerHTML = `<p style="text-align: center; color: #6e655f; padding: 30px; grid-column: 1/-1;">Nenhum livro encontrado com esses filtros.</p>`;
                 return;
             }
 
             const nomeUsuarioLogado = nomeDoUsuario() || "";
+            const admin = Admin.ehAdmin();
 
             filtrados.forEach(item => {
                 let textoBotao = "Negociar";
@@ -381,9 +383,15 @@
                 let corCoracao = favoritos.includes(item.id) ? "#e74c3c" : "#ccc";
 
                 let botaoGerenciar = "";
-                if (nomeUsuarioLogado && item.vendedor.toLowerCase() === nomeUsuarioLogado.toLowerCase()) {
+                const meuId = localStorage.getItem("usuarioId");
+                if (meuId && item.vendedorId && String(item.vendedorId) === String(meuId)) {
                     botaoGerenciar = `<button onclick="abrirModalStatus(${item.id})" style="background: #6e655f; color: #fff; border: none; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; margin-top: 6px;">Gerenciar Status</button>`;
                 }
+
+                // (Admin) botão para excluir o anúncio de qualquer pessoa
+                const botaoAdmin = admin
+                    ? `<button type="button" class="admin-btn-perigo" onclick="excluirAnuncio(${Number(item.id)})" title="Excluir este anúncio (administrador)" style="margin-top: 6px;">Excluir anúncio</button>`
+                    : "";
 
                 let mensagemChatPreDefinida = encodeURIComponent(`Olá ${item.vendedor}! Tenho interesse no seu livro "${item.titulo}" (${item.modalidade}${item.preco ? ' - ' + item.preco : ''}). Ainda está disponível?`);
                 let linkChat = `Chat.html?destinatario=${encodeURIComponent(item.vendedor)}&livro=${encodeURIComponent(item.titulo)}&msg=${mensagemChatPreDefinida}`;
@@ -402,15 +410,15 @@
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="${corCoracao}" stroke="${corCoracao}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                         </button>
                         <div>
-                            <img src="${item.imagem}" alt="${item.titulo}" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=400&q=80';" style="width: 100%; height: 220px; object-fit: cover; border-radius: 6px; margin-bottom: 10px; background-color: #faf8f5;">
+                            <img src="${Admin.esc(Admin.urlImagem(item.imagem, IMAGEM_PADRAO))}" alt="${Admin.esc(item.titulo)}" loading="lazy" onerror="this.onerror=null; this.src=IMAGEM_PADRAO;" style="width: 100%; height: 220px; object-fit: cover; border-radius: 6px; margin-bottom: 10px; background-color: #faf8f5;">
                             ${badgeStatus}
-                            <h3 style="font-size: 1rem; color: #2d251e; margin: 0 0 6px 0;">${item.titulo}</h3>
-                            <p style="font-size: 0.85rem; color: #6e655f; margin: 0 0 4px 0;">Autor: <strong>${item.autor}</strong></p>
+                            <h3 style="font-size: 1rem; color: #2d251e; margin: 0 0 6px 0;">${Admin.esc(item.titulo)}</h3>
+                            <p style="font-size: 0.85rem; color: #6e655f; margin: 0 0 4px 0;">Autor: <strong>${Admin.esc(item.autor)}</strong></p>
                             <p style="font-size: 0.85rem; color: #6e655f; margin: 0 0 4px 0;">Modalidade: <strong class="${classeModalidade}">${item.modalidade} ${item.preco ? '(' + item.preco + ')' : ''}</strong></p>
-                            <p style="font-size: 0.8rem; color: #8c533e; margin: 0 0 4px 0;">Região: ${item.regiao || 'Taguatinga'}</p>
-                            <p style="font-size: 0.8rem; color: #6e655f; margin: 0 0 6px 0;">${item.vendedor} <span style="color: #f39c12;">${item.avaliacao}</span></p>
+                            <p style="font-size: 0.8rem; color: #8c533e; margin: 0 0 4px 0;">Região: ${Admin.esc(item.regiao || 'Taguatinga')}</p>
+                            <p style="font-size: 0.8rem; color: #6e655f; margin: 0 0 6px 0;">${Admin.nomeHtml(item.vendedor, item.vendedorId)} <span style="color: #f39c12;">${Admin.esc(item.avaliacao)}</span></p>
                             ${linhaComissao}
-                            ${botaoGerenciar}
+                            ${botaoGerenciar}${botaoAdmin}
                         </div>
                         <a href="${linkChat}" class="button btn-negociar" style="display: block; text-align: center; background: #8c533e; color: #fff; padding: 8px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.85rem; margin-top: 10px;">${textoBotao}</a>
                     `;
@@ -422,16 +430,16 @@
 
                     card.innerHTML = `
                         <div style="display: flex; align-items: center; gap: 15px; text-align: left;">
-                            <img src="${item.imagem}" alt="${item.titulo}" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=400&q=80';" style="width: 50px; height: 70px; object-fit: cover; border-radius: 4px;">
+                            <img src="${Admin.esc(Admin.urlImagem(item.imagem, IMAGEM_PADRAO))}" alt="${Admin.esc(item.titulo)}" loading="lazy" onerror="this.onerror=null; this.src=IMAGEM_PADRAO;" style="width: 50px; height: 70px; object-fit: cover; border-radius: 4px;">
                             <div>
                                 <div style="display: flex; align-items: center; gap: 8px;">
-                                    <h3 style="font-size: 0.95rem; color: #2d251e; margin: 0;">${item.titulo}</h3>
+                                    <h3 style="font-size: 0.95rem; color: #2d251e; margin: 0;">${Admin.esc(item.titulo)}</h3>
                                     ${badgeStatus}
                                 </div>
-                                <p style="font-size: 0.8rem; color: #6e655f; margin: 2px 0;">Autor: <strong>${item.autor}</strong> | Região: ${item.regiao || 'Taguatinga'}</p>
-                                <p style="font-size: 0.8rem; color: #6e655f; margin: 0;">Anunciante: <strong>${item.vendedor}</strong> (<span style="color: #f39c12;">${item.avaliacao}</span>) | <span class="${classeModalidade}" style="font-weight: 600;">${item.modalidade} ${item.preco ? '(' + item.preco + ')' : ''}</span></p>
+                                <p style="font-size: 0.8rem; color: #6e655f; margin: 2px 0;">Autor: <strong>${Admin.esc(item.autor)}</strong> | Região: ${Admin.esc(item.regiao || 'Taguatinga')}</p>
+                                <p style="font-size: 0.8rem; color: #6e655f; margin: 0;">Anunciante: <strong>${Admin.nomeHtml(item.vendedor, item.vendedorId)}</strong> (<span style="color: #f39c12;">${Admin.esc(item.avaliacao)}</span>) | <span class="${classeModalidade}" style="font-weight: 600;">${item.modalidade} ${item.preco ? '(' + item.preco + ')' : ''}</span></p>
                                 ${linhaComissao}
-                            ${botaoGerenciar}
+                            ${botaoGerenciar}${botaoAdmin}
                             </div>
                         </div>
                         <div style="display: flex; gap: 10px; align-items: center;">
@@ -446,11 +454,13 @@
             });
         }
 
+        // Guarda o texto da busca e redesenha os anúncios.
         function filtrarAnuncios(texto) {
             textoBusca = texto;
             renderizarAnuncios();
         }
 
+        // Formata um número como dinheiro (R$ 0,00).
         function formatarMoeda(valor) {
             return Number(valor).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
         }
@@ -461,6 +471,7 @@
             return parseFloat(limpo) || 0;
         }
 
+        // Mostra a simulação da taxa da plataforma sobre o preço digitado.
         function atualizarSimulacaoTaxa(valor) {
             const preco = valorNumerico(valor);
             const comissao = preco * 0.05;
@@ -468,6 +479,7 @@
                 `Taxa da loja (5%): ${formatarMoeda(comissao)} | Você receberá: ${formatarMoeda(preco - comissao)}`;
         }
 
+        // Filtra por modalidade (venda, troca, doação) e destaca o botão.
         function filtrarModalidade(mod, botao) {
             filtroAtual = mod;
             document.querySelectorAll(".filter-btn").forEach(btn => {
@@ -483,6 +495,7 @@
             renderizarAnuncios();
         }
 
+        // Aplica o filtro de região escolhido.
         function mudarFiltroRegiao() {
             const selectRegiao = document.getElementById("filtroRegiao");
             if (selectRegiao) {
@@ -491,6 +504,7 @@
             renderizarAnuncios();
         }
 
+        // Marca ou desmarca um anúncio como favorito.
         function toggleFavorito(id) {
             const index = favoritos.indexOf(id);
             if (index > -1) {
@@ -502,6 +516,7 @@
             renderizarAnuncios();
         }
 
+        // Abre o formulário de novo anúncio (só para quem está logado).
         function abrirModalAnuncio() {
             if (!localStorage.getItem("usuario")) {
                 alert("Você precisa estar logado para anunciar um livro!");
@@ -512,6 +527,7 @@
             if (modal) modal.style.display = "flex";
         }
 
+        // Fecha o formulário de novo anúncio.
         function fecharModalAnuncio() {
             const modal = document.getElementById("modalAnuncio");
             const form = document.getElementById("formAnuncio");
@@ -521,11 +537,13 @@
             if (grupoPreco) grupoPreco.style.display = "none";
         }
 
+        // Abre o modal para pedir aviso quando um livro chegar.
         function abrirModalAvisar() {
             const modal = document.getElementById("modalAvisar");
             if (modal) modal.style.display = "flex";
         }
 
+        // Fecha o modal de aviso.
         function fecharModalAvisar() {
             const modal = document.getElementById("modalAvisar");
             const form = document.getElementById("formAvisar");
@@ -533,6 +551,7 @@
             if (form) form.reset();
         }
 
+        // Guarda o livro que o usuário quer ser avisado.
         function salvarDesejoAviso(event) {
             event.preventDefault();
             const inputDesejado = document.getElementById("livroDesejado");
@@ -545,6 +564,7 @@
             }
         }
 
+        // Compara o título do novo anúncio com os avisos pedidos (por ora só simula a notificação no console).
         function verificarAlertasNovosLivros(tituloNovoLivro) {
             const termoMatch = alertasDesejos.some(alerta => tituloNovoLivro.toLowerCase().includes(alerta.toLowerCase()));
             if (termoMatch) {
@@ -552,6 +572,7 @@
             }
         }
 
+        // Abre o modal para mudar o status de um anúncio.
         function abrirModalStatus(id) {
             idLivroSelecionadoParaStatus = id;
             const livro = listaAnuncios.find(item => item.id === id);
@@ -563,43 +584,64 @@
             }
         }
 
+        // Fecha o modal de status.
         function fecharModalStatus() {
             const modalStatus = document.getElementById("modalStatus");
             if (modalStatus) modalStatus.style.display = "none";
             idLivroSelecionadoParaStatus = null;
         }
 
+        // Muda o status do anúncio escolhido (PATCH /book_listings/:id) e atualiza a lista.
         function atualizarStatusAnuncio(novoStatus) {
-            const livro = listaAnuncios.find(item => item.id === idLivroSelecionadoParaStatus);
-            if (livro) {
-                livro.status = novoStatus;
-                localStorage.setItem("anunciosComunidade", JSON.stringify(listaAnuncios));
+            return mudarStatusNaApi(novoStatus, () => `Status atualizado para: ${novoStatus}`);
+        }
+
+        // Envia o novo status para a API e, se der certo, troca o anúncio na lista local.
+        async function mudarStatusNaApi(novoStatus, mensagem) {
+            const atual = listaAnuncios.find(item => item.id === idLivroSelecionadoParaStatus);
+            if (!atual) return;
+
+            try {
+                const resposta = await Admin.chamar(`/book_listings/${atual.id}`, {
+                    method: "PATCH",
+                    corpo: { book_listing: { status: novoStatus } }
+                });
+                const atualizado = anuncioDaApi(resposta);
+                listaAnuncios = listaAnuncios.map(item => item.id === atualizado.id ? atualizado : item);
                 fecharModalStatus();
                 renderizarAnuncios();
-                alert(`Status atualizado para: ${novoStatus}`);
+                alert(mensagem(atualizado));
+            } catch (erro) {
+                alert(erro.message);
             }
         }
 
+        // (Admin) Exclui o anúncio de qualquer pessoa, depois de confirmar.
+        async function excluirAnuncio(id) {
+            const anuncio = listaAnuncios.find(item => item.id === id);
+            if (!anuncio || !Admin.ehAdmin()) return;
+            if (!confirm(`Excluir o anúncio "${anuncio.titulo}" de ${anuncio.vendedor}?\n\nIsso não pode ser desfeito.`)) return;
+
+            try {
+                await Admin.chamar(`/book_listings/${id}`, { method: "DELETE" });
+            } catch (erro) {
+                alert(erro.message);
+                return;
+            }
+            listaAnuncios = listaAnuncios.filter(item => item.id !== id);
+            favoritos = favoritos.filter(f => f !== id);
+            localStorage.setItem("favoritosComunidade", JSON.stringify(favoritos));
+            renderizarAnuncios();
+            Admin.avisar(`Anúncio "${anuncio.titulo}" excluído.`);
+        }
+
+        // Marca o anúncio como indisponível; a API soma 1 venda/troca na reputação do anunciante.
         function concluirTransacaoSucesso() {
-            const livro = listaAnuncios.find(item => item.id === idLivroSelecionadoParaStatus);
-            if (livro) {
-                livro.status = "Indisponivel";
-                
-                let partesAval = livro.avaliacao.split("(");
-                let contadorTrocas = 1;
-                if (partesAval.length > 1) {
-                    let numStr = partesAval[1].replace(/\D/g, "");
-                    contadorTrocas = (parseInt(numStr) || 0) + 1;
-                }
-                livro.avaliacao = `5.0 (${contadorTrocas} ${livro.modalidade === 'Venda' ? 'vendas' : 'trocas'})`;
-
-                localStorage.setItem("anunciosComunidade", JSON.stringify(listaAnuncios));
-                fecharModalStatus();
-                renderizarAnuncios();
-                alert(`Transação concluída com sucesso! A reputação do usuário foi atualizada para ${livro.avaliacao}.`);
-            }
+            return mudarStatusNaApi("Indisponivel", livro =>
+                `Transação concluída com sucesso! A reputação do usuário foi atualizada para ${livro.avaliacao}.`);
         }
 
+        // Mostra o campo de preço só quando a modalidade é venda.
         function alternarCampoPreco() {
             const modalidadeSelect = document.getElementById("novaModalidade");
             const grupoPreco = document.getElementById("grupoPreco");
@@ -615,60 +657,85 @@
             }
         }
 
-        function cadastrarAnuncio(event) {
+        // Reduz uma imagem enviada pelo usuário (máx. 600 px, JPEG) para caber no banco e carregar rápido.
+        function reduzirImagem(arquivo) {
+            return new Promise((resolve, reject) => {
+                const leitor = new FileReader();
+                leitor.onerror = () => reject(new Error("Não foi possível ler a imagem."));
+                leitor.onload = () => {
+                    const img = new Image();
+                    img.onerror = () => reject(new Error("O arquivo escolhido não é uma imagem válida."));
+                    img.onload = () => {
+                        const escala = Math.min(1, 600 / Math.max(img.width, img.height));
+                        const canvas = document.createElement("canvas");
+                        canvas.width = Math.max(1, Math.round(img.width * escala));
+                        canvas.height = Math.max(1, Math.round(img.height * escala));
+                        canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+                        resolve(canvas.toDataURL("image/jpeg", 0.8));
+                    };
+                    img.src = leitor.result;
+                };
+                leitor.readAsDataURL(arquivo);
+            });
+        }
+
+        // Valida o formulário e cria o anúncio na API (POST /book_listings), em nome do usuário logado.
+        async function cadastrarAnuncio(event) {
             event.preventDefault();
-            const titulo = document.getElementById("novoTitulo").value;
-            const autor = document.getElementById("novoAutor").value;
+            const titulo = document.getElementById("novoTitulo").value.trim();
+            const autor = document.getElementById("novoAutor").value.trim();
             const modalidade = document.getElementById("novaModalidade").value;
-            const preco = document.getElementById("novoPreco").value;
             const regiao = document.getElementById("novaRegiao").value;
             const inputArquivo = document.getElementById("novaFotoArquivo");
-            let isbnOuLink = document.getElementById("novoIsbn").value.trim();
+            const isbnOuLink = document.getElementById("novoIsbn").value.trim();
 
-            const nomeUsuario = nomeDoUsuario() || "Leitor Anônimo";
+            let preco = null;
+            if (modalidade === "Venda") {
+                preco = valorNumerico(document.getElementById("novoPreco").value);
+                if (!(preco > 0)) {
+                    alert("Informe um preço válido para a venda (ex.: R$ 25,00).");
+                    return;
+                }
+            }
 
-            const prosseguirComImagem = (imagemUrl) => {
-                const novoItem = {
-                    id: Date.now(),
-                    titulo: titulo,
-                    autor: autor,
-                    modalidade: modalidade,
-                    preco: modalidade === "Venda" ? preco : "",
-                    regiao: regiao,
-                    status: "Disponivel",
-                    vendedor: nomeUsuario,
-                    avaliacao: "5.0 (1 troca)",
-                    imagem: imagemUrl
-                };
+            const botao = event.submitter || document.querySelector("#formAnuncio button[type='submit']");
+            if (botao) botao.disabled = true;
 
-                listaAnuncios.unshift(novoItem);
-                localStorage.setItem("anunciosComunidade", JSON.stringify(listaAnuncios));
+            try {
+                let imagemUrl;
+                if (inputArquivo && inputArquivo.files && inputArquivo.files[0]) {
+                    imagemUrl = await reduzirImagem(inputArquivo.files[0]);
+                } else if (isbnOuLink) {
+                    imagemUrl = isbnOuLink.startsWith("http")
+                        ? isbnOuLink
+                        : `https://covers.openlibrary.org/b/isbn/${encodeURIComponent(isbnOuLink)}-L.jpg`;
+                } else {
+                    imagemUrl = IMAGEM_PADRAO;
+                }
 
+                const criado = await Admin.chamar("/book_listings", {
+                    method: "POST",
+                    corpo: { book_listing: {
+                        title: titulo, author_name: autor, modality: modalidade,
+                        price: preco, region: regiao, image_url: imagemUrl
+                    } }
+                });
+
+                listaAnuncios.unshift(anuncioDaApi(criado));
                 verificarAlertasNovosLivros(titulo);
                 fecharModalAnuncio();
                 renderizarAnuncios();
                 alert("Livro anunciado com sucesso na comunidade!");
-            };
-
-            if (inputArquivo && inputArquivo.files && inputArquivo.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    prosseguirComImagem(e.target.result);
-                };
-                reader.readAsDataURL(inputArquivo.files[0]);
-            } else {
-                let imagemUrl = "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=400&q=80";
-                if (isbnOuLink) {
-                    if (isbnOuLink.startsWith("http")) {
-                        imagemUrl = isbnOuLink;
-                    } else {
-                        imagemUrl = `https://covers.openlibrary.org/b/isbn/${isbnOuLink}-L.jpg`;
-                    }
-                }
-                prosseguirComImagem(imagemUrl);
+            } catch (erro) {
+                alert(erro.status === 401
+                    ? "Sua sessão expirou (ou o login é antigo). Saia e entre novamente para anunciar."
+                    : erro.message);
+            } finally {
+                if (botao) botao.disabled = false;
             }
         }
 
+        // Devolve o nome do usuário logado.
         function nomeDoUsuario() {
             try {
                 const u = JSON.parse(localStorage.getItem("usuario"));
@@ -678,6 +745,7 @@
             }
         }
 
+        // Encerra a sessão e volta para o login.
         function realizarLogout(e) {
             if (e) e.preventDefault();
             localStorage.removeItem("usuario");

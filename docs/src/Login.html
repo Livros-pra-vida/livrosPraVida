@@ -71,11 +71,13 @@
     <script>
          const API_URL = "https://lpv-api.onrender.com";
 
+// Mostra ou esconde a senha digitada.
 function alternarVisibilidadeSenha() {
     const campo = document.getElementById("senha");
     campo.type = campo.type === "password" ? "text" : "password";
 }
 
+// Faz o login na API (POST /users/login) e guarda o token e os dados do usuário no navegador.
 document.getElementById("formLogin").addEventListener("submit", async function (event) {
     event.preventDefault();
 

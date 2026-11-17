@@ -128,10 +128,12 @@
     </footer>
 
         <script>
+        // Diz se há um usuário logado (flag salva no localStorage).
         function estaLogado() {
             return !!localStorage.getItem("usuario");
         }
 
+        // Monta o menu do topo conforme o usuário esteja logado ou não.
         document.addEventListener("DOMContentLoaded", function () {
             const menu = document.getElementById("menuNavegacao");
             const fotoPerfil = localStorage.getItem("usuarioFoto") || "../imagens/Background.png";
@@ -163,6 +165,7 @@
             }
         });
 
+        // Encerra a sessão e volta para o login.
         function sair(event) {
             if (event) event.preventDefault();
             localStorage.removeItem("usuario");

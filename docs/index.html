@@ -75,6 +75,7 @@
                 <a href="src/Login.html" id="entrar">Entrar</a>
                 <a href="src/Cadastro.html" id="cadastrar" class="btn-cadastrar">Cadastrar</a>
 
+                <a href="src/Estantes.html" id="minhasEstantes" style="display: none;">Minhas Estantes</a>
                 <a href="#" id="sair" onclick="sair()" style="display: none;">Sair</a>
                 <a href="src/MeuPerfil.html" id="meuPerfil" title="Meu Perfil" style="display: none;">
                     <img id="menuAvatar" src="imagens/Background.png" alt="Foto do Perfil" class="avatar-img">
@@ -344,6 +345,7 @@
     </footer>
 
     <script>
+        // Ao abrir a home: ajusta o menu conforme o login, mostra o popup de boas-vindas e atualiza o carrinho.
         document.addEventListener("DOMContentLoaded", function () {
         atualizarContadorCarrinho();
 
@@ -358,6 +360,7 @@
             document.getElementById("cadastrar").style.display = "none";
             document.getElementById("meuPerfil").style.display = "flex";
             document.getElementById("sair").style.display = "inline-block";
+            document.getElementById("minhasEstantes").style.display = "inline-block";
 
             const fotoSalva = localStorage.getItem("usuarioFoto");
 
@@ -370,6 +373,7 @@
 
             document.getElementById("meuPerfil").style.display = "none";
             document.getElementById("sair").style.display = "none";
+            document.getElementById("minhasEstantes").style.display = "none";
             document.getElementById("entrar").style.display = "inline-block";
             document.getElementById("cadastrar").style.display = "inline-block";
         }
@@ -380,11 +384,13 @@
     const menuNavegacao = document.getElementById("menu-navegacao");
 
     if (btnMenu && menuNavegacao) {
+        // Abre/fecha o menu lateral (versão celular).
         btnMenu.addEventListener("click", () => {
             menuNavegacao.classList.toggle("ativo");
         });
     }
 
+        // Adiciona o livro ao carrinho (localStorage) e atualiza o contador.
         function adicionarAoCarrinho(titulo, preco, imagem) {
             let carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
 
@@ -399,6 +405,7 @@
             alert(`"${titulo}" foi adicionado ao seu carrinho!`);
         }
 
+        // Mostra no ícone do carrinho a quantidade total de itens.
         function atualizarContadorCarrinho() {
             const carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
             const contador = document.getElementById("contadorCarrinhoHeader");
@@ -413,6 +420,7 @@
             }
         }
 
+        // Logout: apaga os dados da sessão do navegador e volta para o login.
         function sair() {
             localStorage.removeItem("usuario");
             localStorage.removeItem("logado");

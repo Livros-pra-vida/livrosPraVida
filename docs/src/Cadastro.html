@@ -84,7 +84,7 @@
 
                 <label class="terms">
                     <input type="checkbox" id="termos" required>
-                    Li e concordo com os Termos de Uso e a Política de Privacidade.
+                    Li e concordo com os <a href="Termos.html#termos" target="_blank" rel="noopener">Termos de Uso</a> e a <a href="Termos.html#privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.
                 </label>
 
                 <button type="submit" class="register" id="btnSubmit">Concluir</button>
@@ -105,11 +105,13 @@
     <script>
         const API_URL = "https://lpv-api.onrender.com";
 
+// Mostra ou esconde o texto do campo de senha indicado.
 function alternarSenha(id) {
     const input = document.getElementById(id);
     input.type = input.type === "password" ? "text" : "password";
 }
 
+// Envia o cadastro para a API (POST /users); se der certo, guarda o token e os dados do usuário e vai para a home.
 document.getElementById("formCadastro").addEventListener("submit", async function (event) {
     event.preventDefault();
 

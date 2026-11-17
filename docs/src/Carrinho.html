@@ -53,6 +53,7 @@
     </main>
 
     <script>
+        // Ao abrir a página: carrega o endereço do perfil e desenha o carrinho.
         document.addEventListener("DOMContentLoaded", function () {
             carregarCarrinho();
             carregarEnderecoPerfil();
@@ -69,6 +70,7 @@
             return `${rua}, nº ${numero || "S/N"} - ${bairro}, ${cidade} (CEP: ${cep})`;
         }
 
+        // Mostra na tela o endereço de entrega salvo no perfil.
         function carregarEnderecoPerfil() {
             const txt = document.getElementById("textoEnderecoCarrinho");
             const endereco = enderecoDoPerfil();
@@ -93,6 +95,7 @@
             };
         }
 
+        // Lê o carrinho do localStorage, desenha os itens e calcula os totais.
         function carregarCarrinho() {
             const lista = document.getElementById("listaCarrinho");
             let carrinho = (JSON.parse(localStorage.getItem("carrinhoLivros")) || [])
@@ -140,6 +143,7 @@
             document.getElementById("valorTotal").textContent = `R$ ${totalComFrete.toFixed(2)} (Frete R$ 10,00)`;
         }
 
+        // Soma ou subtrai a quantidade de um item (se chegar a 0, remove) e redesenha.
         function alterarQuantidade(index, delta) {
             let carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
             if (carrinho[index]) {
@@ -150,6 +154,7 @@
             }
         }
 
+        // Tira um item do carrinho e redesenha.
         function removerItem(index) {
             let carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
             carrinho.splice(index, 1);
@@ -157,6 +162,7 @@
             carregarCarrinho();
         }
 
+        // Exige endereço no perfil, registra o pedido no histórico (localStorage), esvazia o carrinho e vai para o perfil.
         function finalizarCompra() {
             const enderecoFinal = enderecoDoPerfil();
             if (!enderecoFinal) {
