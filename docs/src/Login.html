@@ -32,8 +32,8 @@
 
             <form id="formLogin">
                 <label>
-                    Nome de usuário ou e-mail
-                    <input type="text" id="loginInput" required placeholder="Digite seu e-mail ou usuário" autocomplete="username">
+                    Nome de usuário
+                    <input type="text" id="loginInput" required placeholder="Digite seu e-mail" autocomplete="username">
                 </label>
 
                 <label>
@@ -69,7 +69,7 @@
     </main>
 
     <script>
-         const API_URL = "https://lpv-api.onrender.com";
+const API_URL = "https://lpv-api.onrender.com";
 
 // Mostra ou esconde a senha digitada.
 function alternarVisibilidadeSenha() {
@@ -85,6 +85,9 @@ document.getElementById("formLogin").addEventListener("submit", async function (
     const passwordValue = document.getElementById("senha").value;
     const btnSubmit = document.getElementById("btnSubmit");
 
+    // Criptografa a senha com SHA-256 antes de enviar à API.
+    const hashedPassword = CryptoJS.SHA256(passwordValue).toString();
+
     btnSubmit.disabled = true;
     btnSubmit.innerText = "Entrando...";
 
@@ -96,13 +99,14 @@ document.getElementById("formLogin").addEventListener("submit", async function (
             },
             body: JSON.stringify({
                 email: loginValue,
-                password: passwordValue
+                password: hashedPassword
             })
         });
 
         const data = await response.json();
 
         if (response.ok) {
+            // Armazena os dados do usuário e o token de autenticação no navegador.
             localStorage.setItem("usuario", JSON.stringify(data.user));
             localStorage.setItem("token", data.token);
             localStorage.setItem("logado", "true");
@@ -120,6 +124,7 @@ document.getElementById("formLogin").addEventListener("submit", async function (
         console.error("Erro no login:", error);
         alert("Não foi possível conectar ao servidor. Se ele estava inativo, aguarde um minuto e tente de novo.");
     } finally {
+        // Reabilita o botão independentemente do resultado da requisição.
         btnSubmit.disabled = false;
         btnSubmit.innerText = "Entrar";
     }
