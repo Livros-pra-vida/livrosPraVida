@@ -102,6 +102,8 @@
         </footer>
     </main>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+    
     <script>
         const API_URL = "https://lpv-api.onrender.com";
 
@@ -146,6 +148,10 @@ document.getElementById("formCadastro").addEventListener("submit", async functio
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 60000);
 
+
+    // Criptografa a senha com SHA-256 antes de enviar para ocultá-la no Payload do F12
+    const hashedPassword = CryptoJS.SHA256(senha).toString();
+    
     try {
         const response = await fetch(`${API_URL}/users`, {
             method: 'POST',
@@ -160,7 +166,7 @@ document.getElementById("formCadastro").addEventListener("submit", async functio
                     cpf: cpf,
                     telefone: telefone,
                     nascimento: nascimento,
-                    password: senha,
+                    password: hashedPassword,
                     password_confirmation: confirmarSenha
                 }
             })
