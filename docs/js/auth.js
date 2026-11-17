@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     protegerAcoesRestritas();
 });
 
-// 1. Atualiza o menu superior baseado no estado de login
+// Atualiza o menu superior baseado no estado de login
 function atualizarMenuNavegacao() {
     const isLogado = localStorage.getItem("logado") === "true";
     const authContainer = document.getElementById("authMenu");
@@ -24,7 +24,7 @@ function atualizarMenuNavegacao() {
     }
 }
 
-// 2. Trava ações de compra, troca, doação e chat para visitantes
+// Trava ações de compra, troca, doação e chat para visitantes
 function protegerAcoesRestritas() {
     const isLogado = localStorage.getItem("logado") === "true";
     const botoesRestritos = document.querySelectorAll(".btn-negociar, .btn-chat-direct, .btn-assinar");
@@ -44,7 +44,7 @@ function protegerAcoesRestritas() {
     });
 }
 
-// 3. Encerra a sessão
+// Encerra a sessão
 function realizarLogout() {
     localStorage.removeItem("logado");
     window.location.href = "../index.html";
