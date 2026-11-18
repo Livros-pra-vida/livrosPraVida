@@ -84,7 +84,10 @@
 
                 <label class="terms">
                     <input type="checkbox" id="termos" required>
-                    Li e concordo com os <a href="Termos.html#termos" target="_blank" rel="noopener">Termos de Uso</a> e a <a href="Termos.html#privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.
+                    Li e concordo com os
+                    <a href="Termos.html#termos" target="_blank" rel="noopener">Termos de Uso</a>
+                    e a
+                    <a href="Termos.html#privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.
                 </label>
 
                 <button type="submit" class="register" id="btnSubmit">Concluir</button>
@@ -102,111 +105,128 @@
         </footer>
     </main>
 
+    <!-- Biblioteca CryptoJS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
-    
+
     <script>
         const API_URL = "https://lpv-api.onrender.com";
 
-// Mostra ou esconde o texto do campo de senha indicado.
-function alternarSenha(id) {
-    const input = document.getElementById(id);
-    input.type = input.type === "password" ? "text" : "password";
-}
+        // Mostra ou esconde o texto do campo de senha indicado.
+        function alternarSenha(id) {
+            const input = document.getElementById(id);
+            input.type = input.type === "password" ? "text" : "password";
+        }
 
-// Envia o cadastro para a API (POST /users); se der certo, guarda o token e os dados do usuário e vai para a home.
-document.getElementById("formCadastro").addEventListener("submit", async function (event) {
-    event.preventDefault();
-
-    const username = document.getElementById("username").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const nascimento = document.getElementById("birthdate").value;
-    const cpf = document.getElementById("cpf").value.trim().replace(/\D/g, '');
-    const telefone = document.getElementById("phone").value.trim().replace(/\D/g, '');
-    const senha = document.getElementById("senha").value;
-    const confirmarSenha = document.getElementById("confirmarSenha").value;
-    const btnSubmit = document.getElementById("btnSubmit");
-
-    if (cpf.length !== 11) {
-        alert("O CPF precisa conter exatamente 11 números.");
-        return;
-    }
-
-    if (telefone.length > 0 && (telefone.length < 10 || telefone.length > 11)) {
-        alert("O telefone deve conter 10 ou 11 números (com DDD).");
-        return;
-    }
-
-    if (senha !== confirmarSenha) {
-        alert("As senhas não coincidem.");
-        return;
-    }
-
-    btnSubmit.disabled = true;
-    btnSubmit.innerText = "Conectando ao servidor (aguarde)...";
-
-    // 60s: o Render gratuito pode demorar para acordar
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 60000);
-
-
-    // Criptografa a senha com SHA-256 antes de enviar para ocultá-la no Payload do F12
-    const hashedPassword = CryptoJS.SHA256(senha).toString();
-    
-    try {
-        const response = await fetch(`${API_URL}/users`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            signal: controller.signal,
-            body: JSON.stringify({
-                user: {
-                    username: username,
-                    email: email,
-                    cpf: cpf,
-                    telefone: telefone,
-                    nascimento: nascimento,
-                    password: hashedPassword,
-                    password_confirmation: confirmarSenha
-                }
-            })
+        // Permite somente números no campo CPF.
+        document.getElementById("cpf").addEventListener("input", function () {
+            this.value = this.value.replace(/\D/g, '');
         });
 
-        clearTimeout(timeoutId);
-        const data = await response.json();
+        // Permite somente números no campo telefone.
+        document.getElementById("phone").addEventListener("input", function () {
+            this.value = this.value.replace(/\D/g, '');
+        });
 
-        if (response.ok) {
-            if (data.token && data.user) {
-                localStorage.setItem("usuario", JSON.stringify(data.user));
-                localStorage.setItem("token", data.token);
-                localStorage.setItem("logado", "true");
-                localStorage.setItem("usuarioId", data.user.id);
-                localStorage.setItem("usuarioNome", data.user.username);
-                localStorage.setItem("usuarioEmail", data.user.email);
-                localStorage.setItem("isAdmin", data.user.admin ? "true" : "false");
-                alert("Conta criada com sucesso!");
-                window.location.href = "../index.html";
-            } else {
-                alert("Conta criada com sucesso! Faça login para continuar.");
-                window.location.href = "Login.html";
+        // Envia o cadastro para a API.
+        document.getElementById("formCadastro").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const username = document.getElementById("username").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const nascimento = document.getElementById("birthdate").value;
+            const cpf = document.getElementById("cpf").value.trim().replace(/\D/g, '');
+            const telefone = document.getElementById("phone").value.trim().replace(/\D/g, '');
+            const senha = document.getElementById("senha").value;
+            const confirmarSenha = document.getElementById("confirmarSenha").value;
+            const btnSubmit = document.getElementById("btnSubmit");
+
+            if (cpf.length !== 11) {
+                alert("O CPF precisa conter exatamente 11 números.");
+                return;
             }
-        } else {
-            const erros = data.errors ? data.errors.join(", ") : (data.error || "Verifique os dados digitados.");
-            alert("Erro ao criar conta: " + erros);
-        }
-    } catch (error) {
-        clearTimeout(timeoutId);
-        console.error("Erro no cadastro:", error);
-        if (error.name === 'AbortError') {
-            alert("O servidor demorou a responder. Tente clicar em Concluir novamente.");
-        } else {
-            alert("Não foi possível conectar ao servidor.");
-        }
-    } finally {
-        btnSubmit.disabled = false;
-        btnSubmit.innerText = "Concluir";
-    }
-});
+
+            if (telefone.length > 0 && (telefone.length < 10 || telefone.length > 11)) {
+                alert("O telefone deve conter 10 ou 11 números (com DDD).");
+                return;
+            }
+
+            if (senha !== confirmarSenha) {
+                alert("As senhas não coincidem.");
+                return;
+            }
+
+            // Gera o hash SHA-256 da senha e da confirmação.
+            const hashedSenha = CryptoJS.SHA256(senha).toString();
+            const hashedConfirmarSenha = CryptoJS.SHA256(confirmarSenha).toString();
+
+            btnSubmit.disabled = true;
+            btnSubmit.innerText = "Realizando cadastro (aguarde)...";
+
+            // 60 segundos: o Render gratuito pode demorar para acordar.
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 60000);
+
+            try {
+                const response = await fetch(`${API_URL}/users`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    signal: controller.signal,
+                    body: JSON.stringify({
+                        user: {
+                            username: username,
+                            email: email,
+                            cpf: cpf,
+                            telefone: telefone,
+                            nascimento: nascimento,
+                            password: hashedSenha,
+                            password_confirmation: hashedConfirmarSenha
+                        }
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    if (data.token && data.user) {
+                        localStorage.setItem("usuario", JSON.stringify(data.user));
+                        localStorage.setItem("token", data.token);
+                        localStorage.setItem("logado", "true");
+                        localStorage.setItem("usuarioId", data.user.id);
+                        localStorage.setItem("usuarioNome", data.user.username);
+                        localStorage.setItem("usuarioEmail", data.user.email);
+                        localStorage.setItem("isAdmin", data.user.admin ? "true" : "false");
+
+                        alert("Conta criada com sucesso!");
+                        window.location.href = "../index.html";
+                    } else {
+                        alert("Conta criada com sucesso! Faça login para continuar.");
+                        window.location.href = "Login.html";
+                    }
+                } else {
+                    const erros = data.errors
+                        ? data.errors.join(", ")
+                        : (data.error || "Verifique os dados digitados.");
+
+                    alert("Erro ao criar conta: " + erros);
+                }
+
+            } catch (error) {
+                console.error("Erro no cadastro:", error);
+
+                if (error.name === 'AbortError') {
+                    alert("O servidor demorou a responder. Tente clicar em Concluir novamente.");
+                } else {
+                    alert("Não foi possível conectar ao servidor.");
+                }
+
+            } finally {
+                clearTimeout(timeoutId);
+                btnSubmit.disabled = false;
+                btnSubmit.innerText = "Concluir";
+            }
+        });
     </script>
 </body>
 
