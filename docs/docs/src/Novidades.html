@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novidades & Lançamentos - Livros pra Vida</title>
+    <link rel="icon" type="image/png" href="../imagens/icone.png">
+    <link rel="stylesheet" href="../css/StyleNovidades.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header style="display: flex; flex-direction: column; background: #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.06); position: sticky; top: 0; z-index: 100; width: 100%; padding: 12px 16px; gap: 12px;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <a href="../index.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #2d251e; font-weight: 700; font-size: 1.15rem;">
+                <img src="../imagens/icone.png" alt="Logo Livros pra Vida" style="width: 32px; height: 32px; border-radius: 6px; object-fit: cover;">
+                <span>Livros pra Vida</span>
+            </a>
+
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <a href="Carrinho.html" title="Ver Carrinho" style="position: relative; color: #2d251e; display: flex; align-items: center; text-decoration: none;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span id="contadorCarrinhoHeader" style="position: absolute; top: -4px; right: -6px; background-color: #8c533e; color: #fff; font-size: 0.65rem; font-weight: 700; padding: 2px 5px; border-radius: 10px; display: none;">0</span>
+                </a>
+
+                <div id="areaAuthHeader" style="display: flex; align-items: center; gap: 8px;"></div>
+            </div>
+        </div>
+
+        <nav style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px 16px; width: 100%; padding-top: 2px;">
+            <a href="Catalogo.html" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.88rem;">Catálogo</a>
+            <a href="ComprarTrocar.html" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.88rem;">Comprar & Trocar</a>
+            <a href="Novidades.html" style="text-decoration: none; color: #8c533e; font-weight: 700; font-size: 0.88rem;">Novidades</a>
+            <a href="Chat.html" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.88rem;">Chat & Comunidade</a>
+            <a href="SobreNos.html" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.88rem;">Sobre Nós</a>
+        </nav>
+
+    </header>
+
+    <main class="container">
+        <h1>Novidades, Lançamentos & Mangás</h1>
+        <p style="margin-bottom: 25px; color: #666;">Fique por dentro das principais notícias do mercado literário e otaku com matérias reais dos maiores portais especializados.</p>
+
+        <!-- Filtros Rápidos / Abas de Notícias -->
+        <div class="novidades-tabs">
+            <button class="tab-novidade active" onclick="filtrarNoticias('todos', event)">Todos</button>
+            <button class="tab-novidade" onclick="filtrarNoticias('livros', event)">Livros & Prêmios</button>
+            <button class="tab-novidade" onclick="filtrarNoticias('mangas', event)">Mangás & Hiatos</button>
+            <button class="tab-novidade" onclick="filtrarNoticias('adaptacoes', event)">Adaptações (Filmes/Séries)</button>
+        </div>
+
+        <!-- LAYOUT DUPLO: COLUNA PRINCIPAL DE NOTÍCIAS + CALENDÁRIO LATERAL -->
+        <div class="layout-novidades-principal">
+            
+            <!-- COLUNA DAS MATÉRIAS -->
+            <div class="coluna-noticias">
+                
+                <!-- 1. BANNER DE DESTAQUE DA SEMANA -->
+                <article class="banner-destaque item-novidade" data-categoria="mangas">
+                    <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&auto=format&fit=crop&q=80" alt="Destaque Hunter x Hunter">
+                    <div class="banner-conteudo">
+                        <span class="selo-destaque">Destaque da Semana</span>
+                        <span class="tag-categoria">Retorno de Hiato</span>
+                        <h2 style="font-size: 1.3rem; color: #2d251e;">Hunter x Hunter: Shonen Jump traz atualizações oficiais sobre a obra de Togashi</h2>
+                        <p style="font-size: 0.9rem; color: #555;">JBox - Cultura Pop Japonesa</p>
+                        <span class="descricao-noticia">Acompanhe os anúncios detalhados sobre o andamento dos novos capítulos, cronograma de publicação e o forte impacto do retorno do mangá no mercado internacional e brasileiro.</span>
+                        <a href="Chat.html" class="badge-comunidade">42 membros conversando sobre isso no Chat</a>
+                        <div style="margin-top: 10px;">
+                            <a href="https://www.jbox.com.br/?s=Hunter+x+Hunter" target="_blank" class="btn-externo">Ler Matéria Completa</a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- LISTA DE OUTRAS MATÉRIAS -->
+                <div class="novidades-grid">
+                    <!-- CATEGORIA: LIVROS -->
+                    <article class="item-novidade" data-categoria="livros">
+                        <span class="tag-categoria">Mercado Editorial</span>
+                        <img src="../imagens/montanha-magica.jpg" alt="Prêmio Jabuti">
+                        <div class="info">
+                            <h3>Prêmio Jabuti divulga novidades e cronograma da edição</h3>
+                            <p>PublishNews</p>
+                            <span class="descricao-noticia">A principal premiação da literatura brasileira traz atualizações em suas categorias e prazos para inscrições de editoras e autores independentes.</span>
+                            <a href="Chat.html" class="badge-comunidade">18 comentários no Chat</a>
+                            <strong style="color: #8c533e; font-size: 0.9rem; display: block; margin-top: 4px;">Portal PublishNews</strong>
+                        </div>
+                        <a href="https://www.publishnews.com.br/busca?q=Pr%C3%AAmio+Jabuti" target="_blank" class="btn-externo">Ler Matéria Completa</a>
+                    </article>
+
+                    <!-- CATEGORIA: ADAPTAÇÕES -->
+                    <article class="item-novidade" data-categoria="adaptacoes">
+                        <span class="tag-categoria">Cinema & Literatura</span>
+                        <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400&auto=format&fit=crop&q=60" alt="Cinema e Telonas">
+                        <div class="info">
+                            <h3>Grandes sucessos literários cotados para adaptação nas telas</h3>
+                            <p>Omelete</p>
+                            <span class="descricao-noticia">Confira os romances e livros de fantasia mais comentados do momento que fecharam contratos para ganhar versões em formato de filme ou série de streaming.</span>
+                            <strong style="color: #8c533e; font-size: 0.9rem;">Portal Omelete</strong>
+                        </div>
+                        <a href="https://www.omelete.com.br/busca/?q=livros+adaptados" target="_blank" class="btn-externo">Ler Matéria Completa</a>
+                    </article>
+
+                    <!-- CATEGORIA: LIVROS -->
+                    <article class="item-novidade" data-categoria="livros">
+                        <span class="tag-categoria">Feiras e Eventos</span>
+                        <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400&auto=format&fit=crop&q=60" alt="Feira de Livros">
+                        <div class="info">
+                            <h3>Balanço e impacto das Bienais do Livro no incentivo à leitura</h3>
+                            <p>PublishNews</p>
+                            <span class="descricao-noticia">Uma análise aprofundada sobre como os grandes eventos literários presenciais impulsionam o consumo de livros físicos e aproxima autores do público jovem.</span>
+                            <strong style="color: #8c533e; font-size: 0.9rem;">Portal PublishNews</strong>
+                        </div>
+                        <a href="https://www.publishnews.com.br/busca?q=Bienal+do+Livro" target="_blank" class="btn-externo">Ler Matéria Completa</a>
+                    </article>
+                </div>
+            </div>
+
+            <!-- 2 & 3. COLUNA LATERAL: PRÓXIMOS LANÇAMENTOS & WIDGETS -->
+            <aside class="sidebar-lancamentos">
+                <h3>Próximos Lançamentos</h3>
+                
+                <div class="item-calendario">
+                    <div class="data-box">
+                        <span class="dia">12</span>
+                        <span class="mes">Set</span>
+                    </div>
+                    <div class="info-calendario">
+                        <h4>Box Edição Especial O Hobbit</h4>
+                        <p>Editora HarperCollins • Capa Dura</p>
+                    </div>
+                </div>
+
+                <div class="item-calendario">
+                    <div class="data-box">
+                        <span class="dia">18</span>
+                        <span class="mes">Set</span>
+                    </div>
+                    <div class="info-calendario">
+                        <h4>Mangá Jujutsu Kaisen Vol. 28</h4>
+                        <p>Panini Mangás • Lançamento Oficial</p>
+                    </div>
+                </div>
+
+                <div class="item-calendario">
+                    <div class="data-box">
+                        <span class="dia">25</span>
+                        <span class="mes">Set</span>
+                    </div>
+                    <div class="info-calendario">
+                        <h4>Novo Romance de Fantasia Nacional</h4>
+                        <p>Selo Independente • Pré-venda</p>
+                    </div>
+                </div>
+            </aside>
+
+        </div>
+    </main>
+
+    <script>
+        // Diz se há um usuário logado.
+        function estaLogado() {
+            return !!localStorage.getItem("usuario");
+        }
+
+        // Ao abrir a página: ajusta o cabeçalho e o contador do carrinho.
+        document.addEventListener("DOMContentLoaded", function () {
+            atualizarCabecalhoAuth();
+            atualizarContadorCarrinho();
+        });
+
+        // Troca os links do topo conforme o usuário esteja logado ou não.
+        function atualizarCabecalhoAuth() {
+            const areaAuth = document.getElementById("areaAuthHeader");
+            const fotoSalva = localStorage.getItem("usuarioFoto") || "../imagens/perfil.jpg";
+            if (!areaAuth) return;
+
+            if (estaLogado()) {
+                areaAuth.innerHTML = `
+                    <a href="Estantes.html" style="text-decoration: none; color: #8c533e; font-size: 0.85rem; font-weight: 600;">Minhas Estantes</a>
+                    <a href="#" onclick="realizarLogout(event)" style="text-decoration: none; color: #6e655f; font-size: 0.85rem; font-weight: 500;">Sair</a>
+                    <a href="MeuPerfil.html" title="Meu Perfil">
+                        <img src="${fotoSalva}" onerror="this.src='../imagens/perfil.jpg'" alt="Perfil" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid #8c533e;">
+                    </a>
+                `;
+            } else {
+                areaAuth.innerHTML = `
+                    <a href="Login.html" style="text-decoration: none; color: #8c533e; font-size: 0.85rem; font-weight: 600; padding: 4px 8px;">Entrar</a>
+                    <a href="Cadastro.html" style="text-decoration: none; background-color: #8c533e; color: #fff; padding: 5px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">Cadastrar</a>
+                `;
+            }
+        }
+
+        // Mostra no ícone do carrinho a quantidade de itens.
+        function atualizarContadorCarrinho() {
+            const carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
+            const contador = document.getElementById("contadorCarrinhoHeader");
+            if (!contador) return;
+            if (carrinho.length > 0) {
+                contador.innerText = carrinho.length;
+                contador.style.display = "inline-block";
+            } else {
+                contador.style.display = "none";
+            }
+        }
+
+        // Encerra a sessão e volta para o login.
+        function realizarLogout(e) {
+            if (e) e.preventDefault();
+            localStorage.removeItem("usuario");
+            localStorage.removeItem("token");
+            localStorage.removeItem("logado");
+            localStorage.removeItem("usuarioId");
+            localStorage.removeItem("usuarioNome");
+            localStorage.removeItem("usuarioEmail");
+            localStorage.removeItem("isAdmin");
+            localStorage.removeItem("usuarioFoto");
+            window.location.href = "../index.html";
+        }
+
+        // Mostra só as notícias da categoria escolhida e destaca o botão ativo.
+        function filtrarNoticias(categoria, evento) {
+            document.querySelectorAll('.tab-novidade').forEach(btn => btn.classList.remove('active'));
+            evento.target.classList.add('active');
+
+            document.querySelectorAll('.item-novidade').forEach(card => {
+                if (categoria === 'todos' || card.getAttribute('data-categoria') === categoria) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

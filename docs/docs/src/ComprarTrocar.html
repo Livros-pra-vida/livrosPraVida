@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprar & Trocar - Livros pra Vida</title>
+
+    <link rel="icon" type="image/png" href="../imagens/icone.png">
+    <link rel="stylesheet" href="../css/StyleHome.css">
+    <link rel="stylesheet" href="../css/StyleCatalogo.css">
+    <link rel="stylesheet" href="../css/StyleComprarTrocar.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <header style="display: flex; flex-direction: column; background: #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.06); position: sticky; top: 0; z-index: 100; width: 100%; padding: 12px 16px; gap: 12px;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <a href="../index.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #2d251e; font-weight: 700; font-size: 1.15rem;">
+                <img src="../imagens/icone.png" alt="Logo Livros pra Vida" style="width: 32px; height: 32px; border-radius: 6px; object-fit: cover;">
+                <span>Livros pra Vida</span>
+            </a>
+
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <a href="Carrinho.html" title="Ver Carrinho" style="position: relative; color: #2d251e; display: flex; align-items: center; text-decoration: none;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span id="contadorCarrinhoHeader" style="position: absolute; top: -4px; right: -6px; background-color: #8c533e; color: #fff; font-size: 0.65rem; font-weight: 700; padding: 2px 5px; border-radius: 10px; display: none;">0</span>
+                </a>
+
+                <div id="areaAuthHeader" style="display: flex; align-items: center; gap: 8px;"></div>
+            </div>
+        </div>
+
+        <div style="width: 100%;">
+            <input type="text" id="inputBuscaP2P" placeholder="Buscar título ou autor na comunidade..." style="width: 100%; padding: 8px 14px; border: 1px solid #e0d7cd; border-radius: 20px; font-size: 0.85rem; outline: none; background-color: #faf8f5; text-align: center;" oninput="filtrarAnuncios(this.value)">
+        </div>
+
+        <nav style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px 16px; width: 100%; padding-top: 2px;">
+            <a href="Catalogo.html" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.88rem;">Catálogo</a>
+            <a href="ComprarTrocar.html" style="text-decoration: none; color: #8c533e; font-weight: 700; font-size: 0.88rem;">Comprar & Trocar</a>
+            <a href="Novidades.html" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.88rem;">Novidades</a>
+            <a href="Chat.html" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.88rem;">Chat & Comunidade</a>
+            <a href="SobreNos.html" style="text-decoration: none; color: #2d251e; font-weight: 500; font-size: 0.88rem;">Sobre Nós</a>
+        </nav>
+
+    </header>
+
+    <main style="max-width: 1200px; margin: 30px auto; padding: 0 20px;">
+        <section class="section">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 15px; margin-bottom: 25px;">
+                <div class="section-title">
+                    <h2 style="font-size: 1.8rem; margin-bottom: 5px; color: #2d251e;">Comprar & Trocar (Comunidade P2P)</h2>
+                    <p style="color: #6e655f; margin: 0;">Negocie diretamente com outros leitores. Taxa transparente da plataforma: 5% por venda.</p>
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button onclick="abrirModalAvisar()" style="background-color: #f39c12; color: #fff; border: none; padding: 10px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.9rem;">
+                        Quero ser avisado de um livro
+                    </button>
+                    <button onclick="abrirModalAnuncio()" style="background-color: #8c533e; color: #fff; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.9rem;">
+                        + Anunciar um Livro
+                    </button>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px;">
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                    <button class="filter-btn active" onclick="filtrarModalidade('Todos', this)" style="padding: 6px 14px; border-radius: 20px; border: 1px solid #e0d7cd; background: #8c533e; color: #fff; font-weight: 600; cursor: pointer; font-size: 0.85rem;">Todos</button>
+                    <button class="filter-btn" onclick="filtrarModalidade('Troca', this)" style="padding: 6px 14px; border-radius: 20px; border: 1px solid #e0d7cd; background: #faf8f5; color: #2d251e; font-weight: 500; cursor: pointer; font-size: 0.85rem;">Troca</button>
+                    <button class="filter-btn" onclick="filtrarModalidade('Venda', this)" style="padding: 6px 14px; border-radius: 20px; border: 1px solid #e0d7cd; background: #faf8f5; color: #2d251e; font-weight: 500; cursor: pointer; font-size: 0.85rem;">Venda</button>
+                    <button class="filter-btn" onclick="filtrarModalidade('Doação', this)" style="padding: 6px 14px; border-radius: 20px; border: 1px solid #e0d7cd; background: #faf8f5; color: #2d251e; font-weight: 500; cursor: pointer; font-size: 0.85rem;">Doação</button>
+                    <button class="filter-btn" onclick="filtrarModalidade('Favoritos', this)" style="padding: 6px 14px; border-radius: 20px; border: 1px solid #e0d7cd; background: #faf8f5; color: #2d251e; font-weight: 500; cursor: pointer; font-size: 0.85rem;">❤️ Meus Favoritos</button>
+                </div>
+
+                <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                    <select id="filtroRegiao" onchange="mudarFiltroRegiao()" style="padding: 6px 12px; border-radius: 20px; border: 1px solid #e0d7cd; background: #fff; font-size: 0.85rem; color: #2d251e; outline: none; cursor: pointer;">
+                        <option value="Todas">Todas as Regiões</option>
+                        <option value="Taguatinga">Taguatinga</option>
+                        <option value="Águas Claras">Águas Claras</option>
+                        <option value="Asa Sul / Norte">Asa Sul / Norte</option>
+                        <option value="Ceilândia / Samambaia">Ceilândia / Samambaia</option>
+                        <option value="Outras">Outras Regiões</option>
+                    </select>
+
+                    <div style="display: flex; background: #e0d7cd; border-radius: 20px; padding: 2px;">
+                        <button onclick="mudarModoExibicao('grade')" id="btnModoGrade" title="Modo Grade" style="background: #8c533e; color: #fff; border: none; border-radius: 18px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; font-weight: 600;">🔲 Grade</button>
+                        <button onclick="mudarModoExibicao('lista')" id="btnModoLista" title="Modo Lista" style="background: transparent; color: #2d251e; border: none; border-radius: 18px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; font-weight: 600;">Lista</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="gridAnuncios" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px;">
+            </div>
+        </section>
+    </main>
+
+    <div id="modalAnuncio" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; overflow-y: auto; padding: 20px;">
+        <div style="background: #fff; padding: 30px; border-radius: 8px; width: 100%; max-width: 450px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin: auto;">
+            <button onclick="fecharModalAnuncio()" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #6e655f;">✕</button>
+            <h3 style="margin-top: 0; color: #2d251e; margin-bottom: 20px;">Anunciar Livro na Comunidade</h3>
+            
+            <form id="formAnuncio" onsubmit="cadastrarAnuncio(event)" style="display: flex; flex-direction: column; gap: 14px;">
+                <div>
+                    <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; color: #2d251e;">Título do Livro</label>
+                    <input type="text" id="novoTitulo" required placeholder="Ex: O Pequeno Príncipe" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px; font-size: 0.9rem; outline: none;">
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; color: #2d251e;">Autor</label>
+                    <input type="text" id="novoAutor" required placeholder="Ex: Antoine de Saint-Exupéry" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px; font-size: 0.9rem; outline: none;">
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; color: #2d251e;">Modalidade</label>
+                    <select id="novaModalidade" onchange="alternarCampoPreco()" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px; font-size: 0.9rem; outline: none; background: #fff;">
+                        <option value="Troca">Troca</option>
+                        <option value="Venda">Venda</option>
+                        <option value="Doação">Doação</option>
+                    </select>
+                </div>
+                <div id="grupoPreco" style="display: none;">
+                    <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; color: #2d251e;">Preço (R$)</label>
+                    <input type="text" id="novoPreco" placeholder="Ex: R$ 25,00" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px; font-size: 0.9rem; outline: none;" oninput="atualizarSimulacaoTaxa(this.value)">
+                    <small id="simulacaoTaxa" style="color: #27ae60; font-size: 0.75rem; display: block; margin-top: 4px;">Taxa da loja (5%): R$ 0,00 | Você receberá: R$ 0,00</small>
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; color: #2d251e;">Sua Região / Bairro</label>
+                    <select id="novaRegiao" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px; font-size: 0.9rem; outline: none; background: #fff;">
+                        <option value="Taguatinga">Taguatinga</option>
+                        <option value="Águas Claras">Águas Claras</option>
+                        <option value="Asa Sul / Norte">Asa Sul / Norte</option>
+                        <option value="Ceilândia / Samambaia">Ceilândia / Samambaia</option>
+                        <option value="Outras">Outras Regiões</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; color: #2d251e;">Foto Real do Livro <span style="font-weight: 400; color: #6e655f;">(Opcional)</span></label>
+                    <input type="file" id="novaFotoArquivo" accept="image/*" style="width: 100%; padding: 6px; border: 1px solid #e0d7cd; border-radius: 6px; font-size: 0.85rem; background: #faf8f5;">
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; color: #2d251e;">ISBN ou Link da Capa <span style="font-weight: 400; color: #6e655f;">(Alternativa à foto)</span></label>
+                    <input type="text" id="novoIsbn" placeholder="Ex: 9788595081529" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px; font-size: 0.9rem; outline: none;">
+                </div>
+                <button type="submit" style="background: #8c533e; color: #fff; border: none; padding: 12px; border-radius: 6px; font-weight: 600; cursor: pointer; margin-top: 10px;">Publicar Anúncio</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalAvisar" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; padding: 20px;">
+        <div style="background: #fff; padding: 30px; border-radius: 8px; width: 100%; max-width: 400px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin: auto;">
+            <button onclick="fecharModalAvisar()" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #6e655f;">✕</button>
+            <h3 style="margin-top: 0; color: #2d251e; margin-bottom: 15px;">Quero ser avisado</h3>
+            <p style="font-size: 0.85rem; color: #6e655f; margin-bottom: 20px;">Informe o título que você procura. Se alguém anunciar este livro na comunidade, avisaremos você!</p>
+            
+            <form id="formAvisar" onsubmit="salvarDesejoAviso(event)" style="display: flex; flex-direction: column; gap: 14px;">
+                <div>
+                    <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; color: #2d251e;">Nome do Livro ou Autor Desejado</label>
+                    <input type="text" id="livroDesejado" required placeholder="Ex: Harry Potter e a Pedra Filosofal" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px; font-size: 0.9rem; outline: none;">
+                </div>
+                <button type="submit" style="background: #f39c12; color: #fff; border: none; padding: 12px; border-radius: 6px; font-weight: 600; cursor: pointer; margin-top: 10px;">Cadastrar Alerta</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalStatus" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; padding: 20px;">
+        <div style="background: #fff; padding: 30px; border-radius: 8px; width: 100%; max-width: 380px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; margin: auto;">
+            <button onclick="fecharModalStatus()" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #6e655f;">✕</button>
+            <h3 style="margin-top: 0; color: #2d251e; margin-bottom: 10px;">Gerenciar Anúncio</h3>
+            <p id="tituloLivroGerenciar" style="font-size: 0.9rem; color: #6e655f; margin-bottom: 20px; font-weight: 600;"></p>
+            
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button onclick="atualizarStatusAnuncio('Disponivel')" style="background: #2ecc71; color: #fff; border: none; padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer;">Marcar como Disponível</button>
+                <button onclick="atualizarStatusAnuncio('Em Negociacao')" style="background: #f39c12; color: #fff; border: none; padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer;">Marcar em Negociação</button>
+                <button onclick="concluirTransacaoSucesso()" style="background: #3498db; color: #fff; border: none; padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer;">Concluir com Sucesso (Vendido/Trocado)</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer" style="background: #faf8f5; padding: 40px 5%; border-top: 1px solid #e0d7cd; margin-top: 60px;">
+        <div class="footer-brand" style="margin-bottom: 20px;">
+            <img src="../imagens/icone.png" alt="Logo Livros pra Vida" class="footer-icon" style="width: 30px; height: 30px; border-radius: 4px;">
+            <h2 style="font-size: 1.1rem; color: #2d251e; margin: 8px 0;">Livros pra Vida</h2>
+            <p style="color: #6e655f; font-size: 0.9rem;">Uma livraria para quem acredita que cada livro é uma conversa com o tempo.</p>
+        </div>
+        <div class="footer-bottom" style="border-top: 1px solid #e0d7cd; padding-top: 20px; display: flex; justify-content: space-between; color: #6e655f; font-size: 0.85rem;">
+            <p>© 2026 Livros pra Vida. Todos os direitos reservados.</p>
+            <p><a href="Termos.html#privacidade" style="color: inherit;">Privacidade</a> · <a href="Termos.html#termos" style="color: inherit;">Termos</a> · <a href="Termos.html#privacidade" style="color: inherit;">LGPD</a></p>
+        </div>
+    </footer>
+
+    <script src="../js/admin.js"></script>
+    <script>
+        // Os anúncios vêm da API (GET /book_listings): todos os usuários veem a mesma lista
+        // e o administrador pode excluir qualquer anúncio.
+        let listaAnuncios = [];
+        let estadoAnuncios = "carregando"; // "carregando" | "ok" | "erro"
+        const IMAGEM_PADRAO = "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=400&q=80";
+
+        // Converte um anúncio vindo da API para o formato usado nesta página.
+        function anuncioDaApi(r) {
+            return {
+                id: r.id,
+                titulo: r.title,
+                autor: r.author_name,
+                modalidade: r.modality,
+                preco: r.price ? formatarMoeda(r.price) : "",
+                regiao: r.region,
+                status: r.status,
+                vendedor: r.seller || "Leitor",
+                vendedorId: r.seller_id, // nulo nos anúncios de exemplo (anunciante sem conta)
+                avaliacao: r.reputation,
+                imagem: r.image_url
+            };
+        }
+
+        // Busca os anúncios na API e redesenha a lista.
+        async function carregarAnuncios() {
+            estadoAnuncios = "carregando";
+            renderizarAnuncios();
+            try {
+                listaAnuncios = (await Admin.chamar("/book_listings")).map(anuncioDaApi);
+                estadoAnuncios = "ok";
+            } catch (erro) {
+                console.warn("Não foi possível carregar os anúncios:", erro.message);
+                estadoAnuncios = "erro";
+            }
+            renderizarAnuncios();
+        }
+
+        let favoritos = JSON.parse(localStorage.getItem("favoritosComunidade")) || [];
+        let alertasDesejos = JSON.parse(localStorage.getItem("alertasDesejosComunidade")) || [];
+        let filtroAtual = "Todos";
+        let regiaoAtual = "Todas";
+        let modoExibicao = "grade";
+        let textoBusca = "";
+        let idLivroSelecionadoParaStatus = null;
+
+        // Ao abrir a página: ajusta o cabeçalho, o carrinho e desenha os anúncios.
+        document.addEventListener("DOMContentLoaded", function () {
+            atualizarContadorCarrinho();
+            atualizarCabecalhoAuth();
+            Admin.ativarCliques(document.body, carregarAnuncios); // admin clica no nome do anunciante -> perfil
+            carregarAnuncios();
+        });
+
+        // Troca os links do topo conforme o usuário esteja logado ou não.
+        function atualizarCabecalhoAuth() {
+            const areaAuth = document.getElementById("areaAuthHeader");
+            const fotoSalva = localStorage.getItem("usuarioFoto") || "../imagens/perfil.jpg";
+            if (!areaAuth) return;
+
+            if (localStorage.getItem("usuario")) {
+                areaAuth.innerHTML = `
+                    <a href="Estantes.html" style="text-decoration: none; color: #8c533e; font-size: 0.85rem; font-weight: 600;">Minhas Estantes</a>
+                    <a href="#" onclick="realizarLogout(event)" style="text-decoration: none; color: #6e655f; font-size: 0.85rem; font-weight: 500;">Sair</a>
+                    <a href="MeuPerfil.html" title="Meu Perfil">
+                        <img src="${fotoSalva}" onerror="this.src='../imagens/perfil.jpg'" alt="Perfil" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid #8c533e;">
+                    </a>
+                `;
+            } else {
+                areaAuth.innerHTML = `
+                    <a href="Login.html" style="text-decoration: none; color: #8c533e; font-size: 0.85rem; font-weight: 600; padding: 4px 8px;">Entrar</a>
+                    <a href="Cadastro.html" style="text-decoration: none; background-color: #8c533e; color: #fff; padding: 5px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">Cadastrar</a>
+                `;
+            }
+        }
+
+        // Mostra no ícone do carrinho a quantidade de itens.
+        function atualizarContadorCarrinho() {
+            const carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
+            const contador = document.getElementById("contadorCarrinhoHeader");
+            if (contador) {
+                if (carrinho.length > 0) {
+                    contador.innerText = carrinho.length;
+                    contador.style.display = "inline-block";
+                } else {
+                    contador.style.display = "none";
+                }
+            }
+        }
+
+        // Alterna entre ver os anúncios em grade ou em lista.
+        function mudarModoExibicao(modo) {
+            modoExibicao = modo;
+            const btnGrade = document.getElementById("btnModoGrade");
+            const btnLista = document.getElementById("btnModoLista");
+            if (btnGrade && btnLista) {
+                if (modo === 'grade') {
+                    btnGrade.style.background = "#8c533e";
+                    btnGrade.style.color = "#fff";
+                    btnLista.style.background = "transparent";
+                    btnLista.style.color = "#2d251e";
+                } else {
+                    btnLista.style.background = "#8c533e";
+                    btnLista.style.color = "#fff";
+                    btnGrade.style.background = "transparent";
+                    btnGrade.style.color = "#2d251e";
+                }
+            }
+            renderizarAnuncios();
+        }
+
+        // Desenha os anúncios aplicando os filtros de busca, modalidade e região.
+        function renderizarAnuncios() {
+            const grid = document.getElementById("gridAnuncios");
+            if (!grid) return;
+            grid.innerHTML = "";
+
+            if (modoExibicao === 'grade') {
+                grid.style.display = "grid";
+                grid.style.gridTemplateColumns = "repeat(auto-fill, minmax(240px, 1fr))";
+                grid.style.gap = "20px";
+            } else {
+                grid.style.display = "flex";
+                grid.style.flexDirection = "column";
+                grid.style.gap = "12px";
+            }
+
+            const filtrados = listaAnuncios.filter(item => {
+                let passaModalidade = true;
+                if (filtroAtual === "Favoritos") {
+                    passaModalidade = favoritos.includes(item.id);
+                } else if (filtroAtual !== "Todos") {
+                    passaModalidade = item.modalidade === filtroAtual;
+                }
+
+                let passaRegiao = (regiaoAtual === "Todas" || item.regiao === regiaoAtual);
+                const termo = textoBusca.toLowerCase();
+                const passaBusca = !termo
+                    || item.titulo.toLowerCase().includes(termo)
+                    || item.autor.toLowerCase().includes(termo);
+                return passaModalidade && passaRegiao && passaBusca;
+            });
+
+            if (estadoAnuncios === "carregando" && listaAnuncios.length === 0) {
+                grid.innerHTML = `<p style="text-align: center; color: #6e655f; padding: 30px; grid-column: 1/-1;">Carregando anúncios... (pode levar um pouco se o servidor estava inativo)</p>`;
+                return;
+            }
+
+            if (estadoAnuncios === "erro" && listaAnuncios.length === 0) {
+                grid.innerHTML = `<div style="text-align: center; color: #6e655f; padding: 30px; grid-column: 1/-1;">
+                    <p>Não foi possível carregar os anúncios agora.</p>
+                    <button type="button" onclick="carregarAnuncios()" style="background: #8c533e; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600;">Tentar de novo</button>
+                </div>`;
+                return;
+            }
+
+            if (filtrados.length === 0) {
+                grid.innerHTML = `<p style="text-align: center; color: #6e655f; padding: 30px; grid-column: 1/-1;">Nenhum livro encontrado com esses filtros.</p>`;
+                return;
+            }
+
+            const nomeUsuarioLogado = nomeDoUsuario() || "";
+            const admin = Admin.ehAdmin();
+
+            filtrados.forEach(item => {
+                let textoBotao = "Negociar";
+                let classeModalidade = "modalidade-troca";
+                
+                if (item.modalidade === "Doação") {
+                    textoBotao = "Solicitar";
+                    classeModalidade = "modalidade-doacao";
+                } else if (item.modalidade === "Venda") {
+                    textoBotao = "Comprar";
+                }
+
+                let badgeStatus = "";
+                if (item.status === "Em Negociacao") {
+                    badgeStatus = `<span style="background: #fff3cd; color: #856404; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; font-weight: 600; display: inline-block; margin-bottom: 6px;">Em Negociação</span>`;
+                } else if (item.status === "Indisponivel") {
+                    badgeStatus = `<span style="background: #f8d7da; color: #721c24; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; font-weight: 600; display: inline-block; margin-bottom: 6px;">Vendido / Trocado</span>`;
+                }
+
+                const linhaComissao = (item.modalidade === "Venda" && item.preco)
+                    ? `<small style="font-size: 0.7rem; color: #27ae60; display: block; margin-bottom: 6px; font-weight: 600;">(Comissão 5%: ${formatarMoeda(valorNumerico(item.preco) * 0.05)})</small>`
+                    : "";
+
+                let corCoracao = favoritos.includes(item.id) ? "#e74c3c" : "#ccc";
+
+                let botaoGerenciar = "";
+                const meuId = localStorage.getItem("usuarioId");
+                if (meuId && item.vendedorId && String(item.vendedorId) === String(meuId)) {
+                    botaoGerenciar = `<button onclick="abrirModalStatus(${item.id})" style="background: #6e655f; color: #fff; border: none; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; margin-top: 6px;">Gerenciar Status</button>`;
+                }
+
+                // (Admin) botão para excluir o anúncio de qualquer pessoa
+                const botaoAdmin = admin
+                    ? `<button type="button" class="admin-btn-perigo" onclick="excluirAnuncio(${Number(item.id)})" title="Excluir este anúncio (administrador)" style="margin-top: 6px;">Excluir anúncio</button>`
+                    : "";
+
+                let mensagemChatPreDefinida = encodeURIComponent(`Olá ${item.vendedor}! Tenho interesse no seu livro "${item.titulo}" (${item.modalidade}${item.preco ? ' - ' + item.preco : ''}). Ainda está disponível?`);
+                let linkChat = `Chat.html?destinatario=${encodeURIComponent(item.vendedor)}&livro=${encodeURIComponent(item.titulo)}&msg=${mensagemChatPreDefinida}`;
+
+                const card = document.createElement("article");
+                card.className = "book";
+                card.style.position = "relative";
+                card.style.background = "#fff";
+                card.style.borderRadius = "8px";
+                card.style.padding = "15px";
+                card.style.boxShadow = "0 2px 5px rgba(0,0,0,0.05)";
+
+                if (modoExibicao === 'grade') {
+                    card.innerHTML = `
+                        <button onclick="toggleFavorito(${item.id})" title="Favoritar" style="position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,0.85); border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="${corCoracao}" stroke="${corCoracao}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                        </button>
+                        <div>
+                            <img src="${Admin.esc(Admin.urlImagem(item.imagem, IMAGEM_PADRAO))}" alt="${Admin.esc(item.titulo)}" loading="lazy" onerror="this.onerror=null; this.src=IMAGEM_PADRAO;" style="width: 100%; height: 220px; object-fit: cover; border-radius: 6px; margin-bottom: 10px; background-color: #faf8f5;">
+                            ${badgeStatus}
+                            <h3 style="font-size: 1rem; color: #2d251e; margin: 0 0 6px 0;">${Admin.esc(item.titulo)}</h3>
+                            <p style="font-size: 0.85rem; color: #6e655f; margin: 0 0 4px 0;">Autor: <strong>${Admin.esc(item.autor)}</strong></p>
+                            <p style="font-size: 0.85rem; color: #6e655f; margin: 0 0 4px 0;">Modalidade: <strong class="${classeModalidade}">${item.modalidade} ${item.preco ? '(' + item.preco + ')' : ''}</strong></p>
+                            <p style="font-size: 0.8rem; color: #8c533e; margin: 0 0 4px 0;">Região: ${Admin.esc(item.regiao || 'Taguatinga')}</p>
+                            <p style="font-size: 0.8rem; color: #6e655f; margin: 0 0 6px 0;">${Admin.nomeHtml(item.vendedor, item.vendedorId)} <span style="color: #f39c12;">${Admin.esc(item.avaliacao)}</span></p>
+                            ${linhaComissao}
+                            ${botaoGerenciar}${botaoAdmin}
+                        </div>
+                        <a href="${linkChat}" class="button btn-negociar" style="display: block; text-align: center; background: #8c533e; color: #fff; padding: 8px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.85rem; margin-top: 10px;">${textoBotao}</a>
+                    `;
+                } else {
+                    card.style.display = "flex";
+                    card.style.flexDirection = "row";
+                    card.style.alignItems = "center";
+                    card.style.justifyContent = "space-between";
+
+                    card.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: 15px; text-align: left;">
+                            <img src="${Admin.esc(Admin.urlImagem(item.imagem, IMAGEM_PADRAO))}" alt="${Admin.esc(item.titulo)}" loading="lazy" onerror="this.onerror=null; this.src=IMAGEM_PADRAO;" style="width: 50px; height: 70px; object-fit: cover; border-radius: 4px;">
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <h3 style="font-size: 0.95rem; color: #2d251e; margin: 0;">${Admin.esc(item.titulo)}</h3>
+                                    ${badgeStatus}
+                                </div>
+                                <p style="font-size: 0.8rem; color: #6e655f; margin: 2px 0;">Autor: <strong>${Admin.esc(item.autor)}</strong> | Região: ${Admin.esc(item.regiao || 'Taguatinga')}</p>
+                                <p style="font-size: 0.8rem; color: #6e655f; margin: 0;">Anunciante: <strong>${Admin.nomeHtml(item.vendedor, item.vendedorId)}</strong> (<span style="color: #f39c12;">${Admin.esc(item.avaliacao)}</span>) | <span class="${classeModalidade}" style="font-weight: 600;">${item.modalidade} ${item.preco ? '(' + item.preco + ')' : ''}</span></p>
+                                ${linhaComissao}
+                            ${botaoGerenciar}${botaoAdmin}
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <button onclick="toggleFavorito(${item.id})" title="Favoritar" style="background: none; border: none; cursor: pointer; padding: 5px;">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="${corCoracao}" stroke="${corCoracao}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            </button>
+                            <a href="${linkChat}" style="background: #8c533e; color: #fff; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.85rem; white-space: nowrap;">${textoBotao}</a>
+                        </div>
+                    `;
+                }
+                grid.appendChild(card);
+            });
+        }
+
+        // Guarda o texto da busca e redesenha os anúncios.
+        function filtrarAnuncios(texto) {
+            textoBusca = texto;
+            renderizarAnuncios();
+        }
+
+        // Formata um número como dinheiro (R$ 0,00).
+        function formatarMoeda(valor) {
+            return Number(valor).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+        }
+
+        // Aceita "R$ 35,00" ou "35.00"
+        function valorNumerico(texto) {
+            const limpo = String(texto || "").replace(/[^\d,.]/g, "").replace(",", ".");
+            return parseFloat(limpo) || 0;
+        }
+
+        // Mostra a simulação da taxa da plataforma sobre o preço digitado.
+        function atualizarSimulacaoTaxa(valor) {
+            const preco = valorNumerico(valor);
+            const comissao = preco * 0.05;
+            document.getElementById("simulacaoTaxa").innerText =
+                `Taxa da loja (5%): ${formatarMoeda(comissao)} | Você receberá: ${formatarMoeda(preco - comissao)}`;
+        }
+
+        // Filtra por modalidade (venda, troca, doação) e destaca o botão.
+        function filtrarModalidade(mod, botao) {
+            filtroAtual = mod;
+            document.querySelectorAll(".filter-btn").forEach(btn => {
+                btn.style.background = "#faf8f5";
+                btn.style.color = "#2d251e";
+                btn.style.fontWeight = "500";
+            });
+            if (botao) {
+                botao.style.background = "#8c533e";
+                botao.style.color = "#fff";
+                botao.style.fontWeight = "600";
+            }
+            renderizarAnuncios();
+        }
+
+        // Aplica o filtro de região escolhido.
+        function mudarFiltroRegiao() {
+            const selectRegiao = document.getElementById("filtroRegiao");
+            if (selectRegiao) {
+                regiaoAtual = selectRegiao.value;
+            }
+            renderizarAnuncios();
+        }
+
+        // Marca ou desmarca um anúncio como favorito.
+        function toggleFavorito(id) {
+            const index = favoritos.indexOf(id);
+            if (index > -1) {
+                favoritos.splice(index, 1);
+            } else {
+                favoritos.push(id);
+            }
+            localStorage.setItem("favoritosComunidade", JSON.stringify(favoritos));
+            renderizarAnuncios();
+        }
+
+        // Abre o formulário de novo anúncio (só para quem está logado).
+        function abrirModalAnuncio() {
+            if (!localStorage.getItem("usuario")) {
+                alert("Você precisa estar logado para anunciar um livro!");
+                window.location.href = "Login.html";
+                return;
+            }
+            const modal = document.getElementById("modalAnuncio");
+            if (modal) modal.style.display = "flex";
+        }
+
+        // Fecha o formulário de novo anúncio.
+        function fecharModalAnuncio() {
+            const modal = document.getElementById("modalAnuncio");
+            const form = document.getElementById("formAnuncio");
+            const grupoPreco = document.getElementById("grupoPreco");
+            if (modal) modal.style.display = "none";
+            if (form) form.reset();
+            if (grupoPreco) grupoPreco.style.display = "none";
+        }
+
+        // Abre o modal para pedir aviso quando um livro chegar.
+        function abrirModalAvisar() {
+            const modal = document.getElementById("modalAvisar");
+            if (modal) modal.style.display = "flex";
+        }
+
+        // Fecha o modal de aviso.
+        function fecharModalAvisar() {
+            const modal = document.getElementById("modalAvisar");
+            const form = document.getElementById("formAvisar");
+            if (modal) modal.style.display = "none";
+            if (form) form.reset();
+        }
+
+        // Guarda o livro que o usuário quer ser avisado.
+        function salvarDesejoAviso(event) {
+            event.preventDefault();
+            const inputDesejado = document.getElementById("livroDesejado");
+            if (inputDesejado) {
+                const termo = inputDesejado.value.trim();
+                alertasDesejos.push(termo);
+                localStorage.setItem("alertasDesejosComunidade", JSON.stringify(alertasDesejos));
+                fecharModalAvisar();
+                alert(`Alerta cadastrado! Avisaremos assim que "${termo}" estiver disponível.`);
+            }
+        }
+
+        // Compara o título do novo anúncio com os avisos pedidos (por ora só simula a notificação no console).
+        function verificarAlertasNovosLivros(tituloNovoLivro) {
+            const termoMatch = alertasDesejos.some(alerta => tituloNovoLivro.toLowerCase().includes(alerta.toLowerCase()));
+            if (termoMatch) {
+                console.log("Notificação simulada: Alguém cadastrou um livro que você estava esperando!");
+            }
+        }
+
+        // Abre o modal para mudar o status de um anúncio.
+        function abrirModalStatus(id) {
+            idLivroSelecionadoParaStatus = id;
+            const livro = listaAnuncios.find(item => item.id === id);
+            const tituloGerenciar = document.getElementById("tituloLivroGerenciar");
+            const modalStatus = document.getElementById("modalStatus");
+            if (livro && tituloGerenciar && modalStatus) {
+                tituloGerenciar.innerText = `Livro: ${livro.titulo}`;
+                modalStatus.style.display = "flex";
+            }
+        }
+
+        // Fecha o modal de status.
+        function fecharModalStatus() {
+            const modalStatus = document.getElementById("modalStatus");
+            if (modalStatus) modalStatus.style.display = "none";
+            idLivroSelecionadoParaStatus = null;
+        }
+
+        // Muda o status do anúncio escolhido (PATCH /book_listings/:id) e atualiza a lista.
+        function atualizarStatusAnuncio(novoStatus) {
+            return mudarStatusNaApi(novoStatus, () => `Status atualizado para: ${novoStatus}`);
+        }
+
+        // Envia o novo status para a API e, se der certo, troca o anúncio na lista local.
+        async function mudarStatusNaApi(novoStatus, mensagem) {
+            const atual = listaAnuncios.find(item => item.id === idLivroSelecionadoParaStatus);
+            if (!atual) return;
+
+            try {
+                const resposta = await Admin.chamar(`/book_listings/${atual.id}`, {
+                    method: "PATCH",
+                    corpo: { book_listing: { status: novoStatus } }
+                });
+                const atualizado = anuncioDaApi(resposta);
+                listaAnuncios = listaAnuncios.map(item => item.id === atualizado.id ? atualizado : item);
+                fecharModalStatus();
+                renderizarAnuncios();
+                alert(mensagem(atualizado));
+            } catch (erro) {
+                alert(erro.message);
+            }
+        }
+
+        // (Admin) Exclui o anúncio de qualquer pessoa, depois de confirmar.
+        async function excluirAnuncio(id) {
+            const anuncio = listaAnuncios.find(item => item.id === id);
+            if (!anuncio || !Admin.ehAdmin()) return;
+            if (!confirm(`Excluir o anúncio "${anuncio.titulo}" de ${anuncio.vendedor}?\n\nIsso não pode ser desfeito.`)) return;
+
+            try {
+                await Admin.chamar(`/book_listings/${id}`, { method: "DELETE" });
+            } catch (erro) {
+                alert(erro.message);
+                return;
+            }
+            listaAnuncios = listaAnuncios.filter(item => item.id !== id);
+            favoritos = favoritos.filter(f => f !== id);
+            localStorage.setItem("favoritosComunidade", JSON.stringify(favoritos));
+            renderizarAnuncios();
+            Admin.avisar(`Anúncio "${anuncio.titulo}" excluído.`);
+        }
+
+        // Marca o anúncio como indisponível; a API soma 1 venda/troca na reputação do anunciante.
+        function concluirTransacaoSucesso() {
+            return mudarStatusNaApi("Indisponivel", livro =>
+                `Transação concluída com sucesso! A reputação do usuário foi atualizada para ${livro.avaliacao}.`);
+        }
+
+        // Mostra o campo de preço só quando a modalidade é venda.
+        function alternarCampoPreco() {
+            const modalidadeSelect = document.getElementById("novaModalidade");
+            const grupoPreco = document.getElementById("grupoPreco");
+            const novoPreco = document.getElementById("novoPreco");
+            if (modalidadeSelect && grupoPreco && novoPreco) {
+                if (modalidadeSelect.value === "Venda") {
+                    grupoPreco.style.display = "block";
+                    novoPreco.required = true;
+                } else {
+                    grupoPreco.style.display = "none";
+                    novoPreco.required = false;
+                }
+            }
+        }
+
+        // Reduz uma imagem enviada pelo usuário (máx. 600 px, JPEG) para caber no banco e carregar rápido.
+        function reduzirImagem(arquivo) {
+            return new Promise((resolve, reject) => {
+                const leitor = new FileReader();
+                leitor.onerror = () => reject(new Error("Não foi possível ler a imagem."));
+                leitor.onload = () => {
+                    const img = new Image();
+                    img.onerror = () => reject(new Error("O arquivo escolhido não é uma imagem válida."));
+                    img.onload = () => {
+                        const escala = Math.min(1, 600 / Math.max(img.width, img.height));
+                        const canvas = document.createElement("canvas");
+                        canvas.width = Math.max(1, Math.round(img.width * escala));
+                        canvas.height = Math.max(1, Math.round(img.height * escala));
+                        canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+                        resolve(canvas.toDataURL("image/jpeg", 0.8));
+                    };
+                    img.src = leitor.result;
+                };
+                leitor.readAsDataURL(arquivo);
+            });
+        }
+
+        // Valida o formulário e cria o anúncio na API (POST /book_listings), em nome do usuário logado.
+        async function cadastrarAnuncio(event) {
+            event.preventDefault();
+            const titulo = document.getElementById("novoTitulo").value.trim();
+            const autor = document.getElementById("novoAutor").value.trim();
+            const modalidade = document.getElementById("novaModalidade").value;
+            const regiao = document.getElementById("novaRegiao").value;
+            const inputArquivo = document.getElementById("novaFotoArquivo");
+            const isbnOuLink = document.getElementById("novoIsbn").value.trim();
+
+            let preco = null;
+            if (modalidade === "Venda") {
+                preco = valorNumerico(document.getElementById("novoPreco").value);
+                if (!(preco > 0)) {
+                    alert("Informe um preço válido para a venda (ex.: R$ 25,00).");
+                    return;
+                }
+            }
+
+            const botao = event.submitter || document.querySelector("#formAnuncio button[type='submit']");
+            if (botao) botao.disabled = true;
+
+            try {
+                let imagemUrl;
+                if (inputArquivo && inputArquivo.files && inputArquivo.files[0]) {
+                    imagemUrl = await reduzirImagem(inputArquivo.files[0]);
+                } else if (isbnOuLink) {
+                    imagemUrl = isbnOuLink.startsWith("http")
+                        ? isbnOuLink
+                        : `https://covers.openlibrary.org/b/isbn/${encodeURIComponent(isbnOuLink)}-L.jpg`;
+                } else {
+                    imagemUrl = IMAGEM_PADRAO;
+                }
+
+                const criado = await Admin.chamar("/book_listings", {
+                    method: "POST",
+                    corpo: { book_listing: {
+                        title: titulo, author_name: autor, modality: modalidade,
+                        price: preco, region: regiao, image_url: imagemUrl
+                    } }
+                });
+
+                listaAnuncios.unshift(anuncioDaApi(criado));
+                verificarAlertasNovosLivros(titulo);
+                fecharModalAnuncio();
+                renderizarAnuncios();
+                alert("Livro anunciado com sucesso na comunidade!");
+            } catch (erro) {
+                alert(erro.status === 401
+                    ? "Sua sessão expirou (ou o login é antigo). Saia e entre novamente para anunciar."
+                    : erro.message);
+            } finally {
+                if (botao) botao.disabled = false;
+            }
+        }
+
+        // Devolve o nome do usuário logado.
+        function nomeDoUsuario() {
+            try {
+                const u = JSON.parse(localStorage.getItem("usuario"));
+                return (u && (u.username || u.nome)) || localStorage.getItem("usuarioNome");
+            } catch (e) {
+                return localStorage.getItem("usuarioNome");
+            }
+        }
+
+        // Encerra a sessão e volta para o login.
+        function realizarLogout(e) {
+            if (e) e.preventDefault();
+            localStorage.removeItem("usuario");
+            localStorage.removeItem("token");
+            localStorage.removeItem("logado");
+            localStorage.removeItem("usuarioId");
+            localStorage.removeItem("usuarioNome");
+            localStorage.removeItem("usuarioEmail");
+            localStorage.removeItem("isAdmin");
+            localStorage.removeItem("usuarioFoto");
+            window.location.href = "../index.html";
+        }
+    </script>
+</body>
+</html>
