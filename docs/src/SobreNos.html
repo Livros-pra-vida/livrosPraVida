@@ -136,7 +136,7 @@
         // Monta o menu do topo conforme o usuário esteja logado ou não.
         document.addEventListener("DOMContentLoaded", function () {
             const menu = document.getElementById("menuNavegacao");
-            const fotoPerfil = localStorage.getItem("usuarioFoto") || "../imagens/Background.png";
+            const fotoPerfil = localStorage.getItem("usuarioFoto")  || "../imagens/perfil.jpg";
 
             if (estaLogado()) {
                 menu.innerHTML = `
