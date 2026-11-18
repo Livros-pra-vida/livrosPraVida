@@ -190,7 +190,7 @@
         </div>
         <div class="footer-bottom" style="border-top: 1px solid #e0d7cd; padding-top: 20px; display: flex; justify-content: space-between; color: #6e655f; font-size: 0.85rem;">
             <p>© 2026 Livros pra Vida. Todos os direitos reservados.</p>
-            <p>Privacidade · Termos · LGPD</p>
+            <p><a href="Termos.html#privacidade" style="color: inherit;">Privacidade</a> · <a href="Termos.html#termos" style="color: inherit;">Termos</a> · <a href="Termos.html#privacidade" style="color: inherit;">LGPD</a></p>
         </div>
     </footer>
 
@@ -257,6 +257,7 @@
 
             if (localStorage.getItem("usuario")) {
                 areaAuth.innerHTML = `
+                    <a href="Estantes.html" style="text-decoration: none; color: #8c533e; font-size: 0.85rem; font-weight: 600;">Minhas Estantes</a>
                     <a href="#" onclick="realizarLogout(event)" style="text-decoration: none; color: #6e655f; font-size: 0.85rem; font-weight: 500;">Sair</a>
                     <a href="MeuPerfil.html" title="Meu Perfil">
                         <img src="${fotoSalva}" onerror="this.src='../imagens/perfil.jpg'" alt="Perfil" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid #8c533e;">

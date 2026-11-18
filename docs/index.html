@@ -17,14 +17,6 @@
 
 <body>
 
-    <div id="popup" class="popup-fundo">
-        <div class="popup">
-            <p id="mensagemPopup"></p>
-            <button onclick="fecharPopup()" class="popup button">OK</button>
-        </div>
-    </div>
-
-    
 
     <header class="header">
 
@@ -311,12 +303,12 @@
 
         <div class="footer-bottom">
             <p>© 2026 Livros pra Vida. Todos os direitos reservados.</p>
-            <p>Privacidade · Termos · LGPD</p>
+            <p><a href="src/Termos.html#privacidade" style="color: inherit;">Privacidade</a> · <a href="src/Termos.html#termos" style="color: inherit;">Termos</a> · <a href="src/Termos.html#privacidade" style="color: inherit;">LGPD</a></p>
         </div>
     </footer>
 
     <script>
-        // Ao abrir a home: ajusta o menu conforme o login, mostra o popup de boas-vindas e atualiza o carrinho.
+        // Ao abrir a home: ajusta o menu e o avatar conforme o login e atualiza o contador do carrinho.
         document.addEventListener("DOMContentLoaded", function () {
         atualizarContadorCarrinho();
 
@@ -391,10 +383,10 @@
             }
         }
 
-        // Logout: apaga os dados da sessão do navegador e volta para o login.
+        // Logout: apaga todos os dados da sessão do navegador (inclusive o token) e recarrega a home.
         function sair() {
-            localStorage.removeItem("usuario");
-            localStorage.removeItem("logado");
+            ["usuario", "token", "logado", "usuarioId", "usuarioNome", "usuarioEmail", "isAdmin", "usuarioFoto"]
+                .forEach(chave => localStorage.removeItem(chave));
             window.location.href = "index.html";
         }
     </script>

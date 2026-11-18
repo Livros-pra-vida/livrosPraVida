@@ -226,10 +226,7 @@
 
         // Confere se há usuário logado; se não houver, avisa e manda para o login.
         function verificarLogin() {
-            const usuarioLogado = localStorage.getItem("usuarioLogado");
-            const logadoUniversal = localStorage.getItem("usuario") ? "true" : null;
-            
-            if (!usuarioLogado && logadoUniversal !== "true") {
+            if (!localStorage.getItem("usuario")) {
                 alert("Você precisa estar logado no site para realizar uma compra!");
                 window.location.href = "Login.html";
                 return false;
@@ -240,15 +237,13 @@
         // Troca os links do topo conforme o usuário esteja logado ou não.
         function atualizarCabecalhoAuth() {
             const areaAuth = document.getElementById("areaAuthHeader");
-            const usuarioLogado = localStorage.getItem("usuarioLogado");
-            const logadoUniversal = localStorage.getItem("usuario") ? "true" : null;
-            
             // CORREÇÃO: Padronizado para buscar "usuarioFoto" (mesma chave do MeuPerfil.html)
             const fotoSalva = localStorage.getItem("usuarioFoto") || "../imagens/perfil.jpg";
 
-            if (usuarioLogado || logadoUniversal === "true") {
+            if (localStorage.getItem("usuario")) {
                 areaAuth.innerHTML = `
-                    <a href="Login.html" onclick="realizarLogout()" style="text-decoration: none; color: #6e655f; font-size: 0.85rem; font-weight: 500;">Sair</a>
+                    <a href="Estantes.html" style="text-decoration: none; color: #8c533e; font-size: 0.85rem; font-weight: 600;">Minhas Estantes</a>
+                                        <a href="Login.html" onclick="realizarLogout()" style="text-decoration: none; color: #6e655f; font-size: 0.85rem; font-weight: 500;">Sair</a>
                     <a href="MeuPerfil.html" title="Meu Perfil">
                         <img src="${fotoSalva}" alt="Foto do Perfil" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid #8c533e;">
                     </a>
@@ -263,7 +258,6 @@
 
         // Encerra a sessão e volta para o login.
         function realizarLogout() {
-            localStorage.removeItem("usuarioLogado");
             localStorage.removeItem("usuario");
             localStorage.removeItem("token");
             localStorage.removeItem("logado");

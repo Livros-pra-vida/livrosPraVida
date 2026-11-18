@@ -1,3 +1,4 @@
+// Confere se um CPF é válido: 11 dígitos, não todos iguais e com os dois dígitos verificadores corretos.
 function validarCPF(cpf) {
     // Remove qualquer caractere que não seja número (pontos, traços, espaços)
     cpf = cpf.replace(/\D/g, '');
