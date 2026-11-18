@@ -333,7 +333,7 @@
             document.getElementById("sair").style.display = "inline-block";
             document.getElementById("minhasEstantes").style.display = "inline-block";
 
-            const fotoSalva = localStorage.getItem("usuarioFoto");
+            const fotoSalva = localStorage.getItem("usuarioFoto") || "../imagens/perfil.jpg";
 
             if (fotoSalva) {
                 document.getElementById("menuAvatar").src = fotoSalva;
