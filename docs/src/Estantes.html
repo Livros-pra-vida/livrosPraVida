@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Estantes - Livros pra Vida</title>
+
+    <link rel="icon" type="image/png" href="../imagens/icone.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/StyleMeuPerfil.css">
+    <link rel="stylesheet" href="../css/StyleEstantes.css">
+    <link rel="stylesheet" href="../css/tema.css">
+    <script src="../js/lpv.js"></script>
+</head>
+
+<body>
+
+    <!-- CABEÇALHO / MENU DE NAVEGAÇÃO -->
+    <header class="header">
+        <div class="logo">
+            <a href="../index.html">
+                <img src="../imagens/icone.png" alt="Logo Livros pra Vida">
+            </a>
+            <span>Livros pra Vida</span>
+        </div>
+
+        <nav class="menu">
+            <a href="../index.html">Início</a>
+            <a href="MeuPerfil.html">Meu Perfil</a>
+            <a href="Estantes.html" class="active">Minhas Estantes</a>
+            <a href="#" id="btnSair" class="btn-sair-top">Sair</a>
+        </nav>
+    </header>
+
+    <main class="profile-container">
+
+        <!-- LATERAL: LISTA DE ESTANTES + CRIAR NOVA -->
+        <aside class="card-box estantes-lateral">
+            <div class="card-header">
+                <h3>Minhas Estantes</h3>
+                <p>Só você vê o que está aqui.</p>
+            </div>
+
+            <ul id="listaEstantes" class="lista-estantes" aria-live="polite">
+                <li class="vazio">Conectando ao servidor... (pode levar até 1 minuto se ele estava inativo)</li>
+            </ul>
+
+            <form id="formNovaEstante" class="form-lateral" novalidate>
+                <h4>Nova estante</h4>
+                <div class="form-group">
+                    <label for="novaNome">Nome</label>
+                    <input type="text" id="novaNome" maxlength="80" required placeholder="Ex: Quero ler">
+                </div>
+                <div class="form-group">
+                    <label for="novaLimite">Limite de livros</label>
+                    <input type="number" id="novaLimite" min="1" max="500" value="50" required>
+                </div>
+                <button type="submit" id="btnCriarEstante" class="btn-save">Criar estante</button>
+            </form>
+        </aside>
+
+        <!-- CONTEÚDO: ESTANTE SELECIONADA -->
+        <div class="profile-details">
+
+            <div id="avisoGeral" class="aviso" role="status" hidden></div>
+
+            <section id="painelVazio" class="card-box">
+                <div class="card-header">
+                    <h3>Nenhuma estante selecionada</h3>
+                    <p>Escolha uma estante na lista ou crie a sua primeira para começar a guardar livros.</p>
+                </div>
+            </section>
+
+            <div id="painelEstante" class="painel-estante" hidden>
+
+                <section class="card-box">
+                    <div class="card-header cabecalho-estante">
+                        <div>
+                            <h3 id="estanteTitulo"></h3>
+                            <p id="estanteResumo"></p>
+                        </div>
+                        <button type="button" id="btnExcluirEstante" class="btn-perigo">Excluir estante</button>
+                    </div>
+
+                    <form id="formEditarEstante" novalidate>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="editNome">Nome da estante</label>
+                                <input type="text" id="editNome" maxlength="80" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editLimite">Limite de livros</label>
+                                <input type="number" id="editLimite" min="1" max="500" required>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" id="btnSalvarEstante" class="btn-save">Salvar estante</button>
+                        </div>
+                    </form>
+                </section>
+
+                <section class="card-box">
+                    <div class="card-header">
+                        <h3>Livros desta estante</h3>
+                    </div>
+                    <div id="listaLivros" class="lista-livros"></div>
+                </section>
+
+                <section class="card-box">
+                    <div class="card-header">
+                        <h3>Adicionar livro</h3>
+                        <p>O livro entra na estante selecionada.</p>
+                    </div>
+
+                    <form id="formNovoLivro" novalidate>
+                        <div class="form-grid">
+                            <div class="form-group coluna-cheia">
+                                <label for="livroTitulo">Título</label>
+                                <input type="text" id="livroTitulo" required placeholder="Título do livro">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="livroAutor">Autor</label>
+                                <select id="livroAutor" required></select>
+                            </div>
+
+                            <div class="form-group" id="grupoNovoAutor" hidden>
+                                <label for="novoAutorNome">Nome do novo autor</label>
+                                <input type="text" id="novoAutorNome" placeholder="Nome completo">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="livroNota">Sua nota</label>
+                                <select id="livroNota">
+                                    <option value="">Sem nota</option>
+                                    <option value="1">1 ★</option>
+                                    <option value="2">2 ★★</option>
+                                    <option value="3">3 ★★★</option>
+                                    <option value="4">4 ★★★★</option>
+                                    <option value="5">5 ★★★★★</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="livroLancamento">Data de lançamento (opcional)</label>
+                                <input type="date" id="livroLancamento">
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" id="btnAdicionarLivro" class="btn-save">Adicionar à estante</button>
+                        </div>
+                    </form>
+                </section>
+
+            </div>
+        </div>
+
+    </main>
+
+    <script src="../js/estantes.js"></script>
+</body>
+
+</html>

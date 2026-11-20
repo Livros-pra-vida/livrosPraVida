@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar conta - Livros pra Vida</title>
+
+    <link rel="icon" type="image/png" href="../imagens/icone.png">
+    <link rel="stylesheet" href="../css/StyleCadLog.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/tema.css">
+    <script src="../js/lpv.js"></script>
+</head>
+
+<body>
+
+    <header>
+        <a href="../index.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
+            <img src="../imagens/icone.png" alt="Logo Livros pra Vida">
+            <span>Livros pra Vida</span>
+        </a>
+    </header>
+
+    <main>
+        <section>
+            <div class="title">
+                <h1>Criar conta</h1>
+                <p>Já tem uma conta? <a href="Login.html">Entrar</a></p>
+            </div>
+
+            <p class="aviso-obrigatorio">Campos marcados com <span class="obrigatorio">Obrigatório</span> precisam ser preenchidos.</p>
+
+            <form id="formCadastro">
+                <label>
+                    <span class="rotulo">Nome de usuário <span class="obrigatorio">Obrigatório</span></span>
+                    <input type="text" id="username" required placeholder="Digite seu nome de usuário">
+                </label>
+
+                <label>
+                    <span class="rotulo">E-mail <span class="obrigatorio">Obrigatório</span></span>
+                    <input type="email" id="email" required placeholder="seuemail@exemplo.com">
+                </label>
+
+                <label>
+                    <span class="rotulo">Data de Nascimento <span class="opcional">Opcional</span></span>
+                    <input type="date" id="birthdate">
+                </label>
+
+                <label>
+                    <span class="rotulo">CPF (somente números) <span class="obrigatorio">Obrigatório</span></span>
+                    <input type="text" id="cpf" required maxlength="11" inputmode="numeric" placeholder="00000000000">
+                </label>
+
+                <label>
+                    <span class="rotulo">Telefone (com DDD, somente números) <span class="opcional">Opcional</span></span>
+                    <input type="tel" id="phone" maxlength="11" inputmode="numeric" placeholder="00000000000">
+                </label>
+
+                <label>
+                    <span class="rotulo">Senha <span class="obrigatorio">Obrigatório</span></span>
+                    <div class="password">
+                        <input type="password" id="senha" required minlength="8" autocomplete="new-password"
+                            aria-describedby="regrasSenha" placeholder="Crie uma senha forte">
+                        <button type="button" onclick="alternarSenha('senha')" aria-label="Mostrar/Ocultar Senha">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </label>
+
+                <!-- Regras da senha: cada item fica verde quando é cumprido -->
+                <ul class="regras-senha" id="regrasSenha" aria-live="polite">
+                    <li data-regra="tamanho">Pelo menos 8 caracteres</li>
+                    <li data-regra="maiuscula">Pelo menos 1 letra maiúscula (A-Z)</li>
+                    <li data-regra="numero">Pelo menos 1 número (0-9)</li>
+                    <li data-regra="especial">Pelo menos 1 caractere especial (ex.: ! @ # $ % &amp; *)</li>
+                </ul>
+
+                <label>
+                    <span class="rotulo">Confirmar senha <span class="obrigatorio">Obrigatório</span></span>
+                    <div class="password">
+                        <input type="password" id="confirmarSenha" required autocomplete="new-password" placeholder="Repita a senha">
+                        <button type="button" onclick="alternarSenha('confirmarSenha')" aria-label="Mostrar/Ocultar Senha">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </label>
+
+                <label class="terms">
+                    <input type="checkbox" id="termos" required>
+                    <span class="texto-termos">Li e concordo com os
+                    <a href="Termos.html#termos" target="_blank" rel="noopener">Termos de Uso</a>
+                    e a
+                    <a href="Termos.html#privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.
+                    <span class="obrigatorio">Obrigatório</span></span>
+                </label>
+
+                <button type="submit" class="register" id="btnSubmit">Concluir</button>
+            </form>
+        </section>
+
+        <footer>
+            <p>"Toda história começa com uma página."</p>
+            <div class="benefits">
+                <span>✓ Acesso ilimitado ao catálogo</span>
+                <span>✓ Recomendações personalizadas</span>
+                <span>✓ Chat com outros leitores</span>
+            </div>
+            <small>© 2026 Livros pra Vida. Todos os direitos reservados.</small>
+        </footer>
+    </main>
+
+    <script src="../js/validarCPF.js"></script>
+
+    <script>
+        const API_URL = "https://lpv-api.onrender.com";
+
+        // Mostra ou esconde o texto do campo de senha indicado.
+        function alternarSenha(id) {
+            const input = document.getElementById(id);
+            input.type = input.type === "password" ? "text" : "password";
+        }
+
+        // Regras da senha (as mesmas mostradas na lista abaixo do campo).
+        const REGRAS_SENHA = {
+            tamanho: s => s.length >= 8,
+            maiuscula: s => /[A-Z]/.test(s),
+            numero: s => /[0-9]/.test(s),
+            especial: s => /[^A-Za-z0-9\s]/.test(s)
+        };
+
+        // Pinta cada regra de verde (cumprida) ou cinza e devolve true se todas foram cumpridas.
+        function conferirSenha(senha) {
+            let tudoCerto = true;
+            for (const [nome, regra] of Object.entries(REGRAS_SENHA)) {
+                const ok = regra(senha);
+                document.querySelector(`#regrasSenha [data-regra="${nome}"]`).classList.toggle("ok", ok);
+                if (!ok) tudoCerto = false;
+            }
+            return tudoCerto;
+        }
+
+        document.getElementById("senha").addEventListener("input", function () {
+            conferirSenha(this.value);
+        });
+
+        // Permite somente números no campo CPF.
+        document.getElementById("cpf").addEventListener("input", function () {
+            this.value = this.value.replace(/\D/g, '');
+        });
+
+        // Permite somente números no campo telefone.
+        document.getElementById("phone").addEventListener("input", function () {
+            this.value = this.value.replace(/\D/g, '');
+        });
+
+        // Envia o cadastro para a API.
+        document.getElementById("formCadastro").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const username = document.getElementById("username").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const nascimento = document.getElementById("birthdate").value;
+            const cpf = document.getElementById("cpf").value.trim().replace(/\D/g, '');
+            const telefone = document.getElementById("phone").value.trim().replace(/\D/g, '');
+            const senha = document.getElementById("senha").value;
+            const confirmarSenha = document.getElementById("confirmarSenha").value;
+            const btnSubmit = document.getElementById("btnSubmit");
+
+            if (cpf.length !== 11) {
+                LPV.toast("O CPF precisa conter exatamente 11 números.", "erro", 5000);
+                return;
+            }
+
+            // Confere os dígitos verificadores do CPF (js/validarCPF.js).
+            if (!validarCPF(cpf)) {
+                LPV.toast("CPF inválido. Confira os números digitados.", "erro", 5000);
+                return;
+            }
+
+            if (telefone.length > 0 && (telefone.length < 10 || telefone.length > 11)) {
+                LPV.toast("O telefone deve conter 10 ou 11 números (com DDD).", "erro", 5000);
+                return;
+            }
+
+            if (!conferirSenha(senha)) {
+                LPV.toast("A senha precisa ter pelo menos 8 caracteres, 1 letra maiúscula, 1 número e 1 caractere especial.", "erro", 5000);
+                document.getElementById("senha").focus();
+                return;
+            }
+
+            if (senha !== confirmarSenha) {
+                LPV.toast("As senhas não coincidem.", "erro", 5000);
+                return;
+            }
+
+            btnSubmit.disabled = true;
+            btnSubmit.innerText = "Realizando cadastro (aguarde)...";
+
+            // 60 segundos: o Render gratuito pode demorar para acordar.
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 60000);
+
+            try {
+                const response = await fetch(`${API_URL}/users`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    signal: controller.signal,
+                    body: JSON.stringify({
+                        user: {
+                            username: username,
+                            email: email,
+                            cpf: cpf,
+                            telefone: telefone,
+                            nascimento: nascimento,
+                            // A senha vai pura (protegida pelo HTTPS): o servidor confere as
+                            // regras de novo e grava com SHA-256 + bcrypt.
+                            password: senha,
+                            password_confirmation: confirmarSenha
+                        }
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    if (data.token && data.user) {
+                        LPV.salvarSessao(data.user, data.token);
+                        LPV.toastNaProximaPagina(`Conta criada com sucesso! Bem-vindo(a), ${data.user.username}!`);
+                        window.location.href = "../index.html";
+                    } else {
+                        LPV.toastNaProximaPagina("Conta criada com sucesso! Faça login para continuar.");
+                        window.location.href = "Login.html";
+                    }
+                } else {
+                    const erros = data.errors
+                        ? data.errors.join(", ")
+                        : (data.error || "Verifique os dados digitados.");
+
+                    LPV.toast("Erro ao criar conta: " + erros, "erro", 5000);
+                }
+
+            } catch (error) {
+                console.error("Erro no cadastro:", error);
+
+                if (error.name === 'AbortError') {
+                    LPV.toast("O servidor demorou a responder. Tente clicar em Concluir novamente.", "erro", 5000);
+                } else {
+                    LPV.toast("Não foi possível conectar ao servidor.", "erro", 5000);
+                }
+
+            } finally {
+                clearTimeout(timeoutId);
+                btnSubmit.disabled = false;
+                btnSubmit.innerText = "Concluir";
+            }
+        });
+    </script>
+</body>
+
+</html>

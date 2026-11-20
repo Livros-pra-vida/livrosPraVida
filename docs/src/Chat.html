@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat & Comunidade - Livros pra Vida</title>
+    <link rel="icon" type="image/png" href="../imagens/icone.png">
+    <link rel="stylesheet" href="../css/StyleChat.css">
+    <link rel="stylesheet" href="../css/tema.css">
+    <script src="../js/lpv.js"></script>
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">
+            <a href="../index.html"><img src="../imagens/icone.png" alt="Logo"></a>
+            <span>Livros pra Vida</span>
+        </div>
+        <nav class="menu" id="menuNavegacao">
+            <!-- Preenchido dinamicamente via JS -->
+        </nav>
+    </header>
+
+    <main class="container chat-pagina">
+        <div class="chat-topo">
+            <div>
+                <h1>Chat & Comunidade</h1>
+                <p>Converse com outros leitores e negocie livros com segurança. 🔒 As mensagens são gravadas criptografadas.</p>
+            </div>
+            <div class="chat-tabs" role="tablist">
+                <button id="btnTabGlobal" class="tab-btn active" role="tab" onclick="trocarAba('global')">Comunidade (Fórum)</button>
+                <button id="btnTabPrivado" class="tab-btn" role="tab" onclick="trocarAba('privado')">
+                    Minhas Negociações <span id="badgeNaoLidas" class="chat-badge" style="display:none"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= CHAT GLOBAL ================= -->
+        <section id="secaoGlobal" class="chat-section active">
+            <div id="avisoGlobal" class="chat-aviso" style="display: none;"></div>
+            <div class="chat-box">
+                <div class="messages" id="messages" aria-live="polite"></div>
+                <form class="input-area" id="form">
+                    <input type="text" id="input" maxlength="500" autocomplete="off" aria-label="Mensagem para o fórum"
+                        placeholder="Escreva para a comunidade...">
+                    <button type="submit">Enviar</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ================= CHAT PRIVADO ================= -->
+        <section id="secaoPrivado" class="chat-section">
+            <div class="privado-layout">
+                <aside class="privado-lista">
+                    <h3>Conversas</h3>
+                    <div id="listaConversas"><div class="lpv-esqueleto" style="height: 64px;"></div></div>
+                </aside>
+
+                <div class="privado-conversa">
+                    <div id="semConversaAviso" class="lpv-vazio">
+                        <strong>Nenhuma conversa aberta</strong>
+                        Clique em "Negociar" em um livro do <a href="ComprarTrocar.html" style="color:#8c533e">Comprar & Trocar</a>
+                        ou escolha uma conversa ao lado.
+                    </div>
+
+                    <div class="chat-box privado-caixa" id="caixaChatPrivado" style="display:none;">
+                        <div class="privado-cabecalho">
+                            <img id="privadoCapa" alt="" src="../imagens/icone.png" onerror="this.src='../imagens/icone.png'">
+                            <div>
+                                <strong id="tituloChatPrivado">Conversa</strong>
+                                <small id="subtituloChatPrivado"></small>
+                            </div>
+                        </div>
+                        <div class="messages" id="chatPrivadoMessages" aria-live="polite"></div>
+                        <form class="input-area" id="formPrivado">
+                            <input type="text" id="chatPrivadoInput" maxlength="1000" autocomplete="off"
+                                aria-label="Mensagem privada" placeholder="Digite sua mensagem...">
+                            <button type="submit">Enviar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="../js/admin.js"></script>
+    <script type="module">
+        import { createConsumer } from "https://esm.sh/@rails/actioncable@7";
+
+        const token = LPV.token();
+        const meuId = Number(localStorage.getItem("usuarioId"));
+        let consumer = null;
+
+        // ---------- Utilidades ----------
+        function hora(data) {
+            const d = new Date(data);
+            const hoje = new Date();
+            const mesmoDia = d.toDateString() === hoje.toDateString();
+            return mesmoDia
+                ? d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })
+                : d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }) + " " + d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+        }
+
+        function iniciais(nome) {
+            return String(nome || "?").trim().split(/\s+/).slice(0, 2).map(p => p[0]).join("").toUpperCase();
+        }
+
+        // Monta um balão de mensagem só com textContent (seguro contra XSS).
+        function criarBalao(m, { privado = false } = {}) {
+            const minha = m.user_id === meuId;
+            const div = document.createElement("div");
+            div.className = "msg" + (minha ? " minha" : "");
+            if (m.id) div.dataset.msgId = m.id;
+            if (m.user_id) div.dataset.userId = m.user_id;
+
+            if (!minha) {
+                const avatar = document.createElement("span");
+                avatar.className = "msg-avatar";
+                avatar.textContent = iniciais(m.username);
+                div.append(avatar);
+            }
+
+            const corpo = document.createElement("div");
+            corpo.className = "msg-corpo";
+
+            if (!minha && !privado) {
+                let nome;
+                if (Admin.ehAdmin() && m.user_id) {
+                    nome = document.createElement("button");
+                    nome.type = "button";
+                    nome.className = "admin-usuario msg-nome";
+                    nome.dataset.adminUid = m.user_id;
+                    nome.dataset.adminNome = m.username;
+                    nome.title = "Ver perfil (administrador)";
+                } else {
+                    nome = document.createElement("span");
+                    nome.className = "msg-nome";
+                }
+                nome.textContent = m.username;
+                corpo.append(nome);
+            }
+
+            const texto = document.createElement("p");
+            texto.textContent = m.content;
+            const meta = document.createElement("small");
+            meta.textContent = hora(m.created_at || Date.now()) + (privado && minha ? (m.read_at ? " ✓✓" : " ✓") : "");
+            corpo.append(texto, meta);
+
+            if (!privado && Admin.ehAdmin() && m.id) {
+                const apagar = document.createElement("button");
+                apagar.type = "button";
+                apagar.className = "msg-apagar";
+                apagar.textContent = "Apagar";
+                apagar.title = "Apagar esta mensagem (administrador)";
+                apagar.addEventListener("click", () => apagarMensagem(m.id));
+                corpo.append(apagar);
+            }
+
+            div.append(corpo);
+            return div;
+        }
+
+        // =============== CHAT GLOBAL ===============
+        const list = document.getElementById("messages");
+        const form = document.getElementById("form");
+        const input = document.getElementById("input");
+        const aviso = document.getElementById("avisoGlobal");
+
+        function mostrarAviso(texto) {
+            aviso.textContent = texto;
+            aviso.style.display = "block";
+        }
+
+        function addMessage(m) {
+            if (m.deleted) { removerMensagem(m.id); return; }
+            if (m.id && list.querySelector(`[data-msg-id="${m.id}"]`)) return;
+            list.append(criarBalao(m));
+            list.scrollTop = list.scrollHeight;
+        }
+
+        function removerMensagem(id) {
+            list.querySelectorAll(`[data-msg-id="${id}"]`).forEach(el => el.remove());
+        }
+
+        // (Admin) apaga a mensagem de qualquer pessoa.
+        async function apagarMensagem(id) {
+            if (!confirm("Apagar esta mensagem para todos?")) return;
+            try {
+                await LPV.chamar(`/messages/${id}`, { method: "DELETE" });
+                removerMensagem(id);
+            } catch (erro) {
+                if (erro.status === 404) { removerMensagem(id); return; }
+                LPV.toast(erro.message, "erro");
+            }
+        }
+
+        Admin.ativarCliques(list, userId =>
+            list.querySelectorAll(`[data-user-id="${userId}"]`).forEach(el => el.remove()));
+
+        async function iniciarChatGlobal() {
+            if (!token) {
+                mostrarAviso("Faça login para ler e participar do chat da comunidade.");
+                form.addEventListener("submit", e => { e.preventDefault(); window.location.href = "Login.html"; });
+                return;
+            }
+
+            mostrarAviso("Conectando ao chat... (o servidor pode levar até 1 minuto para acordar)");
+            try {
+                (await LPV.chamar("/messages")).forEach(addMessage);
+                aviso.style.display = "none";
+            } catch (erro) {
+                if (erro.status === 401) {
+                    LPV.toastNaProximaPagina("Sua sessão expirou. Entre novamente.", "info");
+                    window.location.href = "Login.html";
+                    return;
+                }
+                mostrarAviso("Não foi possível carregar o histórico: " + erro.message);
+            }
+
+            consumer = createConsumer(`${LPV.API_URL.replace("https", "wss")}/cable?token=${encodeURIComponent(token)}`);
+            let conectado = false, jaConectou = false, falhas = 0;
+            const canal = consumer.subscriptions.create("ChatChannel", {
+                connected() { conectado = jaConectou = true; falhas = 0; aviso.style.display = "none"; },
+                disconnected() {
+                    conectado = false;
+                    falhas++;
+                    mostrarAviso(!jaConectou && falhas >= 3
+                        ? "Não foi possível entrar no chat. Saia e entre novamente na sua conta."
+                        : "Conexão com o chat perdida. Tentando reconectar...");
+                },
+                received: addMessage
+            });
+
+            form.addEventListener("submit", e => {
+                e.preventDefault();
+                const content = input.value.trim();
+                if (!content) return;
+                if (!conectado) {
+                    LPV.toast("Ainda sem conexão com o chat. Tente de novo em instantes.", "erro");
+                    return;
+                }
+                canal.perform("speak", { content });
+                input.value = "";
+            });
+        }
+
+        // =============== CHAT PRIVADO (salvo no banco, criptografado) ===============
+        const listaEl = document.getElementById("listaConversas");
+        const caixaPrivada = document.getElementById("chatPrivadoMessages");
+        const formPrivado = document.getElementById("formPrivado");
+        const inputPrivado = document.getElementById("chatPrivadoInput");
+        let conversas = [];
+        let conversaAtual = null;
+        let canalPrivado = null;
+
+        // Lista de conversas (como comprador ou como anunciante).
+        async function carregarConversas() {
+            if (!token) {
+                listaEl.innerHTML = '<p class="privado-vazio">Entre na sua conta para ver suas negociações.</p>';
+                return;
+            }
+            try {
+                conversas = await LPV.chamar("/conversations");
+                desenharLista();
+            } catch (erro) {
+                listaEl.innerHTML = `<p class="privado-vazio">${LPV.esc(erro.message)}</p>`;
+            }
+        }
+
+        function desenharLista() {
+            const naoLidas = conversas.reduce((t, c) => t + c.unread_count, 0);
+            const badge = document.getElementById("badgeNaoLidas");
+            badge.textContent = naoLidas;
+            badge.style.display = naoLidas > 0 ? "inline-block" : "none";
+
+            if (conversas.length === 0) {
+                listaEl.innerHTML = '<p class="privado-vazio">Nenhuma negociação ainda.</p>';
+                return;
+            }
+            listaEl.innerHTML = conversas.map(c => `
+                <button type="button" class="conversa-item ${conversaAtual && conversaAtual.id === c.id ? "ativo" : ""}" data-id="${Number(c.id)}">
+                    <span class="msg-avatar">${LPV.esc(iniciais(c.other_user.name))}</span>
+                    <span class="conversa-texto">
+                        <strong>${LPV.esc(c.other_user.name)}</strong>
+                        <small>${LPV.esc(c.listing_title)} · ${c.role === "comprador" ? "você quer o livro" : "seu anúncio"}</small>
+                        <em>${c.last_message ? LPV.esc((c.last_message.from_me ? "Você: " : "") + c.last_message.content) : "Sem mensagens ainda"}</em>
+                    </span>
+                    ${c.unread_count ? `<span class="chat-badge">${Number(c.unread_count)}</span>` : ""}
+                </button>`).join("");
+        }
+
+        listaEl.addEventListener("click", e => {
+            const item = e.target.closest("[data-id]");
+            if (item) abrirConversa(Number(item.dataset.id));
+        });
+
+        // Abre a conversa: busca as mensagens no banco e entra no canal de tempo real dela.
+        async function abrirConversa(id) {
+            try {
+                const dados = await LPV.chamar(`/conversations/${id}`);
+                conversaAtual = dados;
+
+                document.getElementById("semConversaAviso").style.display = "none";
+                document.getElementById("caixaChatPrivado").style.display = "block";
+                document.getElementById("tituloChatPrivado").textContent = dados.other_user.name;
+                document.getElementById("subtituloChatPrivado").textContent =
+                    `${dados.listing_title} · ${dados.role === "comprador" ? "Você está negociando este livro" : "Interessado no seu anúncio"}`;
+                document.getElementById("privadoCapa").src = LPV.urlImagem(dados.listing_image, "../imagens/icone.png");
+
+                caixaPrivada.innerHTML = "";
+                if (dados.messages.length === 0) {
+                    caixaPrivada.innerHTML = '<p class="privado-vazio">Diga olá e combine a negociação 🙂</p>';
+                }
+                dados.messages.forEach(adicionarPrivada);
+
+                // Zera o contador de não lidas desta conversa.
+                const c = conversas.find(x => x.id === id);
+                if (c) c.unread_count = 0;
+                desenharLista();
+                entrarNoCanal(id);
+                inputPrivado.focus();
+            } catch (erro) {
+                LPV.toast(erro.message, "erro");
+            }
+        }
+
+        function adicionarPrivada(m) {
+            if (m.id && caixaPrivada.querySelector(`[data-msg-id="${m.id}"]`)) return;
+            const vazio = caixaPrivada.querySelector(".privado-vazio");
+            if (vazio) vazio.remove();
+            caixaPrivada.append(criarBalao(m, { privado: true }));
+            caixaPrivada.scrollTop = caixaPrivada.scrollHeight;
+        }
+
+        function entrarNoCanal(id) {
+            if (!consumer) consumer = createConsumer(`${LPV.API_URL.replace("https", "wss")}/cable?token=${encodeURIComponent(token)}`);
+            if (canalPrivado) canalPrivado.unsubscribe();
+            canalPrivado = consumer.subscriptions.create({ channel: "ConversationChannel", conversation_id: id }, {
+                received(m) {
+                    if (!conversaAtual || m.conversation_id !== conversaAtual.id) return;
+                    adicionarPrivada(m);
+                    const c = conversas.find(x => x.id === m.conversation_id);
+                    if (c) {
+                        c.last_message = { content: m.content, from_me: m.user_id === meuId };
+                        desenharLista();
+                    }
+                }
+            });
+        }
+
+        formPrivado.addEventListener("submit", async e => {
+            e.preventDefault();
+            const texto = inputPrivado.value.trim();
+            if (!texto || !conversaAtual) return;
+            inputPrivado.value = "";
+            try {
+                const m = await LPV.chamar(`/conversations/${conversaAtual.id}/messages`, { method: "POST", corpo: { content: texto } });
+                adicionarPrivada(m);
+                const c = conversas.find(x => x.id === conversaAtual.id);
+                if (c) { c.last_message = { content: m.content, from_me: true }; desenharLista(); }
+            } catch (erro) {
+                inputPrivado.value = texto;
+                LPV.toast(erro.message, "erro");
+            }
+        });
+
+        // Veio do botão "Negociar" (Chat.html?anuncio=ID&msg=...): abre ou reaproveita a conversa.
+        async function abrirPeloAnuncio(anuncioId, mensagem) {
+            if (!token) {
+                LPV.toastNaProximaPagina("Entre na sua conta para negociar.", "info");
+                window.location.href = "Login.html";
+                return;
+            }
+            try {
+                const conversa = await LPV.chamar("/conversations", {
+                    method: "POST", corpo: { book_listing_id: Number(anuncioId), message: mensagem || "" }
+                });
+                history.replaceState(null, "", "Chat.html?aba=privado");
+                await carregarConversas();
+                abrirConversa(conversa.id);
+            } catch (erro) {
+                LPV.toast(erro.message, "erro", 6000);
+            }
+        }
+
+        // =============== Abas ===============
+        window.trocarAba = function (aba) {
+            document.getElementById("secaoGlobal").classList.toggle("active", aba === "global");
+            document.getElementById("secaoPrivado").classList.toggle("active", aba === "privado");
+            document.getElementById("btnTabGlobal").classList.toggle("active", aba === "global");
+            document.getElementById("btnTabPrivado").classList.toggle("active", aba === "privado");
+            if (aba === "privado") carregarConversas();
+        };
+
+        // =============== Início ===============
+        const params = new URLSearchParams(location.search);
+        iniciarChatGlobal();
+        carregarConversas();
+        if (params.get("anuncio")) {
+            trocarAba("privado");
+            abrirPeloAnuncio(params.get("anuncio"), params.get("msg"));
+        } else if (params.get("aba") === "privado") {
+            trocarAba("privado");
+        }
+    </script>
+
+    <script>
+        // Menu do topo conforme o login.
+        document.addEventListener("DOMContentLoaded", function () {
+            const menu = document.getElementById("menuNavegacao");
+            const foto = LPV.esc(LPV.urlImagem(localStorage.getItem("usuarioFoto"), "../imagens/perfil.jpg"));
+            const links = `
+                <a href="Catalogo.html">Catálogo</a>
+                <a href="ComprarTrocar.html">Comprar & Trocar</a>
+                <a href="Novidades.html">Novidades</a>
+                <a href="Chat.html" class="active">Chat & Comunidade</a>
+                <a href="SobreNos.html">Sobre Nós</a>`;
+            menu.innerHTML = LPV.logado() ? links + `
+                <a href="Estantes.html">Minhas Estantes</a>
+                <a href="#" onclick="LPV.sair(event)" class="btn-sair">Sair</a>
+                <a href="MeuPerfil.html" class="profile-nav-link" title="Meu Perfil">
+                    <img src="${foto}" onerror="this.src='../imagens/perfil.jpg'" alt="Meu Perfil" class="avatar-circle">
+                </a>` : links + `
+                <a href="Login.html" class="login-button">Entrar</a>
+                <a href="Cadastro.html" class="signup-button">Cadastrar</a>`;
+        });
+    </script>
+</body>
+
+</html>

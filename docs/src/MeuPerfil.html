@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil - Livros pra Vida</title>
+
+    <link rel="icon" type="image/png" href="../imagens/icone.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/StyleMeuPerfil.css">
+    <link rel="stylesheet" href="../css/tema.css">
+    <script src="../js/lpv.js"></script>
+</head>
+
+<body>
+
+    <!-- CABEÇALHO / MENU DE NAVEGAÇÃO -->
+    <header class="header">
+        <div class="logo">
+            <a href="../index.html">
+                <img src="../imagens/icone.png" alt="Logo Livros pra Vida">
+            </a>
+            <span>Livros pra Vida</span>
+        </div>
+
+        <nav class="menu">
+            <a href="../index.html">Início</a>
+            <a href="Estantes.html">Minhas Estantes</a>
+            <a href="Carrinho.html">Carrinho <span id="contadorCarrinhoHeader" class="perfil-contador" style="display:none"></span></a>
+            <a href="#" onclick="LPV.sair(event)" class="btn-sair-top">Sair</a>
+        </nav>
+    </header>
+
+    <!-- CONTAINER PRINCIPAL DO PERFIL -->
+    <main class="profile-container">
+
+        <!-- CARTÃO LATERAL: PERFIL E REPUTAÇÃO -->
+        <aside class="profile-card">
+            <div class="avatar-wrapper">
+                <img src="../imagens/perfil.jpg" alt="Foto do Usuário" id="userAvatar" class="avatar-img" onerror="this.src='../imagens/perfil.jpg'">
+                <button class="btn-change-avatar" onclick="document.getElementById('avatarUpload').click()" title="Alterar foto">📷</button>
+                <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="uploadFotoPerfil(event)">
+            </div>
+
+            <h2 id="profileName">Leitor Colaborador</h2>
+            <span id="badgePlano" class="role-badge">Membro Colaborador</span>
+
+            <!-- Status de Maioridade -->
+            <div id="statusIdade" style="margin-top: 10px; font-size: 0.8rem; padding: 4px 8px; border-radius: 4px; display: inline-block; background: #e0d7cd; color: #2d251e;">
+                Verificando idade...
+            </div>
+
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="statTrocas">–</span>
+                    <span class="stat-label">Concluídos</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="statDoacoes">–</span>
+                    <span class="stat-label">Pedidos</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="statAnuncios">–</span>
+                    <span class="stat-label">Anúncios</span>
+                </div>
+            </div>
+
+            <button class="btn-logout" onclick="LPV.sair()">Encerrar Sessão</button>
+        </aside>
+
+        <!-- ÁREA CENTRAL DE CONTEÚDO E GERENCIAMENTO -->
+        <div class="profile-details">
+
+            <!-- FORMULÁRIO DE DADOS PESSOAIS, ENDEREÇO E PAGAMENTO -->
+            <section class="card-box">
+                <div class="card-header">
+                    <h3>Informações Cadastrais & Entrega</h3>
+                    <p>Mantenha seus dados atualizados para envios, segurança e compras.</p>
+                </div>
+
+                <form id="formPerfil" onsubmit="salvarPerfil(event)">
+
+                    <!-- Bloco 1: Dados Pessoais -->
+                    <h4 style="margin-bottom: 12px; color: #8c533e; font-size: 1rem; border-bottom: 1px solid #e0d7cd; padding-bottom: 6px;">
+                        1. Dados Pessoais</h4>
+                    <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label for="nomeInput">Nome de Usuário</label>
+                            <input type="text" id="nomeInput" required placeholder="Seu nome de usuário" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="emailInput">E-mail Cadastrado</label>
+                            <input type="email" id="emailInput" required placeholder="seuemail@dominio.com" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="telefoneInput">Telefone / WhatsApp</label>
+                            <input type="tel" id="telefoneInput" maxlength="11" placeholder="00000000000" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="nascimentoInput">Data de Nascimento</label>
+                            <input type="date" id="nascimentoInput" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cpfInput">CPF (somente números)</label>
+                            <input type="text" id="cpfInput" maxlength="11" placeholder="00000000000" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                        </div>
+                    </div>
+
+                    <!-- Bloco 2: Endereço de Entrega -->
+                    <h4 style="margin-bottom: 12px; color: #8c533e; font-size: 1rem; border-bottom: 1px solid #e0d7cd; padding-bottom: 6px;">
+                        2. Endereço de Entrega</h4>
+                    <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label for="cepInput">CEP</label>
+                            <input type="text" id="cepInput" placeholder="00000000" maxlength="8" onblur="consultarCep(this.value)" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                        </div>
+
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label for="ruaInput">Endereço (Rua, Avenida...)</label>
+                            <input type="text" id="ruaInput" placeholder="Nome da rua ou logradouro" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="numeroInput">Número</label>
+                            <input type="text" id="numeroInput" placeholder="Ex: 101" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bairroInput">Bairro</label>
+                            <input type="text" id="bairroInput" placeholder="Bairro" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cidadeInput">Cidade / UF</label>
+                            <input type="text" id="cidadeInput" placeholder="Ex: Brasília - DF" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                        </div>
+                    </div>
+
+                    <!-- Bloco 3: Formas de Pagamento Principal -->
+                    <h4 style="margin-bottom: 12px; color: #8c533e; font-size: 1rem; border-bottom: 1px solid #e0d7cd; padding-bottom: 6px;">
+                        3. Forma de Pagamento Principal</h4>
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label for="pagamentoSelect">Método Favorito</label>
+                        <select id="pagamentoSelect" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px; background: #fff;">
+                            <option value="Pix">Pix (Instantâneo)</option>
+                            <option value="Cartão de Crédito">Cartão de Crédito</option>
+                            <option value="Cartão de Débito">Cartão de Débito</option>
+                            <option value="Boleto">Boleto Bancário</option>
+                        </select>
+                    </div>
+
+                    <!-- Bloco 4: Segurança -->
+                    <h4 style="margin-bottom: 12px; color: #8c533e; font-size: 1rem; border-bottom: 1px solid #e0d7cd; padding-bottom: 6px;">
+                        4. Segurança da Conta</h4>
+                    <p style="font-size: 0.85rem; color: #6e655f; margin-bottom: 12px;">
+                        Para trocar o e-mail ou a senha, informe a sua senha atual. Deixe "Nova senha" em branco para manter a senha.
+                    </p>
+                    <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label for="senhaAtualInput">Senha atual</label>
+                            <input type="password" id="senhaAtualInput" autocomplete="current-password" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                        </div>
+                        <div class="form-group">
+                            <label for="novaSenhaInput">Nova senha</label>
+                            <input type="password" id="novaSenhaInput" autocomplete="new-password" placeholder="8+ caracteres, A-Z, 0-9, !@#" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmaNovaSenhaInput">Confirmar nova senha</label>
+                            <input type="password" id="confirmaNovaSenhaInput" autocomplete="new-password" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px;">
+                        </div>
+                    </div>
+                    <p style="font-size: 0.8rem; color: #6e655f; margin-bottom: 16px;">🔒 CPF, telefone e endereço são gravados criptografados no banco de dados.</p>
+
+                    <div class="form-actions">
+                        <button type="submit" id="btnSalvarPerfil" class="btn-save" style="background: #8c533e; color: #fff; padding: 10px 20px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                            Salvar Alterações
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- HISTÓRICO DE PEDIDOS / COMPRAS ANTERIORES -->
+            <section class="card-box" style="margin-top: 30px;" id="pedidos">
+                <div class="card-header">
+                    <h3>Meus Pedidos & Compras Anteriores</h3>
+                    <p>Acompanhe o protocolo, os livros e o status de envio dos seus pedidos.</p>
+                </div>
+                <div id="listaHistoricoPedidos" style="margin-top: 15px;">
+                    <p style="color: #666; font-size: 0.9rem;">Carregando histórico...</p>
+                </div>
+            </section>
+
+            <!-- LIVROS ANUNCIADOS -->
+            <section class="card-box" style="margin-top: 30px;">
+                <div class="card-header">
+                    <h3>Meus Livros Anunciados</h3>
+                    <p>Obras que você disponibilizou para a comunidade leitora.</p>
+                </div>
+
+                <div class="books-mini-grid" id="meusAnuncios" style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px;">
+                    <div class="lpv-esqueleto" style="width: 140px; height: 190px;"></div>
+                    <div class="lpv-esqueleto" style="width: 140px; height: 190px;"></div>
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+    <script>
+        const CAPA_PADRAO = "https://covers.openlibrary.org/b/id/12645114-L.jpg";
+        let perfil = null;
+
+        // Ao abrir o perfil: tudo vem do banco (dados pessoais, endereço, pagamento, foto, pedidos e anúncios).
+        document.addEventListener("DOMContentLoaded", async function () {
+            if (!LPV.logado()) {
+                LPV.toastNaProximaPagina("Entre na sua conta para ver o seu perfil.", "info");
+                window.location.href = "Login.html";
+                return;
+            }
+
+            try {
+                perfil = await LPV.chamar("/users/me");
+                LPV.salvarSessao(perfil);
+                preencherFormulario(perfil);
+            } catch (erro) {
+                if (erro.status === 401) {
+                    LPV.toastNaProximaPagina("Sua sessão expirou. Faça login novamente.", "info");
+                    window.location.href = "Login.html";
+                    return;
+                }
+                LPV.toast("Não foi possível carregar seus dados: " + erro.message, "erro", 6000);
+            }
+
+            carregarPedidos();
+            carregarMeusAnuncios();
+        });
+
+        function preencherFormulario(u) {
+            const campos = {
+                nomeInput: u.username, emailInput: u.email, telefoneInput: u.telefone,
+                nascimentoInput: u.nascimento ? String(u.nascimento).substring(0, 10) : "",
+                cpfInput: u.cpf, cepInput: u.cep, ruaInput: u.rua, numeroInput: u.numero,
+                bairroInput: u.bairro, cidadeInput: u.cidade
+            };
+            Object.entries(campos).forEach(([id, valor]) => { document.getElementById(id).value = valor || ""; });
+            document.getElementById("pagamentoSelect").value = u.pagamento_favorito || "Pix";
+            document.getElementById("userAvatar").src = LPV.urlImagem(u.avatar_url, "../imagens/perfil.jpg");
+            document.getElementById("profileName").textContent = u.username || "Leitor Colaborador";
+
+            const badge = document.getElementById("badgePlano");
+            if (u.admin) {
+                badge.textContent = "Administrador";
+                badge.style.background = "#8c533e";
+                badge.style.color = "#fff";
+            } else {
+                badge.textContent = "Membro desde " + new Date(u.created_at).toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
+            }
+            verificarMaioridade();
+        }
+
+        // Integração com a API ViaCEP (preenche rua, bairro e cidade).
+        function consultarCep(cep) {
+            const cepLimpo = cep.replace(/\D/g, '');
+            if (cepLimpo.length !== 8) return;
+
+            fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.erro) {
+                        document.getElementById("ruaInput").value = data.logradouro;
+                        document.getElementById("bairroInput").value = data.bairro;
+                        document.getElementById("cidadeInput").value = `${data.localidade} - ${data.uf}`;
+                        document.getElementById("numeroInput").focus();
+                    } else {
+                        LPV.toast("CEP não encontrado.", "erro");
+                    }
+                })
+                .catch(() => LPV.toast("Erro ao buscar o CEP. Verifique sua conexão.", "erro"));
+        }
+
+        // Histórico de pedidos salvo no banco.
+        async function carregarPedidos() {
+            const container = document.getElementById("listaHistoricoPedidos");
+            try {
+                const pedidos = await LPV.chamar("/orders");
+                document.getElementById("statDoacoes").textContent = pedidos.length;
+
+                if (pedidos.length === 0) {
+                    container.innerHTML = `<div class="lpv-vazio"><strong>Nenhum pedido ainda</strong>
+                        Seus pedidos aparecem aqui. <a href="Catalogo.html" style="color:#8c533e">Ver catálogo</a></div>`;
+                    return;
+                }
+
+                container.innerHTML = pedidos.map(p => {
+                    const capa = p.items[0] ? p.items[0].image_url : "";
+                    const itens = p.items.map(i => `${i.quantity}x ${i.title}`).join(", ");
+                    return `
+                    <div class="pedido-card">
+                        <img src="${LPV.esc(LPV.urlImagem(capa, CAPA_PADRAO))}" onerror="this.src='${CAPA_PADRAO}'" alt="Capa do livro">
+                        <div class="pedido-info">
+                            <div class="pedido-protocolo">Pedido #${Number(p.id)} · ${new Date(p.created_at).toLocaleDateString("pt-BR")}</div>
+                            <div class="pedido-itens">${LPV.esc(itens)}</div>
+                            <div class="pedido-detalhes">Pagamento: <strong>${LPV.esc(p.payment_method)}</strong> | Entrega: ${LPV.esc(p.address)}</div>
+                        </div>
+                        <div class="pedido-total">
+                            <strong>${LPV.moeda(p.total)}</strong>
+                            <span class="pedido-status">${LPV.esc(p.status)}</span>
+                        </div>
+                    </div>`;
+                }).join("");
+            } catch (erro) {
+                container.innerHTML = `<p style="color:#666">Não foi possível carregar os pedidos (${LPV.esc(erro.message)}).</p>`;
+            }
+        }
+
+        // Anúncios do Comprar & Trocar feitos por este usuário (e os números do cartão lateral).
+        async function carregarMeusAnuncios() {
+            const grade = document.getElementById("meusAnuncios");
+            try {
+                const meuId = Number(localStorage.getItem("usuarioId"));
+                const meus = (await LPV.chamar("/book_listings")).filter(a => a.seller_id === meuId);
+                document.getElementById("statAnuncios").textContent = meus.length;
+                document.getElementById("statTrocas").textContent = meus.filter(a => a.status === "Indisponivel").length;
+
+                if (meus.length === 0) {
+                    grade.innerHTML = `<div class="lpv-vazio" style="width:100%"><strong>Você ainda não anunciou livros</strong>
+                        <a href="ComprarTrocar.html" style="color:#8c533e">Anunciar no Comprar & Trocar</a></div>`;
+                    return;
+                }
+                const cores = { Troca: "#e6f4ea;color:#137333", Venda: "#fdecea;color:#b3261e", "Doação": "#e8f0fe;color:#1a56b8" };
+                grade.innerHTML = meus.map(a => `
+                    <div class="mini-book-card" style="border: 1px solid #e0d7cd; padding: 10px; border-radius: 8px; width: 150px; text-align: center; background:#fff;">
+                        <span style="font-size: 0.75rem; background: ${cores[a.modality] || "#eee"}; padding: 2px 8px; border-radius: 10px; font-weight:600;">${LPV.esc(a.modality)}</span>
+                        <img src="${LPV.esc(LPV.urlImagem(a.image_url, CAPA_PADRAO))}" onerror="this.src='${CAPA_PADRAO}'" alt="${LPV.esc(a.title)}" style="width: 100%; height: 110px; object-fit: cover; margin: 8px 0; border-radius: 4px;">
+                        <h4 style="font-size: 0.85rem; margin-bottom: 4px;">${LPV.esc(a.title)}</h4>
+                        <small style="color:#6e655f">${LPV.esc(a.status === "Indisponivel" ? "Concluído" : a.status === "Em Negociacao" ? "Em negociação" : "Disponível")}</small>
+                    </div>`).join("");
+            } catch (erro) {
+                grade.innerHTML = `<p style="color:#666">Não foi possível carregar seus anúncios.</p>`;
+            }
+        }
+
+        // Diminui a foto escolhida (256 px, JPEG) e salva no banco na hora.
+        function uploadFotoPerfil(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            if (!file.type.startsWith("image/")) {
+                LPV.toast("Escolha um arquivo de imagem.", "erro");
+                return;
+            }
+
+            const img = new Image();
+            img.onload = async function () {
+                const lado = 256;
+                const canvas = document.createElement("canvas");
+                canvas.width = lado;
+                canvas.height = lado;
+                const menor = Math.min(img.width, img.height);
+                canvas.getContext("2d").drawImage(img, (img.width - menor) / 2, (img.height - menor) / 2, menor, menor, 0, 0, lado, lado);
+                const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+                URL.revokeObjectURL(img.src);
+
+                try {
+                    const atualizado = await LPV.chamar(`/users/${perfil.id}`, { method: "PATCH", corpo: { user: { avatar_url: dataUrl } } });
+                    LPV.salvarSessao(atualizado);
+                    document.getElementById("userAvatar").src = dataUrl;
+                    LPV.toast("Foto de perfil atualizada!", "sucesso");
+                } catch (erro) {
+                    LPV.toast("Não foi possível salvar a foto: " + erro.message, "erro");
+                }
+            };
+            img.onerror = () => LPV.toast("Não foi possível ler esta imagem.", "erro");
+            img.src = URL.createObjectURL(file);
+        }
+
+        // Calcula a idade pela data de nascimento e mostra o selo de maior/menor de idade.
+        function verificarMaioridade() {
+            const dataNasc = document.getElementById("nascimentoInput").value;
+            const badgeIdade = document.getElementById("statusIdade");
+
+            if (!dataNasc) {
+                badgeIdade.textContent = "Data de nascimento não informada";
+                badgeIdade.style.background = "#fce8e6";
+                badgeIdade.style.color = "#c5221f";
+                return;
+            }
+
+            const hoje = new Date();
+            const nascimento = new Date(dataNasc);
+            let idade = hoje.getFullYear() - nascimento.getFullYear();
+            const m = hoje.getMonth() - nascimento.getMonth();
+            if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) idade--;
+
+            if (idade >= 18) {
+                badgeIdade.textContent = `Maior de idade (${idade} anos)`;
+                badgeIdade.style.background = "#e6f4ea";
+                badgeIdade.style.color = "#137333";
+            } else {
+                badgeIdade.textContent = `Menor de idade (${idade} anos)`;
+                badgeIdade.style.background = "#fef7e0";
+                badgeIdade.style.color = "#b06000";
+            }
+        }
+
+        document.getElementById("nascimentoInput").addEventListener("change", verificarMaioridade);
+        ["telefoneInput", "cpfInput", "cepInput"].forEach(id =>
+            document.getElementById(id).addEventListener("input", function () { this.value = this.value.replace(/\D/g, ""); }));
+
+        // Salva tudo na API (PATCH /users/:id). Endereço, CPF e telefone ficam criptografados no banco.
+        async function salvarPerfil(event) {
+            event.preventDefault();
+            if (!perfil) return;
+
+            const valor = id => document.getElementById(id).value.trim();
+            const novaSenha = document.getElementById("novaSenhaInput").value;
+            const confirma = document.getElementById("confirmaNovaSenhaInput").value;
+            const senhaAtual = document.getElementById("senhaAtualInput").value;
+            const emailNovo = valor("emailInput");
+
+            if (novaSenha && novaSenha !== confirma) {
+                LPV.toast("A nova senha e a confirmação não coincidem.", "erro");
+                return;
+            }
+            if (novaSenha && !(novaSenha.length >= 8 && /[A-Z]/.test(novaSenha) && /[0-9]/.test(novaSenha) && /[^A-Za-z0-9\s]/.test(novaSenha))) {
+                LPV.toast("A nova senha precisa ter 8+ caracteres, 1 letra maiúscula, 1 número e 1 caractere especial.", "erro", 6000);
+                return;
+            }
+            const mudandoAcesso = novaSenha || emailNovo.toLowerCase() !== String(perfil.email).toLowerCase();
+            if (mudandoAcesso && !senhaAtual) {
+                LPV.toast("Para trocar o e-mail ou a senha, digite sua senha atual.", "erro");
+                document.getElementById("senhaAtualInput").focus();
+                return;
+            }
+
+            const user = {
+                username: valor("nomeInput"),
+                email: emailNovo,
+                telefone: valor("telefoneInput"),
+                nascimento: valor("nascimentoInput"),
+                cpf: valor("cpfInput"),
+                cep: valor("cepInput"),
+                rua: valor("ruaInput"),
+                numero: valor("numeroInput"),
+                bairro: valor("bairroInput"),
+                cidade: valor("cidadeInput"),
+                pagamento_favorito: document.getElementById("pagamentoSelect").value
+            };
+            if (novaSenha) {
+                user.password = novaSenha;
+                user.password_confirmation = confirma;
+            }
+            if (mudandoAcesso) user.current_password = senhaAtual;
+
+            const btnSalvar = document.getElementById("btnSalvarPerfil");
+            btnSalvar.disabled = true;
+            btnSalvar.innerText = "Salvando...";
+
+            try {
+                const atualizado = await LPV.chamar(`/users/${perfil.id}`, { method: "PATCH", corpo: { user } });
+                perfil = atualizado;
+                LPV.salvarSessao(atualizado, atualizado.token); // token novo quando a senha muda
+                preencherFormulario(atualizado);
+                ["senhaAtualInput", "novaSenhaInput", "confirmaNovaSenhaInput"].forEach(id => { document.getElementById(id).value = ""; });
+                LPV.toast("Perfil atualizado com sucesso!", "sucesso");
+            } catch (erro) {
+                if (erro.status === 401) {
+                    LPV.toastNaProximaPagina("Sua sessão expirou. Faça login novamente.", "info");
+                    window.location.href = "Login.html";
+                    return;
+                }
+                LPV.toast("Não foi possível salvar: " + erro.message, "erro", 6000);
+            } finally {
+                btnSalvar.disabled = false;
+                btnSalvar.innerText = "Salvar Alterações";
+            }
+        }
+    </script>
+</body>
+
+</html>

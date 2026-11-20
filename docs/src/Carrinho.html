@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho de Compras - Livros pra Vida</title>
+
+    <link rel="icon" type="image/png" href="../imagens/icone.png">
+    
+    <link rel="stylesheet" href="../css/StyleHome.css">
+    <link rel="stylesheet" href="../css/StyleCarrinho.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/tema.css">
+    <script src="../js/lpv.js"></script>
+</head>
+
+<body>
+
+    <header class="header-carrinho">
+        <a href="../index.html" class="brand-logo">
+            <img src="../imagens/icone.png" alt="Logo Livros pra Vida">
+            <span>Livros pra Vida</span>
+        </a>
+        <nav class="nav-links">
+            <a href="../index.html">Início</a>
+            <a href="Catalogo.html">Catálogo</a>
+            <a href="ComprarTrocar.html">Comprar & Trocar</a>
+            <a href="Novidades.html">Novidades</a>
+            <a href="Chat.html">Chat & Comunidade</a>
+            <a href="SobreNos.html">Sobre Nós</a>
+        </nav>
+    </header>
+
+    <main class="carrinho-main">
+        <h2 class="carrinho-titulo">Meu Carrinho de Compras</h2>
+
+        <div id="listaCarrinho" aria-live="polite">
+            <div class="lpv-esqueleto" style="height: 86px; margin: 12px 0;"></div>
+            <div class="lpv-esqueleto" style="height: 86px; margin: 12px 0;"></div>
+        </div>
+
+        <div id="blocoEnderecoCarrinho" class="carrinho-bloco">
+            <h4>Endereço de Entrega</h4>
+            <p id="textoEnderecoCarrinho">Carregando endereço...</p>
+            <a href="MeuPerfil.html" class="carrinho-link">Atualizar endereço no perfil</a>
+        </div>
+
+        <div class="carrinho-bloco">
+            <h4>Forma de Pagamento</h4>
+            <div class="carrinho-pagamentos" id="opcoesPagamento">
+                <label><input type="radio" name="pagamento" value="Pix" checked> Pix</label>
+                <label><input type="radio" name="pagamento" value="Cartão de Crédito"> Cartão de Crédito</label>
+                <label><input type="radio" name="pagamento" value="Cartão de Débito"> Cartão de Débito</label>
+                <label><input type="radio" name="pagamento" value="Boleto"> Boleto</label>
+            </div>
+        </div>
+
+        <div class="carrinho-resumo">
+            <div><span>Subtotal</span><span id="valorSubtotal">R$ 0,00</span></div>
+            <div><span>Frete</span><span id="valorFrete">R$ 0,00</span></div>
+            <div class="resumo-total">
+                <span class="label-total">Total a pagar:</span>
+                <span id="valorTotal" class="valor-total">R$ 0,00</span>
+            </div>
+        </div>
+
+        <div class="carrinho-acoes">
+            <a href="Catalogo.html" class="btn-continuar">Continuar Comprando</a>
+            <button onclick="finalizarCompra()" class="btn-pagamento" id="btnFinalizar">Finalizar Pedido</button>
+        </div>
+        <p class="carrinho-seguranca">🔒 Carrinho, pedidos e endereço ficam salvos na sua conta. O endereço é gravado criptografado.</p>
+    </main>
+
+    <script>
+        const CAPA_PADRAO = "https://covers.openlibrary.org/b/id/12645114-L.jpg";
+        let perfil = null;
+        let resumoAtual = null;
+
+        // Ao abrir: exige login, carrega o carrinho e o endereço salvos no banco.
+        document.addEventListener("DOMContentLoaded", async function () {
+            if (!LPV.logado()) {
+                LPV.toastNaProximaPagina("Entre na sua conta para ver o seu carrinho.", "info");
+                window.location.href = "Login.html";
+                return;
+            }
+
+            try {
+                const [carrinho, eu] = await Promise.all([LPV.carrinho.carregar(), LPV.chamar("/users/me")]);
+                perfil = eu;
+                const marcado = document.querySelector(`input[name="pagamento"][value="${CSS.escape(eu.pagamento_favorito || "Pix")}"]`);
+                if (marcado) marcado.checked = true;
+                desenharEndereco();
+                desenharCarrinho(carrinho);
+            } catch (erro) {
+                if (erro.status === 401) {
+                    LPV.toastNaProximaPagina("Sua sessão expirou. Entre novamente.", "info");
+                    window.location.href = "Login.html";
+                    return;
+                }
+                document.getElementById("listaCarrinho").innerHTML =
+                    `<div class="lpv-vazio"><strong>Não foi possível carregar o carrinho</strong>${LPV.esc(erro.message)}<br><br>
+                     <button class="btn-pagamento" onclick="location.reload()">Tentar de novo</button></div>`;
+            }
+        });
+
+        // Mostra o endereço de entrega salvo no perfil.
+        function desenharEndereco() {
+            const txt = document.getElementById("textoEnderecoCarrinho");
+            const completo = perfil && perfil.cep && perfil.rua && perfil.bairro && perfil.cidade;
+            if (completo) {
+                txt.innerHTML = `<strong>${LPV.esc(`${perfil.rua}, nº ${perfil.numero || "S/N"} - ${perfil.bairro}, ${perfil.cidade} (CEP: ${perfil.cep})`)}</strong>`;
+            } else {
+                txt.innerHTML = `Você ainda não cadastrou um endereço completo. <a href="MeuPerfil.html" class="carrinho-link"><strong>Cadastrar agora</strong></a>`;
+            }
+        }
+
+        // Desenha os itens e os totais (valores calculados pelo servidor).
+        function desenharCarrinho(resumo) {
+            resumoAtual = resumo;
+            const lista = document.getElementById("listaCarrinho");
+
+            document.getElementById("valorSubtotal").textContent = LPV.moeda(resumo.subtotal);
+            document.getElementById("valorFrete").textContent = LPV.moeda(resumo.shipping);
+            document.getElementById("valorTotal").textContent = LPV.moeda(resumo.total);
+            document.getElementById("btnFinalizar").disabled = resumo.items.length === 0;
+
+            if (resumo.items.length === 0) {
+                lista.innerHTML = `<div class="lpv-vazio"><strong>Seu carrinho está vazio</strong>
+                    Que tal dar uma olhada no <a href="Catalogo.html" class="carrinho-link">catálogo</a>?</div>`;
+                return;
+            }
+
+            lista.innerHTML = resumo.items.map(item => `
+                <div class="carrinho-item">
+                    <img src="${LPV.esc(LPV.urlImagem(item.image_url, CAPA_PADRAO))}" onerror="this.src='${CAPA_PADRAO}'" alt="Capa de ${LPV.esc(item.title)}">
+                    <div class="carrinho-item-info">
+                        <h4>${LPV.esc(item.title)}</h4>
+                        <small>${LPV.esc(item.author_name)}</small>
+                        <span>${LPV.moeda(item.unit_price)} un.</span>
+                    </div>
+                    <div class="carrinho-qtd" role="group" aria-label="Quantidade">
+                        <button onclick="alterarQuantidade(${Number(item.id)}, ${item.quantity - 1})" aria-label="Diminuir">−</button>
+                        <span>${Number(item.quantity)}</span>
+                        <button onclick="alterarQuantidade(${Number(item.id)}, ${item.quantity + 1})" aria-label="Aumentar" ${item.quantity >= 20 ? "disabled" : ""}>+</button>
+                    </div>
+                    <div class="carrinho-item-total">
+                        <strong>${LPV.moeda(item.subtotal)}</strong>
+                        <button onclick="removerItem(${Number(item.id)})" class="carrinho-remover">Remover</button>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        // Muda a quantidade no banco (0 = remover).
+        async function alterarQuantidade(itemId, quantidade) {
+            try {
+                desenharCarrinho(quantidade <= 0 ? await LPV.carrinho.remover(itemId) : await LPV.carrinho.alterar(itemId, quantidade));
+            } catch (erro) {
+                LPV.toast(erro.message, "erro");
+            }
+        }
+
+        async function removerItem(itemId) {
+            try {
+                desenharCarrinho(await LPV.carrinho.remover(itemId));
+                LPV.toast("Item removido do carrinho.");
+            } catch (erro) {
+                LPV.toast(erro.message, "erro");
+            }
+        }
+
+        // Fecha o pedido no servidor: ele confere o endereço, recalcula os preços e esvazia o carrinho.
+        async function finalizarCompra() {
+            if (!perfil || !(perfil.cep && perfil.rua && perfil.bairro && perfil.cidade)) {
+                LPV.toastNaProximaPagina("Preencha seu endereço de entrega antes de finalizar o pedido.", "info");
+                window.location.href = "MeuPerfil.html";
+                return;
+            }
+
+            const botao = document.getElementById("btnFinalizar");
+            const pagamento = document.querySelector('input[name="pagamento"]:checked').value;
+            botao.disabled = true;
+            botao.textContent = "Finalizando...";
+
+            try {
+                const pedido = await LPV.chamar("/orders", { method: "POST", corpo: { payment_method: pagamento } });
+                LPV.carrinho.carregar().catch(() => {});
+                localStorage.setItem("carrinhoQtd", 0);
+                LPV.toastNaProximaPagina(`Pedido #${pedido.id} realizado com sucesso! Total: ${LPV.moeda(pedido.total)}`, "sucesso");
+                window.location.href = "MeuPerfil.html#pedidos";
+            } catch (erro) {
+                LPV.toast(erro.message, "erro", 6000);
+                botao.disabled = false;
+                botao.textContent = "Finalizar Pedido";
+            }
+        }
+    </script>
+</body>
+
+</html>
