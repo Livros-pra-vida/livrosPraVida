@@ -46,10 +46,15 @@
     </header>
 
     <main class="container">
-        <h1>Novidades, Lançamentos & Mangás</h1>
-        <p style="margin-bottom: 25px; color: #666;">Fique por dentro das principais notícias do mercado literário e otaku com matérias reais dos maiores portais especializados.</p>
+        <div class="novidades-topo">
+            <div>
+                <h1>Novidades, Lançamentos & Mangás</h1>
+                <p style="color: #666;">Notícias do mercado literário e otaku selecionadas pela equipe do Livros pra Vida.</p>
+            </div>
+            <!-- Só aparece para administradores (a API também confere) -->
+            <button type="button" id="btnPublicar" class="btn-publicar" style="display:none" onclick="abrirFormulario()">+ Publicar novidade</button>
+        </div>
 
-        <!-- Filtros Rápidos / Abas de Notícias -->
         <div class="novidades-tabs">
             <button class="tab-novidade active" onclick="filtrarNoticias('todos', event)">Todos</button>
             <button class="tab-novidade" onclick="filtrarNoticias('livros', event)">Livros & Prêmios</button>
@@ -57,179 +62,274 @@
             <button class="tab-novidade" onclick="filtrarNoticias('adaptacoes', event)">Adaptações (Filmes/Séries)</button>
         </div>
 
-        <!-- LAYOUT DUPLO: COLUNA PRINCIPAL DE NOTÍCIAS + CALENDÁRIO LATERAL -->
         <div class="layout-novidades-principal">
-            
-            <!-- COLUNA DAS MATÉRIAS -->
             <div class="coluna-noticias">
-                
-                <!-- 1. BANNER DE DESTAQUE DA SEMANA -->
-                <article class="banner-destaque item-novidade" data-categoria="mangas">
-                    <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&auto=format&fit=crop&q=80" alt="Destaque Hunter x Hunter">
-                    <div class="banner-conteudo">
-                        <span class="selo-destaque">Destaque da Semana</span>
-                        <span class="tag-categoria">Retorno de Hiato</span>
-                        <h2 style="font-size: 1.3rem; color: #2d251e;">Hunter x Hunter: Shonen Jump traz atualizações oficiais sobre a obra de Togashi</h2>
-                        <p style="font-size: 0.9rem; color: #555;">JBox - Cultura Pop Japonesa</p>
-                        <span class="descricao-noticia">Acompanhe os anúncios detalhados sobre o andamento dos novos capítulos, cronograma de publicação e o forte impacto do retorno do mangá no mercado internacional e brasileiro.</span>
-                        <a href="Chat.html" class="badge-comunidade">42 membros conversando sobre isso no Chat</a>
-                        <div style="margin-top: 10px;">
-                            <a href="https://www.jbox.com.br/?s=Hunter+x+Hunter" target="_blank" class="btn-externo">Ler Matéria Completa</a>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- LISTA DE OUTRAS MATÉRIAS -->
-                <div class="novidades-grid">
-                    <!-- CATEGORIA: LIVROS -->
-                    <article class="item-novidade" data-categoria="livros">
-                        <span class="tag-categoria">Mercado Editorial</span>
-                        <img src="../imagens/montanha-magica.jpg" alt="Prêmio Jabuti">
-                        <div class="info">
-                            <h3>Prêmio Jabuti divulga novidades e cronograma da edição</h3>
-                            <p>PublishNews</p>
-                            <span class="descricao-noticia">A principal premiação da literatura brasileira traz atualizações em suas categorias e prazos para inscrições de editoras e autores independentes.</span>
-                            <a href="Chat.html" class="badge-comunidade">18 comentários no Chat</a>
-                            <strong style="color: #8c533e; font-size: 0.9rem; display: block; margin-top: 4px;">Portal PublishNews</strong>
-                        </div>
-                        <a href="https://www.publishnews.com.br/busca?q=Pr%C3%AAmio+Jabuti" target="_blank" class="btn-externo">Ler Matéria Completa</a>
-                    </article>
-
-                    <!-- CATEGORIA: ADAPTAÇÕES -->
-                    <article class="item-novidade" data-categoria="adaptacoes">
-                        <span class="tag-categoria">Cinema & Literatura</span>
-                        <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400&auto=format&fit=crop&q=60" alt="Cinema e Telonas">
-                        <div class="info">
-                            <h3>Grandes sucessos literários cotados para adaptação nas telas</h3>
-                            <p>Omelete</p>
-                            <span class="descricao-noticia">Confira os romances e livros de fantasia mais comentados do momento que fecharam contratos para ganhar versões em formato de filme ou série de streaming.</span>
-                            <strong style="color: #8c533e; font-size: 0.9rem;">Portal Omelete</strong>
-                        </div>
-                        <a href="https://www.omelete.com.br/busca/?q=livros+adaptados" target="_blank" class="btn-externo">Ler Matéria Completa</a>
-                    </article>
-
-                    <!-- CATEGORIA: LIVROS -->
-                    <article class="item-novidade" data-categoria="livros">
-                        <span class="tag-categoria">Feiras e Eventos</span>
-                        <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400&auto=format&fit=crop&q=60" alt="Feira de Livros">
-                        <div class="info">
-                            <h3>Balanço e impacto das Bienais do Livro no incentivo à leitura</h3>
-                            <p>PublishNews</p>
-                            <span class="descricao-noticia">Uma análise aprofundada sobre como os grandes eventos literários presenciais impulsionam o consumo de livros físicos e aproxima autores do público jovem.</span>
-                            <strong style="color: #8c533e; font-size: 0.9rem;">Portal PublishNews</strong>
-                        </div>
-                        <a href="https://www.publishnews.com.br/busca?q=Bienal+do+Livro" target="_blank" class="btn-externo">Ler Matéria Completa</a>
-                    </article>
+                <div id="bannerDestaque"></div>
+                <div class="novidades-grid" id="gradeNoticias">
+                    <div class="lpv-esqueleto" style="height: 320px;"></div>
+                    <div class="lpv-esqueleto" style="height: 320px;"></div>
                 </div>
             </div>
 
-            <!-- 2 & 3. COLUNA LATERAL: PRÓXIMOS LANÇAMENTOS & WIDGETS -->
             <aside class="sidebar-lancamentos">
                 <h3>Próximos Lançamentos</h3>
-                
-                <div class="item-calendario">
-                    <div class="data-box">
-                        <span class="dia">12</span>
-                        <span class="mes">Set</span>
-                    </div>
-                    <div class="info-calendario">
-                        <h4>Box Edição Especial O Hobbit</h4>
-                        <p>Editora HarperCollins • Capa Dura</p>
-                    </div>
-                </div>
-
-                <div class="item-calendario">
-                    <div class="data-box">
-                        <span class="dia">18</span>
-                        <span class="mes">Set</span>
-                    </div>
-                    <div class="info-calendario">
-                        <h4>Mangá Jujutsu Kaisen Vol. 28</h4>
-                        <p>Panini Mangás • Lançamento Oficial</p>
-                    </div>
-                </div>
-
-                <div class="item-calendario">
-                    <div class="data-box">
-                        <span class="dia">25</span>
-                        <span class="mes">Set</span>
-                    </div>
-                    <div class="info-calendario">
-                        <h4>Novo Romance de Fantasia Nacional</h4>
-                        <p>Selo Independente • Pré-venda</p>
-                    </div>
-                </div>
+                <div id="listaLancamentos"><div class="lpv-esqueleto" style="height: 60px;"></div></div>
+                <button type="button" id="btnNovoLancamento" class="btn-lancamento" style="display:none" onclick="abrirFormulario(null, 'lancamento')">+ Adicionar lançamento</button>
             </aside>
-
         </div>
     </main>
 
+    <!-- Formulário de publicação (somente administrador) -->
+    <div id="modalNoticia" class="modal-noticia" style="display:none" role="dialog" aria-modal="true" aria-labelledby="tituloModalNoticia">
+        <form id="formNoticia" class="modal-caixa" onsubmit="salvarNoticia(event)">
+            <button type="button" class="modal-fechar" onclick="fecharFormulario()" aria-label="Fechar">✕</button>
+            <h3 id="tituloModalNoticia">Publicar novidade</h3>
+
+            <div class="campo-linha">
+                <label>Tipo
+                    <select id="nKind" onchange="ajustarTipo()">
+                        <option value="noticia">Notícia</option>
+                        <option value="lancamento">Próximo lançamento</option>
+                    </select>
+                </label>
+                <label>Categoria
+                    <select id="nCategory">
+                        <option value="livros">Livros & Prêmios</option>
+                        <option value="mangas">Mangás & Hiatos</option>
+                        <option value="adaptacoes">Adaptações</option>
+                    </select>
+                </label>
+            </div>
+            <label>Título <input id="nTitle" required maxlength="200" placeholder="Ex: Prêmio Jabuti anuncia finalistas"></label>
+            <label><span id="rotuloResumo">Resumo</span> <textarea id="nSummary" rows="3" maxlength="1000" placeholder="Um parágrafo curto sobre a notícia"></textarea></label>
+            <label class="so-lancamento">Data do lançamento <input id="nReleaseDate" type="date"></label>
+            <div class="so-noticia">
+                <div class="campo-linha">
+                    <label>Fonte <input id="nSourceName" maxlength="120" placeholder="Ex: Portal PublishNews"></label>
+                    <label>Link da matéria <input id="nSourceUrl" type="url" maxlength="500" placeholder="https://..."></label>
+                </div>
+                <label>Imagem (link https) <input id="nImageUrl" type="url" placeholder="https://..."></label>
+                <label class="caixa-check"><input id="nFeatured" type="checkbox"> Destaque da semana (substitui o destaque atual)</label>
+            </div>
+            <p id="nErro" class="erro-form" role="alert"></p>
+            <button type="submit" class="btn-publicar" id="btnSalvarNoticia">Publicar</button>
+        </form>
+    </div>
+
     <script>
-        // Diz se há um usuário logado.
-        function estaLogado() {
-            return !!localStorage.getItem("usuario");
+        const CATEGORIAS = { livros: "Livros & Prêmios", mangas: "Mangás & Hiatos", adaptacoes: "Adaptações" };
+        const IMAGEM_PADRAO = "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&auto=format&fit=crop&q=60";
+        const MESES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+        let noticias = [];
+        let lancamentos = [];
+        let categoriaAtual = "todos";
+        let editandoId = null;
+
+        function ehAdmin() {
+            return LPV.logado() && localStorage.getItem("isAdmin") === "true";
         }
 
-        // Ao abrir a página: ajusta o cabeçalho e o contador do carrinho.
         document.addEventListener("DOMContentLoaded", function () {
             atualizarCabecalhoAuth();
-            atualizarContadorCarrinho();
+            LPV.carrinho.pintarContador();
+            if (ehAdmin()) {
+                document.getElementById("btnPublicar").style.display = "inline-block";
+                document.getElementById("btnNovoLancamento").style.display = "block";
+            }
+            carregarNovidades();
         });
 
-        // Troca os links do topo conforme o usuário esteja logado ou não.
-        function atualizarCabecalhoAuth() {
-            const areaAuth = document.getElementById("areaAuthHeader");
-            const fotoSalva = localStorage.getItem("usuarioFoto") || "../imagens/perfil.jpg";
-            if (!areaAuth) return;
-
-            if (estaLogado()) {
-                areaAuth.innerHTML = `
-                    <a href="Estantes.html" style="text-decoration: none; color: #8c533e; font-size: 0.85rem; font-weight: 600;">Minhas Estantes</a>
-                    <a href="#" onclick="realizarLogout(event)" style="text-decoration: none; color: #6e655f; font-size: 0.85rem; font-weight: 500;">Sair</a>
-                    <a href="MeuPerfil.html" title="Meu Perfil">
-                        <img src="${fotoSalva}" onerror="this.src='../imagens/perfil.jpg'" alt="Perfil" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid #8c533e;">
-                    </a>
-                `;
-            } else {
-                areaAuth.innerHTML = `
-                    <a href="Login.html" style="text-decoration: none; color: #8c533e; font-size: 0.85rem; font-weight: 600; padding: 4px 8px;">Entrar</a>
-                    <a href="Cadastro.html" style="text-decoration: none; background-color: #8c533e; color: #fff; padding: 5px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">Cadastrar</a>
-                `;
+        // Busca as notícias e os lançamentos publicados pelos administradores (GET /news_posts).
+        async function carregarNovidades() {
+            try {
+                const dados = await LPV.chamar("/news_posts");
+                noticias = dados.noticias;
+                lancamentos = dados.lancamentos;
+                desenharNoticias();
+                desenharLancamentos();
+            } catch (erro) {
+                document.getElementById("gradeNoticias").innerHTML =
+                    `<div class="lpv-vazio" style="grid-column: 1/-1;"><strong>Não foi possível carregar as novidades</strong>
+                     ${LPV.esc(erro.message)}<br><br><button class="btn-externo" onclick="carregarNovidades()">Tentar de novo</button></div>`;
+                document.getElementById("listaLancamentos").innerHTML = "";
             }
         }
 
-        // Mostra no ícone do carrinho a quantidade de itens.
-        function atualizarContadorCarrinho() {
-            // A quantidade vem do carrinho salvo no banco (js/lpv.js guarda uma cópia do número).
-            LPV.carrinho.pintarContador();
+        // Botões de editar/apagar (só para administrador).
+        function botoesAdmin(n) {
+            if (!ehAdmin()) return "";
+            const autor = n.published_by ? `por ${LPV.esc(n.published_by.name)}` : "conteúdo original";
+            return `<div class="admin-acoes">
+                        <small>${autor}</small>
+                        <button type="button" onclick="abrirFormulario(${Number(n.id)})">Editar</button>
+                        <button type="button" class="perigo" onclick="apagarNoticia(${Number(n.id)})">Apagar</button>
+                    </div>`;
         }
 
-        // Encerra a sessão e volta para o login.
-        function realizarLogout(e) {
-            if (e) e.preventDefault();
-            localStorage.removeItem("usuario");
-            localStorage.removeItem("token");
-            localStorage.removeItem("logado");
-            localStorage.removeItem("usuarioId");
-            localStorage.removeItem("usuarioNome");
-            localStorage.removeItem("usuarioEmail");
-            localStorage.removeItem("isAdmin");
-            localStorage.removeItem("usuarioFoto");
-            window.location.href = "../index.html";
+        function linkMateria(n) {
+            return n.source_url
+                ? `<a href="${LPV.esc(n.source_url)}" target="_blank" rel="noopener noreferrer" class="btn-externo">Ler Matéria Completa</a>`
+                : "";
         }
 
-        // Mostra só as notícias da categoria escolhida e destaca o botão ativo.
+        function desenharNoticias() {
+            const visiveis = noticias.filter(n => categoriaAtual === "todos" || n.category === categoriaAtual);
+            const destaque = visiveis.find(n => n.featured);
+            const demais = visiveis.filter(n => n !== destaque);
+
+            document.getElementById("bannerDestaque").innerHTML = destaque ? `
+                <article class="banner-destaque item-novidade">
+                    <img src="${LPV.esc(LPV.urlImagem(destaque.image_url, IMAGEM_PADRAO))}" alt="" onerror="this.src='${IMAGEM_PADRAO}'">
+                    <div class="banner-conteudo">
+                        <span class="selo-destaque">Destaque da Semana</span>
+                        <span class="tag-categoria">${LPV.esc(CATEGORIAS[destaque.category])}</span>
+                        <h2 style="font-size: 1.3rem; color: #2d251e;">${LPV.esc(destaque.title)}</h2>
+                        <p style="font-size: 0.9rem; color: #555;">${LPV.esc(destaque.source_name || "")}</p>
+                        <span class="descricao-noticia">${LPV.esc(destaque.summary || "")}</span>
+                        <a href="Chat.html" class="badge-comunidade">Comente com a comunidade no Chat</a>
+                        <div style="margin-top: 10px;">${linkMateria(destaque)}</div>
+                        ${botoesAdmin(destaque)}
+                    </div>
+                </article>` : "";
+
+            const grade = document.getElementById("gradeNoticias");
+            if (visiveis.length === 0) {
+                grade.innerHTML = `<div class="lpv-vazio" style="grid-column: 1/-1;"><strong>Nenhuma novidade nesta categoria</strong>
+                    ${ehAdmin() ? "Clique em “+ Publicar novidade” para adicionar." : "Volte em breve!"}</div>`;
+                return;
+            }
+            grade.innerHTML = demais.map(n => `
+                <article class="item-novidade" data-categoria="${LPV.esc(n.category)}">
+                    <span class="tag-categoria">${LPV.esc(CATEGORIAS[n.category])}</span>
+                    <img src="${LPV.esc(LPV.urlImagem(n.image_url, IMAGEM_PADRAO))}" alt="" loading="lazy" onerror="this.src='${IMAGEM_PADRAO}'">
+                    <div class="info">
+                        <h3>${LPV.esc(n.title)}</h3>
+                        <p>${LPV.esc(new Date(n.created_at).toLocaleDateString("pt-BR"))}</p>
+                        <span class="descricao-noticia">${LPV.esc(n.summary || "")}</span>
+                        <strong style="color: #8c533e; font-size: 0.9rem;">${LPV.esc(n.source_name || "")}</strong>
+                    </div>
+                    ${linkMateria(n)}
+                    ${botoesAdmin(n)}
+                </article>`).join("");
+        }
+
+        function desenharLancamentos() {
+            const lista = document.getElementById("listaLancamentos");
+            if (lancamentos.length === 0) {
+                lista.innerHTML = '<p style="font-size: 0.85rem; color: #6e655f;">Nenhum lançamento agendado.</p>';
+                return;
+            }
+            lista.innerHTML = lancamentos.map(l => {
+                const [ano, mes, dia] = String(l.release_date).split("-");
+                return `
+                <div class="item-calendario">
+                    <div class="data-box"><span class="dia">${Number(dia)}</span><span class="mes">${MESES[Number(mes) - 1]}</span></div>
+                    <div class="info-calendario">
+                        <h4>${LPV.esc(l.title)}</h4>
+                        <p>${LPV.esc(l.summary || "")}</p>
+                        ${botoesAdmin(l)}
+                    </div>
+                </div>`;
+            }).join("");
+        }
+
         function filtrarNoticias(categoria, evento) {
-            document.querySelectorAll('.tab-novidade').forEach(btn => btn.classList.remove('active'));
-            evento.target.classList.add('active');
+            document.querySelectorAll(".tab-novidade").forEach(btn => btn.classList.remove("active"));
+            evento.target.classList.add("active");
+            categoriaAtual = categoria;
+            desenharNoticias();
+        }
 
-            document.querySelectorAll('.item-novidade').forEach(card => {
-                if (categoria === 'todos' || card.getAttribute('data-categoria') === categoria) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+        // ---------- Publicar / editar / apagar (administrador) ----------
+        function ajustarTipo() {
+            const lancamento = document.getElementById("nKind").value === "lancamento";
+            document.querySelectorAll(".so-noticia").forEach(el => el.style.display = lancamento ? "none" : "flex");
+            document.querySelectorAll(".so-lancamento").forEach(el => el.style.display = lancamento ? "flex" : "none");
+            document.getElementById("nReleaseDate").required = lancamento;
+            document.getElementById("rotuloResumo").textContent = lancamento ? "Detalhes (editora, formato...)" : "Resumo";
+        }
+
+        function abrirFormulario(id = null, tipo = "noticia") {
+            const n = [...noticias, ...lancamentos].find(x => x.id === id);
+            editandoId = n ? n.id : null;
+            const valores = {
+                nKind: n ? n.kind : tipo, nCategory: n ? n.category : "livros", nTitle: n?.title, nSummary: n?.summary,
+                nReleaseDate: n?.release_date, nSourceName: n?.source_name, nSourceUrl: n?.source_url, nImageUrl: n?.image_url
+            };
+            Object.entries(valores).forEach(([campo, valor]) => { document.getElementById(campo).value = valor || ""; });
+            document.getElementById("nFeatured").checked = !!(n && n.featured);
+            document.getElementById("tituloModalNoticia").textContent = n ? "Editar novidade" : "Publicar novidade";
+            document.getElementById("btnSalvarNoticia").textContent = n ? "Salvar alterações" : "Publicar";
+            document.getElementById("nErro").textContent = "";
+            ajustarTipo();
+            document.getElementById("modalNoticia").style.display = "flex";
+            document.getElementById("nTitle").focus();
+        }
+
+        function fecharFormulario() {
+            document.getElementById("modalNoticia").style.display = "none";
+            editandoId = null;
+        }
+
+        async function salvarNoticia(evento) {
+            evento.preventDefault();
+            const valor = id => document.getElementById(id).value.trim();
+            const lancamento = valor("nKind") === "lancamento";
+            const news_post = {
+                kind: valor("nKind"), category: valor("nCategory"), title: valor("nTitle"), summary: valor("nSummary"),
+                release_date: lancamento ? valor("nReleaseDate") : null,
+                source_name: lancamento ? "" : valor("nSourceName"),
+                source_url: lancamento ? "" : valor("nSourceUrl"),
+                image_url: lancamento ? "" : valor("nImageUrl"),
+                featured: !lancamento && document.getElementById("nFeatured").checked
+            };
+            const botao = document.getElementById("btnSalvarNoticia");
+            botao.disabled = true;
+            try {
+                await LPV.chamar(editandoId ? `/news_posts/${editandoId}` : "/news_posts",
+                    { method: editandoId ? "PATCH" : "POST", corpo: { news_post } });
+                LPV.toast(editandoId ? "Novidade atualizada!" : "Novidade publicada para todos!", "sucesso");
+                fecharFormulario();
+                carregarNovidades();
+            } catch (erro) {
+                document.getElementById("nErro").textContent = erro.message;
+            } finally {
+                botao.disabled = false;
+            }
+        }
+
+        async function apagarNoticia(id) {
+            const n = [...noticias, ...lancamentos].find(x => x.id === id);
+            if (!n || !confirm(`Apagar "${n.title}" para todos os usuários?`)) return;
+            try {
+                await LPV.chamar(`/news_posts/${id}`, { method: "DELETE" });
+                LPV.toast("Novidade apagada.", "info");
+                carregarNovidades();
+            } catch (erro) {
+                LPV.toast(erro.message, "erro");
+            }
+        }
+
+        document.addEventListener("keydown", e => { if (e.key === "Escape") fecharFormulario(); });
+
+        // ---------- Cabeçalho ----------
+        function atualizarCabecalhoAuth() {
+            const areaAuth = document.getElementById("areaAuthHeader");
+            if (!areaAuth) return;
+            const foto = LPV.esc(LPV.urlImagem(localStorage.getItem("usuarioFoto"), "../imagens/perfil.jpg"));
+            if (LPV.logado()) {
+                areaAuth.innerHTML = `
+                    ${ehAdmin() ? '<a href="Admin.html" style="text-decoration: none; color: #fff; background: #2d251e; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600;">Painel ADM</a>' : ""}
+                    <a href="Estantes.html" style="text-decoration: none; color: #8c533e; font-size: 0.85rem; font-weight: 600;">Minhas Estantes</a>
+                    <a href="#" onclick="LPV.sair(event)" style="text-decoration: none; color: #6e655f; font-size: 0.85rem; font-weight: 500;">Sair</a>
+                    <a href="MeuPerfil.html" title="Meu Perfil">
+                        <img src="${foto}" onerror="this.src='../imagens/perfil.jpg'" alt="Perfil" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid #8c533e;">
+                    </a>`;
+            } else {
+                areaAuth.innerHTML = `
+                    <a href="Login.html" style="text-decoration: none; color: #8c533e; font-size: 0.85rem; font-weight: 600; padding: 4px 8px;">Entrar</a>
+                    <a href="Cadastro.html" style="text-decoration: none; background-color: #8c533e; color: #fff; padding: 5px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">Cadastrar</a>`;
+            }
         }
     </script>
 </body>

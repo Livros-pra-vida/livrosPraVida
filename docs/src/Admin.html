@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Administrador - Livros pra Vida</title>
+    <link rel="icon" type="image/png" href="../imagens/icone.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/StyleAdmin.css">
+    <link rel="stylesheet" href="../css/tema.css">
+    <script src="../js/lpv.js"></script>
+</head>
+
+<body>
+    <header class="header">
+        <a href="../index.html" class="logo">
+            <img src="../imagens/icone.png" alt="Logo Livros pra Vida">
+            <span>Livros pra Vida <small>· Painel do Administrador</small></span>
+        </a>
+        <nav class="menu">
+            <a href="Catalogo.html">Catálogo</a>
+            <a href="ComprarTrocar.html">Comprar & Trocar</a>
+            <a href="Novidades.html">Novidades</a>
+            <a href="Chat.html">Chat</a>
+            <a href="MeuPerfil.html">Meu Perfil</a>
+            <a href="#" onclick="LPV.sair(event)" class="sair">Sair</a>
+        </nav>
+    </header>
+
+    <main class="painel">
+        <div class="painel-topo">
+            <div>
+                <h1>Painel do Administrador</h1>
+                <p>Tudo o que é feito aqui fica registrado em "Registro de ações".</p>
+            </div>
+            <a href="Novidades.html" class="botao">+ Publicar novidade</a>
+        </div>
+
+        <div class="abas" role="tablist">
+            <button class="aba ativa" data-aba="geral">Visão geral</button>
+            <button class="aba" data-aba="usuarios">Usuários</button>
+            <button class="aba" data-aba="pedidos">Pedidos</button>
+            <button class="aba" data-aba="registro">Registro de ações</button>
+        </div>
+
+        <!-- VISÃO GERAL -->
+        <section id="aba-geral" class="secao ativa">
+            <div class="cartoes" id="cartoesResumo">
+                <div class="lpv-esqueleto" style="height: 96px;"></div>
+                <div class="lpv-esqueleto" style="height: 96px;"></div>
+                <div class="lpv-esqueleto" style="height: 96px;"></div>
+                <div class="lpv-esqueleto" style="height: 96px;"></div>
+            </div>
+            <div class="atalhos">
+                <h3>Atalhos de moderação</h3>
+                <ul>
+                    <li><a href="Novidades.html">Publicar, editar ou apagar novidades e lançamentos</a></li>
+                    <li><a href="Catalogo.html">Adicionar ou remover livros do catálogo da loja</a></li>
+                    <li><a href="ComprarTrocar.html">Excluir anúncios impróprios do Comprar & Trocar</a></li>
+                    <li><a href="Chat.html">Apagar mensagens do chat da comunidade</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- USUÁRIOS -->
+        <section id="aba-usuarios" class="secao">
+            <div class="barra">
+                <input type="search" id="buscaUsuario" placeholder="Buscar por nome ou e-mail..." aria-label="Buscar usuário">
+                <select id="filtroUsuario" aria-label="Filtrar usuários">
+                    <option value="todos">Todos</option>
+                    <option value="admins">Administradores</option>
+                    <option value="suspensos">Suspensos</option>
+                </select>
+            </div>
+            <p class="aviso-lgpd">🔒 CPF, telefone e endereço não aparecem aqui (LGPD).</p>
+            <div class="tabela-wrap">
+                <table>
+                    <thead>
+                        <tr><th>Usuário</th><th>Situação</th><th>Atividade</th><th>Desde</th><th>Ações</th></tr>
+                    </thead>
+                    <tbody id="tabelaUsuarios"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- PEDIDOS -->
+        <section id="aba-pedidos" class="secao">
+            <div class="barra">
+                <select id="filtroPedido" aria-label="Filtrar pedidos">
+                    <option value="">Todos os status</option>
+                    <option>Em separação</option>
+                    <option>Enviado</option>
+                    <option>Entregue</option>
+                    <option>Cancelado</option>
+                </select>
+            </div>
+            <div class="tabela-wrap">
+                <table>
+                    <thead>
+                        <tr><th>Pedido</th><th>Cliente</th><th>Itens</th><th>Total</th><th>Status</th></tr>
+                    </thead>
+                    <tbody id="tabelaPedidos"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- REGISTRO -->
+        <section id="aba-registro" class="secao">
+            <ul class="registro" id="listaRegistro"></ul>
+        </section>
+    </main>
+
+    <script>
+        const STATUS_PEDIDO = ["Em separação", "Enviado", "Entregue", "Cancelado"];
+        let usuarios = [];
+        const meuId = Number(localStorage.getItem("usuarioId"));
+
+        // Só administrador entra. (A API também confere: quem não é admin recebe "proibido".)
+        document.addEventListener("DOMContentLoaded", () => {
+            if (!LPV.logado() || localStorage.getItem("isAdmin") !== "true") {
+                LPV.toastNaProximaPagina("Área exclusiva dos administradores.", "erro");
+                window.location.href = LPV.logado() ? "../index.html" : "Login.html";
+                return;
+            }
+            document.querySelectorAll(".aba").forEach(b => b.addEventListener("click", () => abrirAba(b.dataset.aba)));
+            document.getElementById("buscaUsuario").addEventListener("input", atrasar(carregarUsuarios, 350));
+            document.getElementById("filtroUsuario").addEventListener("change", desenharUsuarios);
+            document.getElementById("filtroPedido").addEventListener("change", carregarPedidos);
+            carregarResumo();
+        });
+
+        function atrasar(funcao, ms) {
+            let t;
+            return () => { clearTimeout(t); t = setTimeout(funcao, ms); };
+        }
+
+        const carregadas = {};
+        function abrirAba(nome) {
+            document.querySelectorAll(".aba").forEach(b => b.classList.toggle("ativa", b.dataset.aba === nome));
+            document.querySelectorAll(".secao").forEach(s => s.classList.toggle("ativa", s.id === `aba-${nome}`));
+            if (nome === "usuarios" && !carregadas.usuarios) carregarUsuarios();
+            if (nome === "pedidos" && !carregadas.pedidos) carregarPedidos();
+            if (nome === "registro") carregarRegistro();
+        }
+
+        function tratarErro(erro, alvo) {
+            if (erro.status === 401 || erro.status === 403) {
+                LPV.toastNaProximaPagina(erro.message, "erro");
+                window.location.href = "Login.html";
+                return;
+            }
+            document.getElementById(alvo).innerHTML = `<tr><td colspan="5" class="vazio">${LPV.esc(erro.message)}</td></tr>`;
+        }
+
+        // ---------- Visão geral ----------
+        async function carregarResumo() {
+            try {
+                const d = await LPV.chamar("/admin/dashboard");
+                const cartoes = [
+                    ["Usuários", d.usuarios, `+${d.novos_usuarios_7_dias} nos últimos 7 dias`],
+                    ["Administradores", d.administradores, `${d.suspensos} conta(s) suspensa(s)`],
+                    ["Anúncios ativos", d.anuncios_ativos, `${d.negociacoes} negociação(ões) no chat`],
+                    ["Pedidos", d.pedidos, `${d.pedidos_em_aberto} em aberto`],
+                    ["Faturamento", LPV.moeda(d.faturamento), "sem pedidos cancelados"],
+                    ["Livros no catálogo", d.livros_catalogo, `${d.novidades} novidade(s) publicada(s)`],
+                    ["Mensagens hoje", d.mensagens_chat_hoje, "no chat da comunidade"]
+                ];
+                document.getElementById("cartoesResumo").innerHTML = cartoes.map(([titulo, valor, extra]) => `
+                    <div class="cartao"><span>${titulo}</span><strong>${LPV.esc(valor)}</strong><small>${LPV.esc(extra)}</small></div>`).join("");
+            } catch (erro) {
+                if (erro.status === 401 || erro.status === 403) return tratarErro(erro);
+                document.getElementById("cartoesResumo").innerHTML = `<div class="lpv-vazio">${LPV.esc(erro.message)}</div>`;
+            }
+        }
+
+        // ---------- Usuários ----------
+        async function carregarUsuarios() {
+            const q = document.getElementById("buscaUsuario").value.trim();
+            try {
+                usuarios = await LPV.chamar(`/admin/users${q ? `?q=${encodeURIComponent(q)}` : ""}`);
+                carregadas.usuarios = true;
+                desenharUsuarios();
+            } catch (erro) {
+                tratarErro(erro, "tabelaUsuarios");
+            }
+        }
+
+        function desenharUsuarios() {
+            const filtro = document.getElementById("filtroUsuario").value;
+            const lista = usuarios.filter(u =>
+                filtro === "admins" ? u.admin : filtro === "suspensos" ? !!u.suspended_at : true);
+            const corpo = document.getElementById("tabelaUsuarios");
+            if (lista.length === 0) {
+                corpo.innerHTML = '<tr><td colspan="5" class="vazio">Nenhum usuário encontrado.</td></tr>';
+                return;
+            }
+            corpo.innerHTML = lista.map(u => {
+                const eu = u.id === meuId;
+                const situacao = u.suspended_at
+                    ? `<span class="selo suspenso" title="${LPV.esc(u.suspended_reason || "")}">Suspenso</span><small>${LPV.esc(u.suspended_reason || "")}</small>`
+                    : u.admin ? '<span class="selo admin">Administrador</span>' : '<span class="selo ativo">Ativo</span>';
+                const acoes = [];
+                if (!eu && !u.admin) {
+                    acoes.push(u.suspended_at
+                        ? `<button onclick="reativar(${u.id})">Reativar</button>`
+                        : `<button class="alerta" onclick="suspender(${u.id})">Suspender</button>`);
+                    if (!u.suspended_at) acoes.push(`<button onclick="tornarAdmin(${u.id}, true)">Tornar admin</button>`);
+                    acoes.push(`<button class="perigo" onclick="excluir(${u.id})">Excluir</button>`);
+                }
+                if (eu) acoes.push('<small>(você)</small>');
+                return `<tr>
+                    <td><strong>${LPV.esc(u.username)}</strong><small>${LPV.esc(u.email)}${u.cidade ? " · " + LPV.esc(u.cidade) : ""}</small></td>
+                    <td>${situacao}</td>
+                    <td><small>${Number(u.anuncios)} anúncio(s) · ${Number(u.pedidos)} pedido(s) · ${Number(u.mensagens)} msg</small></td>
+                    <td><small>${new Date(u.created_at).toLocaleDateString("pt-BR")}</small></td>
+                    <td class="acoes">${acoes.join("")}</td>
+                </tr>`;
+            }).join("");
+        }
+
+        function nome(id) {
+            return (usuarios.find(u => u.id === id) || {}).username || "este usuário";
+        }
+
+        async function acaoUsuario(caminho, opcoes, mensagem) {
+            try {
+                const atualizado = await LPV.chamar(caminho, opcoes);
+                if (atualizado) usuarios = usuarios.map(u => u.id === atualizado.id ? { ...u, ...atualizado } : u);
+                desenharUsuarios();
+                carregarResumo();
+                LPV.toast(mensagem, "sucesso");
+            } catch (erro) {
+                LPV.toast(erro.message, "erro", 5000);
+            }
+        }
+
+        function suspender(id) {
+            const motivo = prompt(`Motivo da suspensão de "${nome(id)}" (a pessoa vai ver este texto):`);
+            if (motivo === null) return;
+            if (!motivo.trim()) return LPV.toast("Informe o motivo da suspensão.", "erro");
+            acaoUsuario(`/admin/users/${id}/suspend`, { method: "POST", corpo: { reason: motivo.trim() } }, `Conta de ${nome(id)} suspensa.`);
+        }
+
+        function reativar(id) {
+            acaoUsuario(`/admin/users/${id}/reactivate`, { method: "POST" }, `Conta de ${nome(id)} reativada.`);
+        }
+
+        function tornarAdmin(id, valor) {
+            if (valor && !confirm(`Tornar "${nome(id)}" administrador?\n\nEle poderá moderar o site, e só ele mesmo poderá tirar o próprio acesso.`)) return;
+            acaoUsuario(`/admin/users/${id}/admin`, { method: "PATCH", corpo: { admin: valor } }, `${nome(id)} agora é administrador.`);
+        }
+
+        async function excluir(id) {
+            if (!confirm(`Excluir a conta de "${nome(id)}"?\n\nAnúncios, mensagens, pedidos e estantes dessa pessoa serão apagados. Isso não pode ser desfeito.`)) return;
+            try {
+                await LPV.chamar(`/users/${id}`, { method: "DELETE" });
+                usuarios = usuarios.filter(u => u.id !== id);
+                desenharUsuarios();
+                carregarResumo();
+                LPV.toast("Conta excluída.", "info");
+            } catch (erro) {
+                LPV.toast(erro.message, "erro");
+            }
+        }
+
+        // ---------- Pedidos ----------
+        async function carregarPedidos() {
+            const status = document.getElementById("filtroPedido").value;
+            const corpo = document.getElementById("tabelaPedidos");
+            try {
+                const pedidos = await LPV.chamar(`/admin/orders${status ? `?status=${encodeURIComponent(status)}` : ""}`);
+                carregadas.pedidos = true;
+                if (pedidos.length === 0) {
+                    corpo.innerHTML = '<tr><td colspan="5" class="vazio">Nenhum pedido.</td></tr>';
+                    return;
+                }
+                corpo.innerHTML = pedidos.map(p => `<tr>
+                    <td><strong>#${Number(p.id)}</strong><small>${new Date(p.created_at).toLocaleString("pt-BR")}</small></td>
+                    <td>${LPV.esc(p.customer.name || "Conta excluída")}<small>${LPV.esc(p.payment_method)}</small></td>
+                    <td><small>${LPV.esc(p.items.map(i => `${i.quantity}x ${i.title}`).join(", "))}</small></td>
+                    <td><strong>${LPV.moeda(p.total)}</strong></td>
+                    <td><select onchange="mudarStatus(${Number(p.id)}, this)" aria-label="Status do pedido ${Number(p.id)}">
+                        ${STATUS_PEDIDO.map(s => `<option ${s === p.status ? "selected" : ""}>${s}</option>`).join("")}
+                    </select></td>
+                </tr>`).join("");
+            } catch (erro) {
+                tratarErro(erro, "tabelaPedidos");
+            }
+        }
+
+        async function mudarStatus(id, select) {
+            const anterior = [...select.options].find(o => o.defaultSelected)?.value;
+            try {
+                await LPV.chamar(`/admin/orders/${id}`, { method: "PATCH", corpo: { status: select.value } });
+                [...select.options].forEach(o => { o.defaultSelected = o.value === select.value; });
+                LPV.toast(`Pedido #${id}: ${select.value}`, "sucesso");
+            } catch (erro) {
+                select.value = anterior;
+                LPV.toast(erro.message, "erro");
+            }
+        }
+
+        // ---------- Registro de ações ----------
+        async function carregarRegistro() {
+            const lista = document.getElementById("listaRegistro");
+            try {
+                const acoes = await LPV.chamar("/admin/actions");
+                lista.innerHTML = acoes.length === 0
+                    ? '<li class="vazio">Nenhuma ação registrada ainda.</li>'
+                    : acoes.map(a => `<li>
+                        <time>${new Date(a.created_at).toLocaleString("pt-BR")}</time>
+                        <span><strong>${LPV.esc(a.admin_name)}</strong> ${LPV.esc(a.action)}
+                        ${a.target_label ? `<em>${LPV.esc(a.target_label)}</em>` : ""}</span>
+                        ${a.details ? `<small>${LPV.esc(a.details)}</small>` : ""}
+                    </li>`).join("");
+            } catch (erro) {
+                lista.innerHTML = `<li class="vazio">${LPV.esc(erro.message)}</li>`;
+            }
+        }
+    </script>
+</body>
+
+</html>

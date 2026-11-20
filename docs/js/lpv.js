@@ -75,8 +75,8 @@
         }
 
         const dados = resposta.status === 204 ? null : await resposta.json().catch(() => null);
-        if (resposta.status === 401 && token()) {
-            // Token vencido (12 h) ou senha trocada em outro lugar: encerra a sessão.
+        if ((resposta.status === 401 && token()) || (dados && dados.suspended)) {
+            // Token vencido (12 h), senha trocada em outro lugar ou conta suspensa por um admin: encerra a sessão.
             limparSessao();
         }
         if (!resposta.ok) {

@@ -66,6 +66,7 @@
                 </div>
             </div>
 
+            <a href="Admin.html" id="linkPainelAdmin" class="btn-painel-adm" style="display: none;">⚙️ Painel do Administrador</a>
             <button class="btn-logout" onclick="LPV.sair()">Encerrar Sessão</button>
         </aside>
 
@@ -254,6 +255,7 @@
             document.getElementById("profileName").textContent = u.username || "Leitor Colaborador";
 
             const badge = document.getElementById("badgePlano");
+            document.getElementById("linkPainelAdmin").style.display = u.admin ? "block" : "none";
             if (u.admin) {
                 badge.textContent = "Administrador";
                 badge.style.background = "#8c533e";

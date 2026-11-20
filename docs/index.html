@@ -70,6 +70,7 @@
                 <a href="src/Cadastro.html" id="cadastrar" class="btn-cadastrar">Cadastrar</a>
 
                 <a href="src/Estantes.html" id="minhasEstantes" style="display: none;">Minhas Estantes</a>
+                <a href="src/Admin.html" id="painelAdm" style="display: none; font-weight: 700; color: #8c533e;">Painel ADM</a>
                 <a href="#" id="sair" onclick="sair()" style="display: none;">Sair</a>
                 <a href="src/MeuPerfil.html" id="meuPerfil" title="Meu Perfil" style="display: none;">
                     <img id="menuAvatar" src="imagens/perfil.jpg" alt="Foto do Perfil" class="avatar-img">
@@ -324,6 +325,8 @@
             document.getElementById("meuPerfil").style.display = "flex";
             document.getElementById("sair").style.display = "inline-block";
             document.getElementById("minhasEstantes").style.display = "inline-block";
+            // Link do painel só para administrador (a API confere de novo em cada ação).
+            if (localStorage.getItem("isAdmin") === "true") document.getElementById("painelAdm").style.display = "inline-block";
 
             const fotoSalva = localStorage.getItem("usuarioFoto") || "imagens/perfil.jpg";
 

@@ -529,3 +529,18 @@ span {
     .pedido-card { grid-template-columns: 50px 1fr; }
     .pedido-total { grid-column: 2; text-align: left; }
 }
+
+.btn-painel-adm {
+    display: block;
+    margin: 14px 0 8px;
+    padding: 10px;
+    border-radius: 8px;
+    background: #2d251e;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.btn-painel-adm:hover { background: #1c1712; }
