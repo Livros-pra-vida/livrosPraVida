@@ -12,11 +12,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
-<<<<<<< HEAD
     <link rel="stylesheet" href="../css/tema.css">
     <script src="../js/lpv.js"></script>
-=======
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
 </head>
 
 <body>
@@ -35,40 +32,25 @@
                 <p>Já tem uma conta? <a href="Login.html">Entrar</a></p>
             </div>
 
-<<<<<<< HEAD
             <p class="aviso-obrigatorio">Campos marcados com <span class="obrigatorio">Obrigatório</span> precisam ser preenchidos.</p>
 
             <form id="formCadastro">
                 <label>
                     <span class="rotulo">Nome de usuário <span class="obrigatorio">Obrigatório</span></span>
-=======
-            <form id="formCadastro">
-                <label>
-                    Nome de usuário
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                     <input type="text" id="username" required placeholder="Digite seu nome de usuário">
                 </label>
 
                 <label>
-<<<<<<< HEAD
                     <span class="rotulo">E-mail <span class="obrigatorio">Obrigatório</span></span>
-=======
-                    E-mail
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                     <input type="email" id="email" required placeholder="seuemail@exemplo.com">
                 </label>
 
                 <label>
-<<<<<<< HEAD
                     <span class="rotulo">Data de Nascimento <span class="opcional">Opcional</span></span>
-=======
-                    Data de Nascimento
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                     <input type="date" id="birthdate">
                 </label>
 
                 <label>
-<<<<<<< HEAD
                     <span class="rotulo">CPF (somente números) <span class="obrigatorio">Obrigatório</span></span>
                     <input type="text" id="cpf" required maxlength="11" inputmode="numeric" placeholder="00000000000">
                 </label>
@@ -78,26 +60,39 @@
                     <input type="tel" id="phone" maxlength="11" inputmode="numeric" placeholder="00000000000">
                 </label>
 
+                <!-- Endereço de entrega (necessário para comprar; também pode ser preenchido depois no perfil) -->
+                <fieldset class="bloco-endereco">
+                    <legend><span class="rotulo">Endereço de entrega <span class="opcional">Opcional</span></span></legend>
+                    <p class="dica-endereco">Precisamos dele para entregar suas compras. Digite o CEP que o resto é preenchido sozinho. 🔒 Gravado criptografado.</p>
+                    <div class="grade-endereco">
+                        <label class="campo-cep">
+                            CEP
+                            <input type="text" id="cep" maxlength="8" inputmode="numeric" autocomplete="postal-code" placeholder="00000000">
+                        </label>
+                        <label class="campo-rua">
+                            Rua / Avenida
+                            <input type="text" id="rua" maxlength="120" autocomplete="address-line1" placeholder="Nome da rua">
+                        </label>
+                        <label class="campo-numero">
+                            Número
+                            <input type="text" id="numero" maxlength="10" placeholder="Ex: 101">
+                        </label>
+                        <label class="campo-bairro">
+                            Bairro
+                            <input type="text" id="bairro" maxlength="120" placeholder="Bairro">
+                        </label>
+                        <label class="campo-cidade">
+                            Cidade / UF
+                            <input type="text" id="cidade" maxlength="120" autocomplete="address-level2" placeholder="Ex: Brasília - DF">
+                        </label>
+                    </div>
+                </fieldset>
+
                 <label>
                     <span class="rotulo">Senha <span class="obrigatorio">Obrigatório</span></span>
                     <div class="password">
                         <input type="password" id="senha" required minlength="8" autocomplete="new-password"
                             aria-describedby="regrasSenha" placeholder="Crie uma senha forte">
-=======
-                    CPF (somente números)
-                    <input type="text" id="cpf" required maxlength="11" placeholder="00000000000">
-                </label>
-
-                <label>
-                    Telefone (com DDD, somente números)
-                    <input type="tel" id="phone" maxlength="11" placeholder="00000000000">
-                </label>
-
-                <label>
-                    Senha
-                    <div class="password">
-                        <input type="password" id="senha" required minlength="8" placeholder="Mínimo 8 caracteres">
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                         <button type="button" onclick="alternarSenha('senha')" aria-label="Mostrar/Ocultar Senha">
                             <svg viewBox="0 0 24 24">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -107,7 +102,6 @@
                     </div>
                 </label>
 
-<<<<<<< HEAD
                 <!-- Regras da senha: cada item fica verde quando é cumprido -->
                 <ul class="regras-senha" id="regrasSenha" aria-live="polite">
                     <li data-regra="tamanho">Pelo menos 8 caracteres</li>
@@ -120,12 +114,6 @@
                     <span class="rotulo">Confirmar senha <span class="obrigatorio">Obrigatório</span></span>
                     <div class="password">
                         <input type="password" id="confirmarSenha" required autocomplete="new-password" placeholder="Repita a senha">
-=======
-                <label>
-                    Confirmar senha
-                    <div class="password">
-                        <input type="password" id="confirmarSenha" required placeholder="Repita a senha">
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                         <button type="button" onclick="alternarSenha('confirmarSenha')" aria-label="Mostrar/Ocultar Senha">
                             <svg viewBox="0 0 24 24">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -137,18 +125,11 @@
 
                 <label class="terms">
                     <input type="checkbox" id="termos" required>
-<<<<<<< HEAD
                     <span class="texto-termos">Li e concordo com os
                     <a href="Termos.html#termos" target="_blank" rel="noopener">Termos de Uso</a>
                     e a
                     <a href="Termos.html#privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.
                     <span class="obrigatorio">Obrigatório</span></span>
-=======
-                    Li e concordo com os
-                    <a href="Termos.html#termos" target="_blank" rel="noopener">Termos de Uso</a>
-                    e a
-                    <a href="Termos.html#privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                 </label>
 
                 <button type="submit" class="register" id="btnSubmit">Concluir</button>
@@ -166,11 +147,6 @@
         </footer>
     </main>
 
-<<<<<<< HEAD
-=======
-    <!-- Biblioteca CryptoJS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
     <script src="../js/validarCPF.js"></script>
 
     <script>
@@ -182,7 +158,6 @@
             input.type = input.type === "password" ? "text" : "password";
         }
 
-<<<<<<< HEAD
         // Regras da senha (as mesmas mostradas na lista abaixo do campo).
         const REGRAS_SENHA = {
             tamanho: s => s.length >= 8,
@@ -206,11 +181,28 @@
             conferirSenha(this.value);
         });
 
-=======
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
         // Permite somente números no campo CPF.
         document.getElementById("cpf").addEventListener("input", function () {
             this.value = this.value.replace(/\D/g, '');
+        });
+
+        // CEP: só números e, com 8 dígitos, busca rua, bairro e cidade na ViaCEP.
+        document.getElementById("cep").addEventListener("input", async function () {
+            this.value = this.value.replace(/\D/g, "");
+            if (this.value.length !== 8) return;
+            try {
+                const dados = await (await fetch(`https://viacep.com.br/ws/${this.value}/json/`)).json();
+                if (dados.erro) {
+                    LPV.toast("CEP não encontrado. Confira os números ou preencha o endereço manualmente.", "erro");
+                    return;
+                }
+                document.getElementById("rua").value = dados.logradouro || "";
+                document.getElementById("bairro").value = dados.bairro || "";
+                document.getElementById("cidade").value = `${dados.localidade} - ${dados.uf}`;
+                document.getElementById("numero").focus();
+            } catch (e) {
+                LPV.toast("Não foi possível buscar o CEP agora. Preencha o endereço manualmente.", "info");
+            }
         });
 
         // Permite somente números no campo telefone.
@@ -232,55 +224,51 @@
             const btnSubmit = document.getElementById("btnSubmit");
 
             if (cpf.length !== 11) {
-<<<<<<< HEAD
                 LPV.toast("O CPF precisa conter exatamente 11 números.", "erro", 5000);
-=======
-                alert("O CPF precisa conter exatamente 11 números.");
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                 return;
             }
 
             // Confere os dígitos verificadores do CPF (js/validarCPF.js).
             if (!validarCPF(cpf)) {
-<<<<<<< HEAD
                 LPV.toast("CPF inválido. Confira os números digitados.", "erro", 5000);
-=======
-                alert("CPF inválido. Confira os números digitados.");
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                 return;
             }
 
             if (telefone.length > 0 && (telefone.length < 10 || telefone.length > 11)) {
-<<<<<<< HEAD
                 LPV.toast("O telefone deve conter 10 ou 11 números (com DDD).", "erro", 5000);
                 return;
+            }
+
+            const endereco = {
+                cep: document.getElementById("cep").value.trim(),
+                rua: document.getElementById("rua").value.trim(),
+                numero: document.getElementById("numero").value.trim(),
+                bairro: document.getElementById("bairro").value.trim(),
+                cidade: document.getElementById("cidade").value.trim()
+            };
+            const preencheuEndereco = Object.values(endereco).some(Boolean);
+            if (preencheuEndereco) {
+                if (endereco.cep.length !== 8) {
+                    LPV.toast("O CEP precisa ter 8 números.", "erro", 5000);
+                    return;
+                }
+                if (!endereco.rua || !endereco.bairro || !endereco.cidade) {
+                    LPV.toast("Complete o endereço (rua, bairro e cidade) ou deixe todos os campos de endereço vazios.", "erro", 5000);
+                    return;
+                }
             }
 
             if (!conferirSenha(senha)) {
                 LPV.toast("A senha precisa ter pelo menos 8 caracteres, 1 letra maiúscula, 1 número e 1 caractere especial.", "erro", 5000);
                 document.getElementById("senha").focus();
-=======
-                alert("O telefone deve conter 10 ou 11 números (com DDD).");
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                 return;
             }
 
             if (senha !== confirmarSenha) {
-<<<<<<< HEAD
                 LPV.toast("As senhas não coincidem.", "erro", 5000);
                 return;
             }
 
-=======
-                alert("As senhas não coincidem.");
-                return;
-            }
-
-            // Gera o hash SHA-256 da senha e da confirmação.
-            const hashedSenha = CryptoJS.SHA256(senha).toString();
-            const hashedConfirmarSenha = CryptoJS.SHA256(confirmarSenha).toString();
-
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
             btnSubmit.disabled = true;
             btnSubmit.innerText = "Realizando cadastro (aguarde)...";
 
@@ -302,15 +290,10 @@
                             cpf: cpf,
                             telefone: telefone,
                             nascimento: nascimento,
-<<<<<<< HEAD
                             // A senha vai pura (protegida pelo HTTPS): o servidor confere as
                             // regras de novo e grava com SHA-256 + bcrypt.
                             password: senha,
                             password_confirmation: confirmarSenha
-=======
-                            password: hashedSenha,
-                            password_confirmation: hashedConfirmarSenha
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                         }
                     })
                 });
@@ -319,26 +302,25 @@
 
                 if (response.ok) {
                     if (data.token && data.user) {
-<<<<<<< HEAD
                         LPV.salvarSessao(data.user, data.token);
+
+                        // O endereço vai num segundo passo (PATCH): assim o cadastro funciona mesmo
+                        // se o servidor ainda estiver na versão antiga, que não guardava endereço.
+                        if (preencheuEndereco) {
+                            try {
+                                const atualizado = await LPV.chamar(`/users/${data.user.id}`, { method: "PATCH", corpo: { user: endereco } });
+                                LPV.salvarSessao(atualizado);
+                            } catch (erroEndereco) {
+                                LPV.toastNaProximaPagina("Conta criada! Só não deu para salvar o endereço agora: complete no seu perfil.", "info");
+                                window.location.href = "../index.html";
+                                return;
+                            }
+                        }
+
                         LPV.toastNaProximaPagina(`Conta criada com sucesso! Bem-vindo(a), ${data.user.username}!`);
                         window.location.href = "../index.html";
                     } else {
                         LPV.toastNaProximaPagina("Conta criada com sucesso! Faça login para continuar.");
-=======
-                        localStorage.setItem("usuario", JSON.stringify(data.user));
-                        localStorage.setItem("token", data.token);
-                        localStorage.setItem("logado", "true");
-                        localStorage.setItem("usuarioId", data.user.id);
-                        localStorage.setItem("usuarioNome", data.user.username);
-                        localStorage.setItem("usuarioEmail", data.user.email);
-                        localStorage.setItem("isAdmin", data.user.admin ? "true" : "false");
-
-                        alert("Conta criada com sucesso!");
-                        window.location.href = "../index.html";
-                    } else {
-                        alert("Conta criada com sucesso! Faça login para continuar.");
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                         window.location.href = "Login.html";
                     }
                 } else {
@@ -346,26 +328,16 @@
                         ? data.errors.join(", ")
                         : (data.error || "Verifique os dados digitados.");
 
-<<<<<<< HEAD
                     LPV.toast("Erro ao criar conta: " + erros, "erro", 5000);
-=======
-                    alert("Erro ao criar conta: " + erros);
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                 }
 
             } catch (error) {
                 console.error("Erro no cadastro:", error);
 
                 if (error.name === 'AbortError') {
-<<<<<<< HEAD
                     LPV.toast("O servidor demorou a responder. Tente clicar em Concluir novamente.", "erro", 5000);
                 } else {
                     LPV.toast("Não foi possível conectar ao servidor.", "erro", 5000);
-=======
-                    alert("O servidor demorou a responder. Tente clicar em Concluir novamente.");
-                } else {
-                    alert("Não foi possível conectar ao servidor.");
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                 }
 
             } finally {

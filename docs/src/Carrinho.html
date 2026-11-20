@@ -14,11 +14,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<<<<<<< HEAD
     <link rel="stylesheet" href="../css/tema.css">
     <script src="../js/lpv.js"></script>
-=======
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
 </head>
 
 <body>
@@ -41,7 +38,6 @@
     <main class="carrinho-main">
         <h2 class="carrinho-titulo">Meu Carrinho de Compras</h2>
 
-<<<<<<< HEAD
         <div id="listaCarrinho" aria-live="polite">
             <div class="lpv-esqueleto" style="height: 86px; margin: 12px 0;"></div>
             <div class="lpv-esqueleto" style="height: 86px; margin: 12px 0;"></div>
@@ -70,24 +66,10 @@
                 <span class="label-total">Total a pagar:</span>
                 <span id="valorTotal" class="valor-total">R$ 0,00</span>
             </div>
-=======
-        <div id="listaCarrinho"></div>
-
-        <div id="blocoEnderecoCarrinho" style="background: #faf8f5; border: 1px solid #e0d7cd; padding: 15px; border-radius: 8px; margin: 20px 0;">
-            <h4 style="color: #8c533e; margin-bottom: 8px; font-size: 1rem;">Endereço de Entrega</h4>
-            <p id="textoEnderecoCarrinho" style="font-size: 0.9rem; color: #444; margin-bottom: 8px;">Carregando endereço...</p>
-            <a href="MeuPerfil.html" style="font-size: 0.8rem; color: #8c533e; text-decoration: underline;">Atualizar endereço no perfil</a>
-        </div>
-
-        <div class="resumo-total">
-            <span class="label-total">Total a pagar (com frete):</span>
-            <span id="valorTotal" class="valor-total">R$ 0,00</span>
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
         </div>
 
         <div class="carrinho-acoes">
             <a href="Catalogo.html" class="btn-continuar">Continuar Comprando</a>
-<<<<<<< HEAD
             <button onclick="finalizarCompra()" class="btn-pagamento" id="btnFinalizar">Finalizar Pedido</button>
         </div>
         <p class="carrinho-seguranca">🔒 Carrinho, pedidos e endereço ficam salvos na sua conta. O endereço é gravado criptografado.</p>
@@ -195,132 +177,10 @@
         async function finalizarCompra() {
             if (!perfil || !(perfil.cep && perfil.rua && perfil.bairro && perfil.cidade)) {
                 LPV.toastNaProximaPagina("Preencha seu endereço de entrega antes de finalizar o pedido.", "info");
-=======
-            <button onclick="finalizarCompra()" class="btn-pagamento">Finalizar Pedido</button>
-        </div>
-    </main>
-
-    <script>
-        // Ao abrir a página: carrega o endereço do perfil e desenha o carrinho.
-        document.addEventListener("DOMContentLoaded", function () {
-            carregarCarrinho();
-            carregarEnderecoPerfil();
-        });
-
-        // Monta o endereço salvo no perfil (preenchido em Meu Perfil)
-        function enderecoDoPerfil() {
-            const rua = localStorage.getItem("usuarioRua");
-            const numero = localStorage.getItem("usuarioNumero");
-            const bairro = localStorage.getItem("usuarioBairro");
-            const cidade = localStorage.getItem("usuarioCidade");
-            const cep = localStorage.getItem("usuarioCep");
-            if (!rua || !cep) return "";
-            return `${rua}, nº ${numero || "S/N"} - ${bairro}, ${cidade} (CEP: ${cep})`;
-        }
-
-        // Mostra na tela o endereço de entrega salvo no perfil.
-        function carregarEnderecoPerfil() {
-            const txt = document.getElementById("textoEnderecoCarrinho");
-            const endereco = enderecoDoPerfil();
-            if (endereco) {
-                txt.innerHTML = `<strong>${endereco}</strong>`;
-            } else {
-                txt.innerHTML = `Você ainda não cadastrou um endereço completo. <a href="MeuPerfil.html" style="color: #8c533e; font-weight: bold;">Cadastrar agora</a>`;
-            }
-        }
-
-        // Aceita itens vindos do catálogo antigo (titulo/preco/imagem) e da API (title/price/image_url)
-        function normalizarItem(item) {
-            let precoBruto = item.preco !== undefined ? item.preco : item.price;
-            if (typeof precoBruto === "string") {
-                precoBruto = precoBruto.replace("R$", "").replace(/\s/g, "").replace(",", ".");
-            }
-            return {
-                titulo: item.titulo || item.title || "Livro do Acervo",
-                preco: Number(precoBruto) || 0,
-                imagem: item.imagem || item.image_url || "https://covers.openlibrary.org/b/id/12645114-L.jpg",
-                quantidade: item.quantidade || 1
-            };
-        }
-
-        // Lê o carrinho do localStorage, desenha os itens e calcula os totais.
-        function carregarCarrinho() {
-            const lista = document.getElementById("listaCarrinho");
-            let carrinho = (JSON.parse(localStorage.getItem("carrinhoLivros")) || [])
-                .map(normalizarItem)
-                .filter(item => item.preco > 0);
-
-            localStorage.setItem("carrinhoLivros", JSON.stringify(carrinho));
-
-            if (carrinho.length === 0) {
-                lista.innerHTML = `<p style="text-align: center; color: #666; padding: 20px;">Seu carrinho está vazio.</p>`;
-                document.getElementById("valorTotal").textContent = "R$ 0,00";
-                return;
-            }
-
-            let total = 0;
-            lista.innerHTML = carrinho.map((item, index) => {
-                const subtotal = item.preco * item.quantidade;
-                total += subtotal;
-
-                return `
-                    <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e0d7cd; padding: 12px 0; gap: 10px;">
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <img src="${item.imagem}" onerror="this.src='https://covers.openlibrary.org/b/id/12645114-L.jpg'" alt="${item.titulo}" style="width: 50px; height: 70px; object-fit: cover; border-radius: 4px;">
-                            <div>
-                                <h4 style="font-size: 0.95rem; margin-bottom: 4px;">${item.titulo}</h4>
-                                <span style="font-size: 0.85rem; color: #8c533e; font-weight: bold;">R$ ${item.preco.toFixed(2)} un.</span>
-                            </div>
-                        </div>
-
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <button onclick="alterarQuantidade(${index}, -1)" style="background: #f0ebe0; border: 1px solid #d9d4c9; width: 26px; height: 26px; border-radius: 4px; cursor: pointer; font-weight: bold;">-</button>
-                            <span style="font-size: 0.9rem; font-weight: 600; min-width: 20px; text-align: center;">${item.quantidade}</span>
-                            <button onclick="alterarQuantidade(${index}, 1)" style="background: #f0ebe0; border: 1px solid #d9d4c9; width: 26px; height: 26px; border-radius: 4px; cursor: pointer; font-weight: bold;">+</button>
-                        </div>
-
-                        <div style="text-align: right;">
-                            <div style="font-size: 0.9rem; font-weight: bold; color: #1c1a16; margin-bottom: 4px;">R$ ${subtotal.toFixed(2)}</div>
-                            <button onclick="removerItem(${index})" style="background: none; border: none; color: #c5221f; cursor: pointer; font-size: 0.8rem; text-decoration: underline;">Remover</button>
-                        </div>
-                    </div>
-                `;
-            }).join("");
-
-            const totalComFrete = total > 0 ? total + 10.00 : 0;
-            document.getElementById("valorTotal").textContent = `R$ ${totalComFrete.toFixed(2)} (Frete R$ 10,00)`;
-        }
-
-        // Soma ou subtrai a quantidade de um item (se chegar a 0, remove) e redesenha.
-        function alterarQuantidade(index, delta) {
-            let carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
-            if (carrinho[index]) {
-                carrinho[index].quantidade = (carrinho[index].quantidade || 1) + delta;
-                if (carrinho[index].quantidade <= 0) carrinho.splice(index, 1);
-                localStorage.setItem("carrinhoLivros", JSON.stringify(carrinho));
-                carregarCarrinho();
-            }
-        }
-
-        // Tira um item do carrinho e redesenha.
-        function removerItem(index) {
-            let carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
-            carrinho.splice(index, 1);
-            localStorage.setItem("carrinhoLivros", JSON.stringify(carrinho));
-            carregarCarrinho();
-        }
-
-        // Exige endereço no perfil, registra o pedido no histórico (localStorage), esvazia o carrinho e vai para o perfil.
-        function finalizarCompra() {
-            const enderecoFinal = enderecoDoPerfil();
-            if (!enderecoFinal) {
-                alert("Por favor, preencha seu endereço de entrega no Perfil antes de finalizar o pedido!");
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                 window.location.href = "MeuPerfil.html";
                 return;
             }
 
-<<<<<<< HEAD
             const botao = document.getElementById("btnFinalizar");
             const pagamento = document.querySelector('input[name="pagamento"]:checked').value;
             botao.disabled = true;
@@ -337,36 +197,6 @@
                 botao.disabled = false;
                 botao.textContent = "Finalizar Pedido";
             }
-=======
-            const carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
-            if (carrinho.length === 0) {
-                alert("Seu carrinho está vazio!");
-                return;
-            }
-
-            const pagamento = localStorage.getItem("usuarioPagamento") || "Pix (Instantâneo)";
-            const totalSubtotal = carrinho.reduce((acc, item) => acc + (Number(item.preco) * (item.quantidade || 1)), 0);
-            const totalComFrete = totalSubtotal + 10.00;
-            const descricaoItens = carrinho.map(i => `${i.quantidade}x ${i.titulo}`).join(", ");
-
-            const historico = JSON.parse(localStorage.getItem("historicoPedidos")) || [];
-            const novoPedido = {
-                id: Math.floor(100000 + Math.random() * 900000),
-                itens: descricaoItens,
-                imagem: carrinho[0].imagem,
-                total: `R$ ${totalComFrete.toFixed(2)}`,
-                pagamento: pagamento,
-                endereco: enderecoFinal,
-                status: "Em separação"
-            };
-
-            historico.unshift(novoPedido);
-            localStorage.setItem("historicoPedidos", JSON.stringify(historico));
-            localStorage.removeItem("carrinhoLivros");
-
-            alert(`Pedido #${novoPedido.id} realizado com sucesso!\n\nEndereço de entrega: ${enderecoFinal}`);
-            window.location.href = "MeuPerfil.html";
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
         }
     </script>
 </body>

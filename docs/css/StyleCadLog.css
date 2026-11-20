@@ -286,7 +286,6 @@ footer small {
 
 .password button:hover svg {
     stroke: #1c1a16;
-<<<<<<< HEAD
 }
 /* ===== Cadastro: marcação de campos obrigatórios e regras da senha ===== */
 .rotulo {
@@ -398,6 +397,3 @@ footer small {
     .grade-endereco { grid-template-columns: 1fr; }
     .grade-endereco label { grid-column: auto; }
 }
-=======
-}
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2

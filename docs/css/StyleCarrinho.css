@@ -264,7 +264,6 @@ body {
     .btn-continuar, .btn-pagamento {
         width: 100%;
     }
-<<<<<<< HEAD
 }
 /* ===== Carrinho ligado ao banco ===== */
 .carrinho-item {
@@ -377,6 +376,3 @@ body {
     .carrinho-item { grid-template-columns: 50px 1fr; }
     .carrinho-qtd, .carrinho-item-total { grid-column: 2; justify-self: start; text-align: left; }
 }
-=======
-}
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2

@@ -12,11 +12,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
-<<<<<<< HEAD
     <link rel="stylesheet" href="../css/tema.css">
     <script src="../js/lpv.js"></script>
-=======
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
 </head>
 
 <body>
@@ -55,11 +52,7 @@
                 </label>
 
                 <div class="forgot-password-container">
-<<<<<<< HEAD
                     <a href="#" class="forgot-password-link" onclick="LPV.toast('A recuperação de senha automática ainda não está disponível. Fale com um administrador pelo chat.', 'info', 6000); return false;">Esqueceu sua senha?</a>
-=======
-                    <a href="#" class="forgot-password-link" onclick="alert('Instruções enviadas se o e-mail existir no sistema.'); return false;">Esqueceu sua senha?</a>
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                 </div>
 
                 <button type="submit" class="login" id="btnSubmit">Entrar</button>
@@ -77,10 +70,6 @@
         </footer>
     </main>
 
-<<<<<<< HEAD
-=======
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
     
     <script>
 const API_URL = "https://lpv-api.onrender.com";
@@ -99,36 +88,14 @@ document.getElementById("formLogin").addEventListener("submit", async function (
     const passwordValue = document.getElementById("senha").value;
     const btnSubmit = document.getElementById("btnSubmit");
 
-<<<<<<< HEAD
-=======
-    // Criptografa a senha com SHA-256 antes de enviar à API.
-    const hashedPassword = CryptoJS.SHA256(passwordValue).toString();
-
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
     btnSubmit.disabled = true;
     btnSubmit.innerText = "Entrando...";
 
     try {
-        const response = await fetch(`${API_URL}/users/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                email: loginValue,
-<<<<<<< HEAD
-                // A senha vai pura, protegida pelo HTTPS; o servidor faz SHA-256 + bcrypt.
-                password: passwordValue
-=======
-                password: hashedPassword
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
-            })
-        });
-
-        const data = await response.json();
+        // Funciona com a API antiga e com a nova (veja LPV.login em js/lpv.js).
+        const { resposta: response, dados: data } = await LPV.login(loginValue, passwordValue);
 
         if (response.ok) {
-<<<<<<< HEAD
             // Guarda o token e os dados do usuário (nome, foto) no navegador.
             LPV.salvarSessao(data.user, data.token);
             LPV.toastNaProximaPagina(`Bem-vindo(a) de volta, ${data.user.username}!`);
@@ -139,25 +106,6 @@ document.getElementById("formLogin").addEventListener("submit", async function (
     } catch (error) {
         console.error("Erro no login:", error);
         LPV.toast("Não foi possível conectar ao servidor. Se ele estava inativo, aguarde um minuto e tente de novo.", "erro", 6000);
-=======
-            // Armazena os dados do usuário e o token de autenticação no navegador.
-            localStorage.setItem("usuario", JSON.stringify(data.user));
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("logado", "true");
-            localStorage.setItem("usuarioId", data.user.id);
-            localStorage.setItem("usuarioNome", data.user.username);
-            localStorage.setItem("usuarioEmail", data.user.email);
-            localStorage.setItem("isAdmin", data.user.admin ? "true" : "false");
-
-            alert(`Bem-vindo(a) de volta, ${data.user.username}!`);
-            window.location.href = "../index.html";
-        } else {
-            alert("Erro ao entrar: " + (data.error || "Usuário ou senha incorretos."));
-        }
-    } catch (error) {
-        console.error("Erro no login:", error);
-        alert("Não foi possível conectar ao servidor. Se ele estava inativo, aguarde um minuto e tente de novo.");
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
     } finally {
         // Reabilita o botão independentemente do resultado da requisição.
         btnSubmit.disabled = false;

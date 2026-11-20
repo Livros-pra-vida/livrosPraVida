@@ -93,6 +93,30 @@
         return dados;
     }
 
+    // ---------- Login compatível com a API antiga e a nova ----------
+    // SHA-256 em hexadecimal (o mesmo formato que o front antigo mandava com CryptoJS).
+    async function sha256Hex(texto) {
+        const bytes = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(texto));
+        return Array.from(new Uint8Array(bytes)).map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    // POST /users/login. Tenta com a senha pura (API nova); se a API recusar, tenta com o SHA-256
+    // da senha (API antiga, que ainda está no ar até o próximo deploy). Devolve { resposta, dados }.
+    async function login(email, senha) {
+        const enviar = async (senhaEnviada) => {
+            const resposta = await fetch(`${API_URL}/users/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password: senhaEnviada })
+            });
+            const dados = await resposta.json().catch(() => ({}));
+            return { resposta, dados };
+        };
+        let resultado = await enviar(senha);
+        if (resultado.resposta.status === 401) resultado = await enviar(await sha256Hex(senha));
+        return resultado;
+    }
+
     // ---------- Segurança ----------
     // Escapa texto antes de colocá-lo em innerHTML (evita XSS).
     function esc(valor) {
@@ -205,7 +229,7 @@
     });
 
     window.LPV = {
-        API_URL, token, logado, usuario, salvarSessao, limparSessao, sair, raiz,
+        API_URL, token, logado, usuario, salvarSessao, limparSessao, sair, raiz, login, sha256Hex,
         chamar, esc, urlImagem, moeda, toast, toastNaProximaPagina, carrinho
     };
 })();

@@ -9,11 +9,8 @@
     <link rel="icon" type="image/png" href="../imagens/icone.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/StyleMeuPerfil.css">
-<<<<<<< HEAD
     <link rel="stylesheet" href="../css/tema.css">
     <script src="../js/lpv.js"></script>
-=======
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
 </head>
 
 <body>
@@ -30,12 +27,8 @@
         <nav class="menu">
             <a href="../index.html">Início</a>
             <a href="Estantes.html">Minhas Estantes</a>
-<<<<<<< HEAD
             <a href="Carrinho.html">Carrinho <span id="contadorCarrinhoHeader" class="perfil-contador" style="display:none"></span></a>
             <a href="#" onclick="LPV.sair(event)" class="btn-sair-top">Sair</a>
-=======
-            <a href="#" onclick="sair()" class="btn-sair-top">Sair</a>
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
         </nav>
     </header>
 
@@ -60,7 +53,6 @@
 
             <div class="profile-stats">
                 <div class="stat-item">
-<<<<<<< HEAD
                     <span class="stat-number" id="statTrocas">–</span>
                     <span class="stat-label">Concluídos</span>
                 </div>
@@ -75,22 +67,6 @@
             </div>
 
             <button class="btn-logout" onclick="LPV.sair()">Encerrar Sessão</button>
-=======
-                    <span class="stat-number" id="statTrocas">4</span>
-                    <span class="stat-label">Trocas</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number" id="statDoacoes">2</span>
-                    <span class="stat-label">Doações</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">4.9 ★</span>
-                    <span class="stat-label">Reputação</span>
-                </div>
-            </div>
-
-            <button class="btn-logout" onclick="sair()">Encerrar Sessão</button>
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
         </aside>
 
         <!-- ÁREA CENTRAL DE CONTEÚDO E GERENCIAMENTO -->
@@ -173,7 +149,6 @@
                         <select id="pagamentoSelect" style="width: 100%; padding: 8px 12px; border: 1px solid #e0d7cd; border-radius: 6px; background: #fff;">
                             <option value="Pix">Pix (Instantâneo)</option>
                             <option value="Cartão de Crédito">Cartão de Crédito</option>
-<<<<<<< HEAD
                             <option value="Cartão de Débito">Cartão de Débito</option>
                             <option value="Boleto">Boleto Bancário</option>
                         </select>
@@ -201,12 +176,6 @@
                     </div>
                     <p style="font-size: 0.8rem; color: #6e655f; margin-bottom: 16px;">🔒 CPF, telefone e endereço são gravados criptografados no banco de dados.</p>
 
-=======
-                            <option value="Boleto Bancário">Boleto Bancário</option>
-                        </select>
-                    </div>
-
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                     <div class="form-actions">
                         <button type="submit" id="btnSalvarPerfil" class="btn-save" style="background: #8c533e; color: #fff; padding: 10px 20px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">
                             Salvar Alterações
@@ -216,11 +185,7 @@
             </section>
 
             <!-- HISTÓRICO DE PEDIDOS / COMPRAS ANTERIORES -->
-<<<<<<< HEAD
             <section class="card-box" style="margin-top: 30px;" id="pedidos">
-=======
-            <section class="card-box" style="margin-top: 30px;">
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                 <div class="card-header">
                     <h3>Meus Pedidos & Compras Anteriores</h3>
                     <p>Acompanhe o protocolo, os livros e o status de envio dos seus pedidos.</p>
@@ -237,19 +202,9 @@
                     <p>Obras que você disponibilizou para a comunidade leitora.</p>
                 </div>
 
-<<<<<<< HEAD
                 <div class="books-mini-grid" id="meusAnuncios" style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px;">
                     <div class="lpv-esqueleto" style="width: 140px; height: 190px;"></div>
                     <div class="lpv-esqueleto" style="width: 140px; height: 190px;"></div>
-=======
-                <div class="books-mini-grid" style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px;">
-                    <div class="mini-book-card" style="border: 1px solid #e0d7cd; padding: 10px; border-radius: 6px; width: 140px; text-align: center;">
-                        <span class="tag-negocio tag-troca" style="font-size: 0.75rem; background: #e6f4ea; color: #137333; padding: 2px 6px; border-radius: 4px;">Troca</span>
-                        <img src="../imagens/midnight-library.jpg" alt="A Biblioteca da Meia-Noite" style="width: 100%; height: 100px; object-fit: cover; margin: 8px 0;">
-                        <h4 style="font-size: 0.85rem; margin-bottom: 8px;">A Biblioteca da Meia-Noite</h4>
-                        <button class="btn-action-card" style="font-size: 0.75rem; padding: 4px 8px; background: #8c533e; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Gerenciar</button>
-                    </div>
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                 </div>
             </section>
 
@@ -258,7 +213,6 @@
     </main>
 
     <script>
-<<<<<<< HEAD
         const CAPA_PADRAO = "https://covers.openlibrary.org/b/id/12645114-L.jpg";
         let perfil = null;
 
@@ -267,34 +221,10 @@
             if (!LPV.logado()) {
                 LPV.toastNaProximaPagina("Entre na sua conta para ver o seu perfil.", "info");
                 window.location.href = "Login.html";
-=======
-        const API_URL = "https://lpv-api.onrender.com";
-
-        // Apaga os dados de sessão do navegador (usado ao sair ou se o token vencer).
-        function limparSessao() {
-            localStorage.removeItem("usuario");
-            localStorage.removeItem("token");
-            localStorage.removeItem("logado");
-            localStorage.removeItem("usuarioId");
-            localStorage.removeItem("usuarioNome");
-            localStorage.removeItem("usuarioEmail");
-            localStorage.removeItem("isAdmin");
-            localStorage.removeItem("usuarioFoto");
-        }
-
-        // Ao abrir o perfil: busca os dados do usuário na API e preenche o formulário (endereço, pagamento e foto vêm do navegador).
-        document.addEventListener("DOMContentLoaded", async function () {
-            const usuarioSalvo = JSON.parse(localStorage.getItem("usuario"));
-
-            if (!usuarioSalvo || !usuarioSalvo.id) {
-                alert("Você precisa estar logado.");
-                window.location.href = "../index.html";
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                 return;
             }
 
             try {
-<<<<<<< HEAD
                 perfil = await LPV.chamar("/users/me");
                 LPV.salvarSessao(perfil);
                 preencherFormulario(perfil);
@@ -335,62 +265,6 @@
         }
 
         // Integração com a API ViaCEP (preenche rua, bairro e cidade).
-=======
-                const resposta = await fetch(`${API_URL}/users/${usuarioSalvo.id}`, {
-                    headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
-                });
-
-                if (resposta.status === 401) {
-                    limparSessao();
-                    alert("Sua sessão expirou. Faça login novamente.");
-                    window.location.href = "Login.html";
-                    return;
-                }
-
-                if (!resposta.ok) {
-                    throw new Error("Não foi possível carregar o usuário.");
-                }
-
-                const usuario = await resposta.json();
-                localStorage.setItem("usuario", JSON.stringify(usuario));
-
-                document.getElementById("nomeInput").value = usuario.username || "";
-                document.getElementById("emailInput").value = usuario.email || "";
-                document.getElementById("telefoneInput").value = usuario.telefone || "";
-                document.getElementById("nascimentoInput").value = usuario.nascimento
-                    ? String(usuario.nascimento).substring(0, 10)
-                    : "";
-                document.getElementById("cpfInput").value = usuario.cpf || "";
-
-                if (usuario.admin) {
-                    const badge = document.getElementById("badgePlano");
-                    badge.textContent = "Administrador";
-                    badge.style.background = "#8c533e";
-                    badge.style.color = "#fff";
-                }
-            } catch (erro) {
-                console.error("Erro ao carregar usuário:", erro);
-                alert("Não foi possível carregar seus dados.");
-            }
-
-            // Endereço, pagamento e foto ficam salvos no navegador
-            document.getElementById("cepInput").value = localStorage.getItem("usuarioCep") || "";
-            document.getElementById("ruaInput").value = localStorage.getItem("usuarioRua") || "";
-            document.getElementById("numeroInput").value = localStorage.getItem("usuarioNumero") || "";
-            document.getElementById("bairroInput").value = localStorage.getItem("usuarioBairro") || "";
-            document.getElementById("cidadeInput").value = localStorage.getItem("usuarioCidade") || "";
-            document.getElementById("pagamentoSelect").value = localStorage.getItem("usuarioPagamento") || "Pix";
-
-            document.getElementById("userAvatar").src = localStorage.getItem("usuarioFoto") || "../imagens/perfil.jpg";
-            document.getElementById("profileName").textContent =
-                document.getElementById("nomeInput").value || "Leitor Colaborador";
-
-            verificarMaioridade();
-            carregarHistoricoPedidos();
-        });
-
-        // Integração com API ViaCEP
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
         function consultarCep(cep) {
             const cepLimpo = cep.replace(/\D/g, '');
             if (cepLimpo.length !== 8) return;
@@ -404,7 +278,6 @@
                         document.getElementById("cidadeInput").value = `${data.localidade} - ${data.uf}`;
                         document.getElementById("numeroInput").focus();
                     } else {
-<<<<<<< HEAD
                         LPV.toast("CEP não encontrado.", "erro");
                     }
                 })
@@ -504,68 +377,6 @@
             };
             img.onerror = () => LPV.toast("Não foi possível ler esta imagem.", "erro");
             img.src = URL.createObjectURL(file);
-=======
-                        alert("CEP não encontrado.");
-                    }
-                })
-                .catch(() => alert("Erro ao buscar o CEP. Verifique sua conexão."));
-        }
-
-        // Desenha o histórico de pedidos guardado no navegador (ou avisa que não há pedidos).
-        function carregarHistoricoPedidos() {
-            const container = document.getElementById("listaHistoricoPedidos");
-            const historico = JSON.parse(localStorage.getItem("historicoPedidos")) || [];
-
-            if (historico.length === 0) {
-                container.innerHTML = `<p style="color: #666; font-size: 0.9rem;">Nenhum pedido realizado ainda.</p>`;
-                return;
-            }
-
-            container.innerHTML = historico.map(pedido => {
-                const imagemCapa = pedido.imagem || "https://covers.openlibrary.org/b/id/12645114-L.jpg";
-
-                return `
-                    <div style="background: #faf8f5; border: 1px solid #e0d7cd; border-radius: 8px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
-                        <div style="display: flex; align-items: center; gap: 15px;">
-                            <img src="${imagemCapa}" onerror="this.src='https://covers.openlibrary.org/b/id/12645114-L.jpg'" alt="Capa do Livro" style="width: 50px; height: 70px; object-fit: cover; border-radius: 4px; border: 1px solid #d9d4c9;">
-                            <div>
-                                <div style="font-size: 0.85rem; color: #8c533e; font-weight: bold; margin-bottom: 4px;">
-                                    Protocolo de Compra: #${pedido.id}
-                                </div>
-                                <div style="font-size: 0.95rem; color: #2d251e; font-weight: 600; margin-bottom: 4px;">
-                                    ${pedido.itens}
-                                </div>
-                                <div style="font-size: 0.8rem; color: #6e655f;">
-                                    Pagamento: <strong>${pedido.pagamento}</strong> | Endereço: ${pedido.endereco || "Endereço cadastrado"}
-                                </div>
-                            </div>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-size: 1rem; font-weight: bold; color: #8c533e; margin-bottom: 4px;">
-                                ${pedido.total}
-                            </div>
-                            <span style="display: inline-block; font-size: 0.75rem; background: #e6f4ea; color: #137333; padding: 3px 8px; border-radius: 12px; font-weight: 600;">
-                                ${pedido.status || "Em separação"}
-                            </span>
-                        </div>
-                    </div>
-                `;
-            }).join("");
-        }
-
-        // Lê a foto escolhida, mostra no perfil e guarda no navegador (localStorage).
-        function uploadFotoPerfil(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const base64Image = e.target.result;
-                    document.getElementById("userAvatar").src = base64Image;
-                    localStorage.setItem("usuarioFoto", base64Image);
-                };
-                reader.readAsDataURL(file);
-            }
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
         }
 
         // Calcula a idade pela data de nascimento e mostra o selo de maior/menor de idade.
@@ -584,13 +395,7 @@
             const nascimento = new Date(dataNasc);
             let idade = hoje.getFullYear() - nascimento.getFullYear();
             const m = hoje.getMonth() - nascimento.getMonth();
-<<<<<<< HEAD
             if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) idade--;
-=======
-            if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) {
-                idade--;
-            }
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
 
             if (idade >= 18) {
                 badgeIdade.textContent = `Maior de idade (${idade} anos)`;
@@ -604,7 +409,6 @@
         }
 
         document.getElementById("nascimentoInput").addEventListener("change", verificarMaioridade);
-<<<<<<< HEAD
         ["telefoneInput", "cpfInput", "cepInput"].forEach(id =>
             document.getElementById(id).addEventListener("input", function () { this.value = this.value.replace(/\D/g, ""); }));
 
@@ -671,94 +475,11 @@
                     return;
                 }
                 LPV.toast("Não foi possível salvar: " + erro.message, "erro", 6000);
-=======
-
-        // Salva os dados pessoais na API (PATCH /users/:id) e o restante no navegador.
-        async function salvarPerfil(event) {
-            event.preventDefault();
-
-            const usuarioSalvo = JSON.parse(localStorage.getItem("usuario"));
-            const btnSalvar = document.getElementById("btnSalvarPerfil");
-
-            if (!usuarioSalvo || !usuarioSalvo.id) {
-                alert("Não foi possível identificar o usuário. Faça login novamente.");
-                return;
-            }
-
-            btnSalvar.disabled = true;
-            btnSalvar.innerText = "Salvando...";
-
-            // Só os dados pessoais vão para a API; endereço e pagamento ficam no navegador
-            const dados = {
-                user: {
-                    username: document.getElementById("nomeInput").value.trim(),
-                    email: document.getElementById("emailInput").value.trim(),
-                    telefone: document.getElementById("telefoneInput").value.trim().replace(/\D/g, ""),
-                    nascimento: document.getElementById("nascimentoInput").value,
-                    cpf: document.getElementById("cpfInput").value.trim().replace(/\D/g, "")
-                }
-            };
-
-            try {
-                const resposta = await fetch(`${API_URL}/users/${usuarioSalvo.id}`, {
-                    method: "PATCH",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${localStorage.getItem("token")}`
-                    },
-                    body: JSON.stringify(dados)
-                });
-
-                if (resposta.status === 401) {
-                    limparSessao();
-                    alert("Sua sessão expirou. Faça login novamente.");
-                    window.location.href = "Login.html";
-                    return;
-                }
-
-                if (!resposta.ok) {
-                    const erro = await resposta.json().catch(() => ({}));
-                    console.error("Erro da API:", erro);
-                    alert("Não foi possível salvar: " + (erro.errors ? erro.errors.join(", ") : (erro.error || "verifique os dados informados.")));
-                    return;
-                }
-
-                const usuarioAtualizado = await resposta.json();
-                localStorage.setItem("usuario", JSON.stringify(usuarioAtualizado));
-
-                localStorage.setItem("usuarioCep", document.getElementById("cepInput").value.trim());
-                localStorage.setItem("usuarioRua", document.getElementById("ruaInput").value.trim());
-                localStorage.setItem("usuarioNumero", document.getElementById("numeroInput").value.trim());
-                localStorage.setItem("usuarioBairro", document.getElementById("bairroInput").value.trim());
-                localStorage.setItem("usuarioCidade", document.getElementById("cidadeInput").value.trim());
-                localStorage.setItem("usuarioPagamento", document.getElementById("pagamentoSelect").value);
-
-                localStorage.setItem("usuarioNome", dados.user.username);
-                localStorage.setItem("usuarioEmail", dados.user.email);
-
-                document.getElementById("profileName").textContent = dados.user.username;
-                verificarMaioridade();
-
-                alert("Perfil atualizado com sucesso!");
-
-            } catch (erro) {
-                console.error("Erro ao salvar perfil:", erro);
-                alert("Erro de conexão com o servidor.");
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
             } finally {
                 btnSalvar.disabled = false;
                 btnSalvar.innerText = "Salvar Alterações";
             }
         }
-<<<<<<< HEAD
-=======
-
-        // Encerra a sessão e volta para o login.
-        function sair() {
-            limparSessao();
-            window.location.href = "../index.html";
-        }
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
     </script>
 </body>
 

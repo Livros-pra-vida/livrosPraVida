@@ -14,11 +14,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<<<<<<< HEAD
     <link rel="stylesheet" href="../css/tema.css">
     <script src="../js/lpv.js"></script>
-=======
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
 </head>
 
 <body>
@@ -170,11 +167,8 @@
                 </div>
                 <button type="submit" style="background: #f39c12; color: #fff; border: none; padding: 12px; border-radius: 6px; font-weight: 600; cursor: pointer; margin-top: 10px;">Cadastrar Alerta</button>
             </form>
-<<<<<<< HEAD
             <h4 style="margin: 20px 0 8px; font-size: 0.9rem; color: #2d251e;">Meus alertas</h4>
             <div id="listaAlertas" style="max-height: 220px; overflow-y: auto;"></div>
-=======
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
         </div>
     </div>
 
@@ -243,13 +237,8 @@
             renderizarAnuncios();
         }
 
-<<<<<<< HEAD
         // Favoritos e alertas ficam salvos no banco (GET /favorites e /wish_alerts).
         let favoritos = [];
-=======
-        let favoritos = JSON.parse(localStorage.getItem("favoritosComunidade")) || [];
-        let alertasDesejos = JSON.parse(localStorage.getItem("alertasDesejosComunidade")) || [];
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
         let filtroAtual = "Todos";
         let regiaoAtual = "Todas";
         let modoExibicao = "grade";
@@ -262,7 +251,6 @@
             atualizarCabecalhoAuth();
             Admin.ativarCliques(document.body, carregarAnuncios); // admin clica no nome do anunciante -> perfil
             carregarAnuncios();
-<<<<<<< HEAD
             carregarFavoritos();
             if (new URLSearchParams(location.search).get("alertas")) abrirModalAvisar();
         });
@@ -276,10 +264,6 @@
             } catch (erro) { /* servidor dormindo: corações aparecem vazios */ }
         }
 
-=======
-        });
-
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
         // Troca os links do topo conforme o usuário esteja logado ou não.
         function atualizarCabecalhoAuth() {
             const areaAuth = document.getElementById("areaAuthHeader");
@@ -304,21 +288,8 @@
 
         // Mostra no ícone do carrinho a quantidade de itens.
         function atualizarContadorCarrinho() {
-<<<<<<< HEAD
             // A quantidade vem do carrinho salvo no banco (js/lpv.js guarda uma cópia do número).
             LPV.carrinho.pintarContador();
-=======
-            const carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
-            const contador = document.getElementById("contadorCarrinhoHeader");
-            if (contador) {
-                if (carrinho.length > 0) {
-                    contador.innerText = carrinho.length;
-                    contador.style.display = "inline-block";
-                } else {
-                    contador.style.display = "none";
-                }
-            }
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
         }
 
         // Alterna entre ver os anúncios em grade ou em lista.
@@ -422,11 +393,7 @@
                 let botaoGerenciar = "";
                 const meuId = localStorage.getItem("usuarioId");
                 if (meuId && item.vendedorId && String(item.vendedorId) === String(meuId)) {
-<<<<<<< HEAD
                     botaoGerenciar = `<button onclick="abrirModalStatus(${Number(item.id)})" style="background: #6e655f; color: #fff; border: none; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; margin-top: 6px;">Gerenciar Status</button>`;
-=======
-                    botaoGerenciar = `<button onclick="abrirModalStatus(${item.id})" style="background: #6e655f; color: #fff; border: none; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; margin-top: 6px;">Gerenciar Status</button>`;
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                 }
 
                 // (Admin) botão para excluir o anúncio de qualquer pessoa
@@ -435,7 +402,6 @@
                     : "";
 
                 let mensagemChatPreDefinida = encodeURIComponent(`Olá ${item.vendedor}! Tenho interesse no seu livro "${item.titulo}" (${item.modalidade}${item.preco ? ' - ' + item.preco : ''}). Ainda está disponível?`);
-<<<<<<< HEAD
                 // A conversa é aberta pelo id do anúncio; o servidor descobre quem é o anunciante.
                 let acaoChat = "";
                 let linkChat = `Chat.html?anuncio=${Number(item.id)}&msg=${mensagemChatPreDefinida}`;
@@ -446,9 +412,6 @@
                     linkChat = "#";
                     acaoChat = `onclick="LPV.toast('Este é um anúncio de exemplo, sem anunciante cadastrado.', 'info'); return false;"`;
                 }
-=======
-                let linkChat = `Chat.html?destinatario=${encodeURIComponent(item.vendedor)}&livro=${encodeURIComponent(item.titulo)}&msg=${mensagemChatPreDefinida}`;
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
 
                 const card = document.createElement("article");
                 card.className = "book";
@@ -460,11 +423,7 @@
 
                 if (modoExibicao === 'grade') {
                     card.innerHTML = `
-<<<<<<< HEAD
                         <button onclick="toggleFavorito(${Number(item.id)})" title="Favoritar" style="position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,0.85); border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2;">
-=======
-                        <button onclick="toggleFavorito(${item.id})" title="Favoritar" style="position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,0.85); border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2;">
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="${corCoracao}" stroke="${corCoracao}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                         </button>
                         <div>
@@ -472,21 +431,13 @@
                             ${badgeStatus}
                             <h3 style="font-size: 1rem; color: #2d251e; margin: 0 0 6px 0;">${Admin.esc(item.titulo)}</h3>
                             <p style="font-size: 0.85rem; color: #6e655f; margin: 0 0 4px 0;">Autor: <strong>${Admin.esc(item.autor)}</strong></p>
-<<<<<<< HEAD
                             <p style="font-size: 0.85rem; color: #6e655f; margin: 0 0 4px 0;">Modalidade: <strong class="${classeModalidade}">${Admin.esc(item.modalidade)} ${item.preco ? '(' + Admin.esc(item.preco) + ')' : ''}</strong></p>
-=======
-                            <p style="font-size: 0.85rem; color: #6e655f; margin: 0 0 4px 0;">Modalidade: <strong class="${classeModalidade}">${item.modalidade} ${item.preco ? '(' + item.preco + ')' : ''}</strong></p>
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                             <p style="font-size: 0.8rem; color: #8c533e; margin: 0 0 4px 0;">Região: ${Admin.esc(item.regiao || 'Taguatinga')}</p>
                             <p style="font-size: 0.8rem; color: #6e655f; margin: 0 0 6px 0;">${Admin.nomeHtml(item.vendedor, item.vendedorId)} <span style="color: #f39c12;">${Admin.esc(item.avaliacao)}</span></p>
                             ${linhaComissao}
                             ${botaoGerenciar}${botaoAdmin}
                         </div>
-<<<<<<< HEAD
                         <a href="${linkChat}" ${acaoChat} class="button btn-negociar" style="display: block; text-align: center; background: #8c533e; color: #fff; padding: 8px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.85rem; margin-top: 10px;">${textoBotao}</a>
-=======
-                        <a href="${linkChat}" class="button btn-negociar" style="display: block; text-align: center; background: #8c533e; color: #fff; padding: 8px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.85rem; margin-top: 10px;">${textoBotao}</a>
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                     `;
                 } else {
                     card.style.display = "flex";
@@ -503,27 +454,16 @@
                                     ${badgeStatus}
                                 </div>
                                 <p style="font-size: 0.8rem; color: #6e655f; margin: 2px 0;">Autor: <strong>${Admin.esc(item.autor)}</strong> | Região: ${Admin.esc(item.regiao || 'Taguatinga')}</p>
-<<<<<<< HEAD
                                 <p style="font-size: 0.8rem; color: #6e655f; margin: 0;">Anunciante: <strong>${Admin.nomeHtml(item.vendedor, item.vendedorId)}</strong> (<span style="color: #f39c12;">${Admin.esc(item.avaliacao)}</span>) | <span class="${classeModalidade}" style="font-weight: 600;">${Admin.esc(item.modalidade)} ${item.preco ? '(' + Admin.esc(item.preco) + ')' : ''}</span></p>
-=======
-                                <p style="font-size: 0.8rem; color: #6e655f; margin: 0;">Anunciante: <strong>${Admin.nomeHtml(item.vendedor, item.vendedorId)}</strong> (<span style="color: #f39c12;">${Admin.esc(item.avaliacao)}</span>) | <span class="${classeModalidade}" style="font-weight: 600;">${item.modalidade} ${item.preco ? '(' + item.preco + ')' : ''}</span></p>
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                                 ${linhaComissao}
                             ${botaoGerenciar}${botaoAdmin}
                             </div>
                         </div>
                         <div style="display: flex; gap: 10px; align-items: center;">
-<<<<<<< HEAD
                             <button onclick="toggleFavorito(${Number(item.id)})" title="Favoritar" style="background: none; border: none; cursor: pointer; padding: 5px;">
                                 <svg width="22" height="22" viewBox="0 0 24 24" fill="${corCoracao}" stroke="${corCoracao}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                             </button>
                             <a href="${linkChat}" ${acaoChat} style="background: #8c533e; color: #fff; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.85rem; white-space: nowrap;">${textoBotao}</a>
-=======
-                            <button onclick="toggleFavorito(${item.id})" title="Favoritar" style="background: none; border: none; cursor: pointer; padding: 5px;">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="${corCoracao}" stroke="${corCoracao}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                            </button>
-                            <a href="${linkChat}" style="background: #8c533e; color: #fff; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.85rem; white-space: nowrap;">${textoBotao}</a>
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                         </div>
                     `;
                 }
@@ -582,7 +522,6 @@
         }
 
         // Marca ou desmarca um anúncio como favorito.
-<<<<<<< HEAD
         async function toggleFavorito(id) {
             if (!LPV.logado()) {
                 LPV.toast("Entre na sua conta para favoritar anúncios.", "info");
@@ -598,27 +537,12 @@
             } catch (erro) {
                 LPV.toast(erro.message, "erro");
             }
-=======
-        function toggleFavorito(id) {
-            const index = favoritos.indexOf(id);
-            if (index > -1) {
-                favoritos.splice(index, 1);
-            } else {
-                favoritos.push(id);
-            }
-            localStorage.setItem("favoritosComunidade", JSON.stringify(favoritos));
-            renderizarAnuncios();
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
         }
 
         // Abre o formulário de novo anúncio (só para quem está logado).
         function abrirModalAnuncio() {
             if (!localStorage.getItem("usuario")) {
-<<<<<<< HEAD
                 LPV.toastNaProximaPagina("Entre na sua conta para anunciar um livro.", "info");
-=======
-                alert("Você precisa estar logado para anunciar um livro!");
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                 window.location.href = "Login.html";
                 return;
             }
@@ -637,7 +561,6 @@
         }
 
         // Abre o modal para pedir aviso quando um livro chegar.
-<<<<<<< HEAD
         async function abrirModalAvisar() {
             if (!LPV.logado()) {
                 LPV.toast("Entre na sua conta para cadastrar alertas.", "info");
@@ -681,11 +604,6 @@
             } catch (erro) {
                 LPV.toast(erro.message, "erro");
             }
-=======
-        function abrirModalAvisar() {
-            const modal = document.getElementById("modalAvisar");
-            if (modal) modal.style.display = "flex";
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
         }
 
         // Fecha o modal de aviso.
@@ -697,7 +615,6 @@
         }
 
         // Guarda o livro que o usuário quer ser avisado.
-<<<<<<< HEAD
         async function salvarDesejoAviso(event) {
             event.preventDefault();
             const inputDesejado = document.getElementById("livroDesejado");
@@ -712,31 +629,12 @@
                 carregarAlertas();
             } catch (erro) {
                 LPV.toast(erro.message, "erro");
-=======
-        function salvarDesejoAviso(event) {
-            event.preventDefault();
-            const inputDesejado = document.getElementById("livroDesejado");
-            if (inputDesejado) {
-                const termo = inputDesejado.value.trim();
-                alertasDesejos.push(termo);
-                localStorage.setItem("alertasDesejosComunidade", JSON.stringify(alertasDesejos));
-                fecharModalAvisar();
-                alert(`Alerta cadastrado! Avisaremos assim que "${termo}" estiver disponível.`);
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
             }
         }
 
         // Compara o título do novo anúncio com os avisos pedidos (por ora só simula a notificação no console).
-<<<<<<< HEAD
         function verificarAlertasNovosLivros() {
             // Os alertas agora são conferidos pelo servidor (GET /wish_alerts mostra os anúncios que combinam).
-=======
-        function verificarAlertasNovosLivros(tituloNovoLivro) {
-            const termoMatch = alertasDesejos.some(alerta => tituloNovoLivro.toLowerCase().includes(alerta.toLowerCase()));
-            if (termoMatch) {
-                console.log("Notificação simulada: Alguém cadastrou um livro que você estava esperando!");
-            }
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
         }
 
         // Abre o modal para mudar o status de um anúncio.
@@ -777,15 +675,9 @@
                 listaAnuncios = listaAnuncios.map(item => item.id === atualizado.id ? atualizado : item);
                 fecharModalStatus();
                 renderizarAnuncios();
-<<<<<<< HEAD
                 LPV.toast(mensagem(atualizado), "sucesso");
             } catch (erro) {
                 LPV.toast(erro.message, "erro");
-=======
-                alert(mensagem(atualizado));
-            } catch (erro) {
-                alert(erro.message);
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
             }
         }
 
@@ -798,19 +690,11 @@
             try {
                 await Admin.chamar(`/book_listings/${id}`, { method: "DELETE" });
             } catch (erro) {
-<<<<<<< HEAD
                 LPV.toast(erro.message, "erro");
-=======
-                alert(erro.message);
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                 return;
             }
             listaAnuncios = listaAnuncios.filter(item => item.id !== id);
             favoritos = favoritos.filter(f => f !== id);
-<<<<<<< HEAD
-=======
-            localStorage.setItem("favoritosComunidade", JSON.stringify(favoritos));
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
             renderizarAnuncios();
             Admin.avisar(`Anúncio "${anuncio.titulo}" excluído.`);
         }
@@ -873,11 +757,7 @@
             if (modalidade === "Venda") {
                 preco = valorNumerico(document.getElementById("novoPreco").value);
                 if (!(preco > 0)) {
-<<<<<<< HEAD
                     LPV.toast("Informe um preço válido para a venda (ex.: R$ 25,00).", "erro");
-=======
-                    alert("Informe um preço válido para a venda (ex.: R$ 25,00).");
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                     return;
                 }
             }
@@ -909,19 +789,11 @@
                 verificarAlertasNovosLivros(titulo);
                 fecharModalAnuncio();
                 renderizarAnuncios();
-<<<<<<< HEAD
                 LPV.toast("Livro anunciado com sucesso na comunidade!", "sucesso");
             } catch (erro) {
                 LPV.toast(erro.status === 401
                     ? "Sua sessão expirou. Entre novamente para anunciar."
                     : erro.message, "erro", 5000);
-=======
-                alert("Livro anunciado com sucesso na comunidade!");
-            } catch (erro) {
-                alert(erro.status === 401
-                    ? "Sua sessão expirou (ou o login é antigo). Saia e entre novamente para anunciar."
-                    : erro.message);
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
             } finally {
                 if (botao) botao.disabled = false;
             }
@@ -939,20 +811,7 @@
 
         // Encerra a sessão e volta para o login.
         function realizarLogout(e) {
-<<<<<<< HEAD
             LPV.sair(e);
-=======
-            if (e) e.preventDefault();
-            localStorage.removeItem("usuario");
-            localStorage.removeItem("token");
-            localStorage.removeItem("logado");
-            localStorage.removeItem("usuarioId");
-            localStorage.removeItem("usuarioNome");
-            localStorage.removeItem("usuarioEmail");
-            localStorage.removeItem("isAdmin");
-            localStorage.removeItem("usuarioFoto");
-            window.location.href = "../index.html";
->>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
         }
     </script>
 </body>
