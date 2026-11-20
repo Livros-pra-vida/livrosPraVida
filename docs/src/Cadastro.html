@@ -290,10 +290,10 @@
                             cpf: cpf,
                             telefone: telefone,
                             nascimento: nascimento,
-                            // A senha vai pura (protegida pelo HTTPS): o servidor confere as
-                            // regras de novo e grava com SHA-256 + bcrypt.
-                            password: senha,
-                            password_confirmation: confirmarSenha
+                            // A senha sai do navegador criptografada com a chave pública da API
+                            // (veja LPV.camposDeSenha em js/lpv.js); o servidor confere as regras
+                            // de novo e grava com SHA-256 + bcrypt.
+                            ...(await LPV.camposDeSenha({ password: senha, password_confirmation: confirmarSenha }))
                         }
                     })
                 });

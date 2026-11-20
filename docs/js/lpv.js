@@ -100,20 +100,68 @@
         return Array.from(new Uint8Array(bytes)).map(b => b.toString(16).padStart(2, "0")).join("");
     }
 
-    // POST /users/login. Tenta com a senha pura (API nova); se a API recusar, tenta com o SHA-256
-    // da senha (API antiga, que ainda está no ar até o próximo deploy). Devolve { resposta, dados }.
+    // ---------- Senha criptografada antes de sair do navegador (camada extra além do HTTPS) ----------
+    // O navegador tranca a senha com a chave PÚBLICA da API (RSA-OAEP, SHA-256). Só a API, que tem a
+    // chave PRIVADA, consegue abrir. No DevTools aparece só um texto embaralhado. Cada pacote leva a
+    // hora e um número único, então vale por pouco tempo e uma vez só.
+    let chaveLogin = null;
+
+    async function chavePublica() {
+        if (chaveLogin) return chaveLogin;
+        try {
+            const resposta = await fetch(`${API_URL}/auth/public_key`);
+            if (!resposta.ok) return null; // API antiga: ainda não tem a chave
+            const dados = await resposta.json();
+            const der = Uint8Array.from(atob(dados.key), c => c.charCodeAt(0));
+            const chave = await crypto.subtle.importKey("spki", der, { name: "RSA-OAEP", hash: "SHA-256" }, false, ["encrypt"]);
+            // Diferença entre o relógio do PC e o do servidor (o do PC pode estar errado).
+            chaveLogin = { chave, diferenca: (dados.server_time || Date.now()) - Date.now() };
+            return chaveLogin;
+        } catch (erro) {
+            return null;
+        }
+    }
+
+    // Devolve a senha trancada (texto base64) ou null se a API ainda não suportar.
+    async function protegerSenha(senha) {
+        const c = await chavePublica();
+        if (!c) return null;
+        const pacote = JSON.stringify({ p: senha, t: Date.now() + c.diferenca, n: crypto.randomUUID() });
+        const cifrado = await crypto.subtle.encrypt({ name: "RSA-OAEP" }, c.chave, new TextEncoder().encode(pacote));
+        return btoa(String.fromCharCode(...new Uint8Array(cifrado)));
+    }
+
+    // camposDeSenha({ password: "...", password_confirmation: "..." })
+    //   -> { password_encrypted: "...", password_confirmation_encrypted: "..." }
+    // (ou os campos puros, se a API ainda for a antiga). Campos vazios são ignorados.
+    async function camposDeSenha(campos) {
+        const resultado = {};
+        for (const [nome, valor] of Object.entries(campos)) {
+            if (!valor) continue;
+            const cifrado = await protegerSenha(valor);
+            if (cifrado) resultado[`${nome}_encrypted`] = cifrado;
+            else resultado[nome] = valor;
+        }
+        return resultado;
+    }
+
+    // POST /users/login. Com a API nova, manda a senha criptografada. Com a API antiga (ainda no ar
+    // até o próximo deploy), manda a senha pura e, se for recusada, o SHA-256 dela, como o front antigo.
     async function login(email, senha) {
-        const enviar = async (senhaEnviada) => {
+        const enviar = async (corpo) => {
             const resposta = await fetch(`${API_URL}/users/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password: senhaEnviada })
+                body: JSON.stringify({ email, ...corpo })
             });
             const dados = await resposta.json().catch(() => ({}));
             return { resposta, dados };
         };
-        let resultado = await enviar(senha);
-        if (resultado.resposta.status === 401) resultado = await enviar(await sha256Hex(senha));
+        const cifrada = await protegerSenha(senha);
+        if (cifrada) return enviar({ password_encrypted: cifrada });
+
+        let resultado = await enviar({ password: senha });
+        if (resultado.resposta.status === 401) resultado = await enviar({ password: await sha256Hex(senha) });
         return resultado;
     }
 
@@ -229,7 +277,7 @@
     });
 
     window.LPV = {
-        API_URL, token, logado, usuario, salvarSessao, limparSessao, sair, raiz, login, sha256Hex,
+        API_URL, token, logado, usuario, salvarSessao, limparSessao, sair, raiz, login, sha256Hex, protegerSenha, camposDeSenha,
         chamar, esc, urlImagem, moeda, toast, toastNaProximaPagina, carrinho
     };
 })();

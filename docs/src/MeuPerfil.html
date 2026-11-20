@@ -451,11 +451,12 @@
                 cidade: valor("cidadeInput"),
                 pagamento_favorito: document.getElementById("pagamentoSelect").value
             };
-            if (novaSenha) {
-                user.password = novaSenha;
-                user.password_confirmation = confirma;
-            }
-            if (mudandoAcesso) user.current_password = senhaAtual;
+            // Senhas saem do navegador criptografadas com a chave pública da API (js/lpv.js).
+            Object.assign(user, await LPV.camposDeSenha({
+                password: novaSenha,
+                password_confirmation: novaSenha ? confirma : "",
+                current_password: mudandoAcesso ? senhaAtual : ""
+            }));
 
             const btnSalvar = document.getElementById("btnSalvarPerfil");
             btnSalvar.disabled = true;
