@@ -485,6 +485,7 @@ span {
     .books-mini-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+<<<<<<< HEAD
 }
 /* ===== Pedidos salvos no banco ===== */
 .pedido-card {
@@ -529,3 +530,6 @@ span {
     .pedido-card { grid-template-columns: 50px 1fr; }
     .pedido-total { grid-column: 2; text-align: left; }
 }
+=======
+}
+>>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2

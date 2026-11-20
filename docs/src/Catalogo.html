@@ -14,8 +14,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<<<<<<< HEAD
     <link rel="stylesheet" href="../css/tema.css">
     <script src="../js/lpv.js"></script>
+=======
+>>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
 </head>
 
 <body>
@@ -219,6 +222,10 @@
         let generoAtual = "Todos";
         let textoBuscaAtual = "";
         let livroAtual = null;
+<<<<<<< HEAD
+=======
+        let carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
+>>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
 
         // Formata um número como dinheiro (R$ 0,00).
         function formatarMoeda(valor) {
@@ -271,8 +278,20 @@
 
         // Mostra no ícone do carrinho a quantidade de itens.
         function atualizarContadorCarrinho() {
+<<<<<<< HEAD
             // A quantidade vem do carrinho salvo no banco (js/lpv.js guarda uma cópia do número).
             LPV.carrinho.pintarContador();
+=======
+            const contador = document.getElementById("contadorCarrinhoHeader");
+            if (!contador) return;
+
+            if (carrinho.length > 0) {
+                contador.innerText = carrinho.length;
+                contador.style.display = "inline-block";
+            } else {
+                contador.style.display = "none";
+            }
+>>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
         }
 
         // Desenha os cards do catálogo aplicando os filtros, com o selo de nota pública.
@@ -606,11 +625,26 @@
                 "Sua nota foi removida.");
         }
 
+<<<<<<< HEAD
         // Coloca o livro clicado no carrinho salvo no banco.
         function adicionarAoCarrinho(idLivro, event) {
             if (event) event.stopPropagation();
             // Salva no carrinho do banco (o preço vem do catálogo no servidor).
             LPV.carrinho.adicionar({ catalogBookId: Number(idLivro) });
+=======
+        // Coloca o livro clicado no carrinho (localStorage) e atualiza o contador.
+        function adicionarAoCarrinho(idLivro, event) {
+            if (event) event.stopPropagation();
+
+            const livro = acervoLivros.find(l => l.id === idLivro);
+            if (!livro) return;
+
+            carrinho.push(livro);
+            localStorage.setItem("carrinhoLivros", JSON.stringify(carrinho));
+            atualizarContadorCarrinho();
+
+            alert(`"${livro.titulo}" foi adicionado ao seu carrinho!`);
+>>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
         }
 
         // Filtra os livros por gênero e destaca o botão.

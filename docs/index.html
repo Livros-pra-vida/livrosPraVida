@@ -13,8 +13,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<<<<<<< HEAD
     <link rel="stylesheet" href="css/tema.css">
     <script src="js/lpv.js"></script>
+=======
+>>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
 </head>
 
 <body>
@@ -161,8 +164,13 @@
                     <img src="imagens/duna.jpg" alt="Capa do livro Duna">
                     <h3>Duna</h3>
                     <p>Frank Herbert</p>
+<<<<<<< HEAD
                     <strong>R$ 69,90</strong>
                     <button onclick="adicionarAoCarrinho('Duna', 'R$ 69,90', 'imagens/duna.jpg')"
+=======
+                    <strong>R$ 62,90</strong>
+                    <button onclick="adicionarAoCarrinho('Duna', 'R$ 62,90', 'imagens/duna.jpg')"
+>>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
                         class="btn-acao-livro">Adicionar ao Carrinho</button>
                 </article>
 
@@ -319,6 +327,11 @@
         if (usuarioSalvo) {
             const usuario = JSON.parse(usuarioSalvo);
 
+<<<<<<< HEAD
+=======
+            console.log("Usuário logado:", usuario);
+
+>>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
             document.getElementById("entrar").style.display = "none";
             document.getElementById("cadastrar").style.display = "none";
             document.getElementById("meuPerfil").style.display = "flex";
@@ -332,6 +345,11 @@
             }
 
         } else {
+<<<<<<< HEAD
+=======
+            console.log("Nenhum usuário logado.");
+
+>>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
             document.getElementById("meuPerfil").style.display = "none";
             document.getElementById("sair").style.display = "none";
             document.getElementById("minhasEstantes").style.display = "none";
@@ -352,20 +370,55 @@
     }
 
         // Adiciona o livro ao carrinho (localStorage) e atualiza o contador.
+<<<<<<< HEAD
         function adicionarAoCarrinho(titulo) {
             // Salva no carrinho do banco; o preço é sempre o do catálogo (o servidor decide).
             LPV.carrinho.adicionar({ titulo });
+=======
+        function adicionarAoCarrinho(titulo, preco, imagem) {
+            let carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
+
+            carrinho.push({
+                titulo: titulo,
+                preco: preco,
+                imagem: imagem
+            });
+
+            localStorage.setItem("carrinhoLivros", JSON.stringify(carrinho));
+            atualizarContadorCarrinho();
+            alert(`"${titulo}" foi adicionado ao seu carrinho!`);
+>>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
         }
 
         // Mostra no ícone do carrinho a quantidade total de itens.
         function atualizarContadorCarrinho() {
+<<<<<<< HEAD
             // A quantidade vem do carrinho salvo no banco (js/lpv.js guarda uma cópia do número).
             LPV.carrinho.pintarContador();
+=======
+            const carrinho = JSON.parse(localStorage.getItem("carrinhoLivros")) || [];
+            const contador = document.getElementById("contadorCarrinhoHeader");
+
+            if (contador) {
+                if (carrinho.length > 0) {
+                    contador.innerText = carrinho.length;
+                    contador.style.display = "inline-block";
+                } else {
+                    contador.style.display = "none";
+                }
+            }
+>>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
         }
 
         // Logout: apaga todos os dados da sessão do navegador (inclusive o token) e recarrega a home.
         function sair() {
+<<<<<<< HEAD
             LPV.sair();
+=======
+            ["usuario", "token", "logado", "usuarioId", "usuarioNome", "usuarioEmail", "isAdmin", "usuarioFoto"]
+                .forEach(chave => localStorage.removeItem(chave));
+            window.location.href = "index.html";
+>>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2
         }
     </script>
 </body>

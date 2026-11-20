@@ -252,6 +252,7 @@ body {
     .chat-tabs {
         flex-direction: column;
     }
+<<<<<<< HEAD
 }
 /* ===================== Chat renovado ===================== */
 .chat-pagina { max-width: 1100px; margin: 0 auto; }
@@ -487,3 +488,6 @@ body {
     .input-area { flex-direction: row; }
     .input-area button { width: auto; }
 }
+=======
+}
+>>>>>>> 8b058c86e4b9d5af21d884fbbc2657e458ac5ac2

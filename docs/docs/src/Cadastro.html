@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar conta - Livros pra Vida</title>
+
+    <link rel="icon" type="image/png" href="../imagens/icone.png">
+    <link rel="stylesheet" href="../css/StyleCadLog.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <header>
+        <a href="../index.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
+            <img src="../imagens/icone.png" alt="Logo Livros pra Vida">
+            <span>Livros pra Vida</span>
+        </a>
+    </header>
+
+    <main>
+        <section>
+            <div class="title">
+                <h1>Criar conta</h1>
+                <p>Já tem uma conta? <a href="Login.html">Entrar</a></p>
+            </div>
+
+            <form id="formCadastro">
+                <label>
+                    Nome de usuário
+                    <input type="text" id="username" required placeholder="Digite seu nome de usuário">
+                </label>
+
+                <label>
+                    E-mail
+                    <input type="email" id="email" required placeholder="seuemail@exemplo.com">
+                </label>
+
+                <label>
+                    Data de Nascimento
+                    <input type="date" id="birthdate">
+                </label>
+
+                <label>
+                    CPF (somente números)
+                    <input type="text" id="cpf" required maxlength="11" placeholder="00000000000">
+                </label>
+
+                <label>
+                    Telefone (com DDD, somente números)
+                    <input type="tel" id="phone" maxlength="11" placeholder="00000000000">
+                </label>
+
+                <label>
+                    Senha
+                    <div class="password">
+                        <input type="password" id="senha" required minlength="8" placeholder="Mínimo 8 caracteres">
+                        <button type="button" onclick="alternarSenha('senha')" aria-label="Mostrar/Ocultar Senha">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </label>
+
+                <label>
+                    Confirmar senha
+                    <div class="password">
+                        <input type="password" id="confirmarSenha" required placeholder="Repita a senha">
+                        <button type="button" onclick="alternarSenha('confirmarSenha')" aria-label="Mostrar/Ocultar Senha">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </label>
+
+                <label class="terms">
+                    <input type="checkbox" id="termos" required>
+                    Li e concordo com os
+                    <a href="Termos.html#termos" target="_blank" rel="noopener">Termos de Uso</a>
+                    e a
+                    <a href="Termos.html#privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.
+                </label>
+
+                <button type="submit" class="register" id="btnSubmit">Concluir</button>
+            </form>
+        </section>
+
+        <footer>
+            <p>"Toda história começa com uma página."</p>
+            <div class="benefits">
+                <span>✓ Acesso ilimitado ao catálogo</span>
+                <span>✓ Recomendações personalizadas</span>
+                <span>✓ Chat com outros leitores</span>
+            </div>
+            <small>© 2026 Livros pra Vida. Todos os direitos reservados.</small>
+        </footer>
+    </main>
+
+    <!-- Biblioteca CryptoJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+    <script src="../js/validarCPF.js"></script>
+
+    <script>
+        const API_URL = "https://lpv-api.onrender.com";
+
+        // Mostra ou esconde o texto do campo de senha indicado.
+        function alternarSenha(id) {
+            const input = document.getElementById(id);
+            input.type = input.type === "password" ? "text" : "password";
+        }
+
+        // Permite somente números no campo CPF.
+        document.getElementById("cpf").addEventListener("input", function () {
+            this.value = this.value.replace(/\D/g, '');
+        });
+
+        // Permite somente números no campo telefone.
+        document.getElementById("phone").addEventListener("input", function () {
+            this.value = this.value.replace(/\D/g, '');
+        });
+
+        // Envia o cadastro para a API.
+        document.getElementById("formCadastro").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const username = document.getElementById("username").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const nascimento = document.getElementById("birthdate").value;
+            const cpf = document.getElementById("cpf").value.trim().replace(/\D/g, '');
+            const telefone = document.getElementById("phone").value.trim().replace(/\D/g, '');
+            const senha = document.getElementById("senha").value;
+            const confirmarSenha = document.getElementById("confirmarSenha").value;
+            const btnSubmit = document.getElementById("btnSubmit");
+
+            if (cpf.length !== 11) {
+                alert("O CPF precisa conter exatamente 11 números.");
+                return;
+            }
+
+            // Confere os dígitos verificadores do CPF (js/validarCPF.js).
+            if (!validarCPF(cpf)) {
+                alert("CPF inválido. Confira os números digitados.");
+                return;
+            }
+
+            if (telefone.length > 0 && (telefone.length < 10 || telefone.length > 11)) {
+                alert("O telefone deve conter 10 ou 11 números (com DDD).");
+                return;
+            }
+
+            if (senha !== confirmarSenha) {
+                alert("As senhas não coincidem.");
+                return;
+            }
+
+            // Gera o hash SHA-256 da senha e da confirmação.
+            const hashedSenha = CryptoJS.SHA256(senha).toString();
+            const hashedConfirmarSenha = CryptoJS.SHA256(confirmarSenha).toString();
+
+            btnSubmit.disabled = true;
+            btnSubmit.innerText = "Realizando cadastro (aguarde)...";
+
+            // 60 segundos: o Render gratuito pode demorar para acordar.
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 60000);
+
+            try {
+                const response = await fetch(`${API_URL}/users`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    signal: controller.signal,
+                    body: JSON.stringify({
+                        user: {
+                            username: username,
+                            email: email,
+                            cpf: cpf,
+                            telefone: telefone,
+                            nascimento: nascimento,
+                            password: hashedSenha,
+                            password_confirmation: hashedConfirmarSenha
+                        }
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    if (data.token && data.user) {
+                        localStorage.setItem("usuario", JSON.stringify(data.user));
+                        localStorage.setItem("token", data.token);
+                        localStorage.setItem("logado", "true");
+                        localStorage.setItem("usuarioId", data.user.id);
+                        localStorage.setItem("usuarioNome", data.user.username);
+                        localStorage.setItem("usuarioEmail", data.user.email);
+                        localStorage.setItem("isAdmin", data.user.admin ? "true" : "false");
+
+                        alert("Conta criada com sucesso!");
+                        window.location.href = "../index.html";
+                    } else {
+                        alert("Conta criada com sucesso! Faça login para continuar.");
+                        window.location.href = "Login.html";
+                    }
+                } else {
+                    const erros = data.errors
+                        ? data.errors.join(", ")
+                        : (data.error || "Verifique os dados digitados.");
+
+                    alert("Erro ao criar conta: " + erros);
+                }
+
+            } catch (error) {
+                console.error("Erro no cadastro:", error);
+
+                if (error.name === 'AbortError') {
+                    alert("O servidor demorou a responder. Tente clicar em Concluir novamente.");
+                } else {
+                    alert("Não foi possível conectar ao servidor.");
+                }
+
+            } finally {
+                clearTimeout(timeoutId);
+                btnSubmit.disabled = false;
+                btnSubmit.innerText = "Concluir";
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat & Comunidade - Livros pra Vida</title>
+    <link rel="icon" type="image/png" href="../imagens/icone.png">
+    <link rel="stylesheet" href="../css/StyleChat.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">
+            <a href="../index.html"><img src="../imagens/icone.png" alt="Logo"></a>
+            <span>Livros pra Vida</span>
+        </div>
+        <nav class="menu" id="menuNavegacao">
+            <!-- Preenchido dinamicamente via JS -->
+        </nav>
+    </header>
+
+    <main class="container">
+        <h1 style="margin-bottom: 20px;">Central de Comunicação & Fórum</h1>
+
+                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <button id="btnTabGlobal" onclick="trocarAba('global')"
+                style="padding: 10px 20px; background: #8c533e; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">
+                Comunidade Global (Fórum)
+            </button>
+            <button id="btnTabPrivado" onclick="trocarAba('privado')"
+                style="padding: 10px 20px; background: #8c533e; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">
+                Minhas Negociações (Privadas)
+            </button>
+        </div>
+
+        <!-- ================= CHAT GLOBAL ================= -->
+        <div id="secaoGlobal" class="chat-section" style="display: block;">
+            <div id="avisoGlobal"
+                style="display: none; text-align: center; padding: 15px; margin-bottom: 15px; color: #666; background: #fff; border-radius: 8px; border: 1px dashed #e0d7cd;">
+            </div>
+            <div class="chat-box">
+                <div class="messages" id="messages"></div>
+                <form class="input-area" id="form">
+                    <input type="text" id="input" maxlength="500" autocomplete="off"
+                        placeholder="Digite sua mensagem para o fórum...">
+                    <button type="submit">Enviar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ================= CHAT PRIVADO ================= -->
+        <div id="secaoPrivado" class="chat-section" style="display: none;">
+            <div id="infoNegociacao"
+                style="display: none; background: #fff; border: 1px solid #e0d7cd; padding: 10px 15px; border-radius: 6px; margin-bottom: 15px; font-size: 0.9rem; color: #2d251e;">
+                Conversando sobre o livro: <strong id="livroNegociacaoTitulo"></strong>
+            </div>
+
+            <div id="listaConversas" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;">
+                <!-- Preenchido dinamicamente via JS -->
+            </div>
+
+            <div class="chat-box" id="caixaChatPrivado" style="display:none;">
+                <div style="background: rgba(255,255,255,0.15); padding: 8px 12px; font-weight: bold; font-size: 0.9rem; border-radius: 4px; margin-bottom: 10px;"
+                    id="tituloChatPrivado">
+                    Conversa Privada
+                </div>
+                <div class="messages" id="chatPrivadoMessages"></div>
+                <div class="input-area">
+                    <input type="text" id="chatPrivadoInput" placeholder="Digite sua mensagem..."
+                        onkeypress="checarEnterPrivado(event)">
+                    <button onclick="enviarMensagemPrivada()">Enviar</button>
+                </div>
+            </div>
+
+            <div id="semConversaAviso"
+                style="text-align: center; padding: 40px; color: #666; background: #fff; border-radius: 8px; border: 1px dashed #e0d7cd;">
+                Nenhuma conversa selecionada. Clique em "Negociar" em algum livro no catálogo de <strong>Comprar &
+                    Trocar</strong> ou escolha uma conversa acima.
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/admin.js"></script>
+    <script type="module">
+        import { createConsumer } from "https://esm.sh/@rails/actioncable@7";
+
+        const API = "https://lpv-api.onrender.com";
+        const TOKEN_KEY = "token";
+
+        const list = document.getElementById("messages");
+        const form = document.getElementById("form");
+        const input = document.getElementById("input");
+        const aviso = document.getElementById("avisoGlobal");
+
+        // Exibe uma mensagem de aviso/erro na área do chat.
+        function mostrarAviso(texto) {
+            aviso.textContent = texto;
+            aviso.style.display = "block";
+        }
+
+        // Desenha uma mensagem no chat público (usa textContent, seguro contra XSS).
+        // Para o administrador, o nome vira botão que abre o perfil e a mensagem ganha o botão de apagar.
+        function addMessage(m) {
+            if (m.deleted) { removerMensagem(m.id); return; }   // aviso de mensagem apagada (tempo real)
+            if (m.id && list.querySelector(`[data-msg-id="${m.id}"]`)) return; // já está na tela
+
+            const admin = Admin.ehAdmin();
+            const div = document.createElement("div");
+            div.className = "msg";
+            if (m.id) div.dataset.msgId = m.id;
+            if (m.user_id) div.dataset.userId = m.user_id;
+
+            let nome;
+            if (admin && m.user_id) {
+                nome = document.createElement("button");
+                nome.type = "button";
+                nome.className = "admin-usuario";
+                nome.dataset.adminUid = m.user_id;
+                nome.dataset.adminNome = m.username;
+                nome.title = "Ver perfil (administrador)";
+                nome.textContent = m.username;
+            } else {
+                nome = document.createElement("strong");
+                nome.textContent = m.username;
+            }
+            const dois = document.createElement("strong");
+            dois.textContent = ": ";
+            const texto = document.createElement("span");
+            texto.textContent = m.content; // textContent: seguro contra XSS
+            div.append(nome, dois, texto);
+
+            if (admin && m.id) {
+                const apagar = document.createElement("button");
+                apagar.type = "button";
+                apagar.className = "admin-btn-perigo";
+                apagar.textContent = "Apagar";
+                apagar.title = "Apagar esta mensagem (administrador)";
+                apagar.style.marginLeft = "8px";
+                apagar.style.padding = "1px 8px";
+                apagar.addEventListener("click", () => apagarMensagem(m.id));
+                div.append(apagar);
+            }
+
+            list.append(div);
+            list.scrollTop = list.scrollHeight;
+        }
+
+        // Tira uma mensagem da tela (quando foi apagada).
+        function removerMensagem(id) {
+            list.querySelectorAll(`[data-msg-id="${id}"]`).forEach(el => el.remove());
+        }
+
+        // (Admin) Apaga a mensagem de qualquer pessoa (DELETE /messages/:id), depois de confirmar.
+        async function apagarMensagem(id) {
+            if (!confirm("Apagar esta mensagem para todos?")) return;
+            try {
+                await Admin.chamar(`/messages/${id}`, { method: "DELETE" });
+                removerMensagem(id);
+            } catch (erro) {
+                if (erro.status === 404) { removerMensagem(id); return; } // já tinha sido apagada
+                alert(erro.message);
+            }
+        }
+
+        // (Admin) Depois de excluir uma conta, some da tela tudo o que essa pessoa escreveu.
+        function removerMensagensDoUsuario(userId) {
+            list.querySelectorAll(`[data-user-id="${userId}"]`).forEach(el => el.remove());
+        }
+
+        // O admin clica no nome de quem escreveu para ver o perfil (e poder excluir a conta).
+        Admin.ativarCliques(list, removerMensagensDoUsuario);
+
+        const token = localStorage.getItem(TOKEN_KEY);
+
+        if (!token) {
+            // "logado" sem token = login antigo (feito antes de o chat usar token)
+            mostrarAviso(localStorage.getItem("usuario")
+                ? "Para usar o chat global, saia e entre novamente na sua conta."
+                : "Faça login para ler e participar do chat global.");
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+                window.location.href = "Login.html";
+            });
+        } else {
+            // Histórico recente (a API pode demorar até 60s para acordar)
+            mostrarAviso("Conectando ao chat...");
+            try {
+                const res = await fetch(`${API}/messages`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    (await res.json()).forEach(addMessage);
+                    aviso.style.display = "none";
+                } else if (res.status === 401) {
+                    // token expirado ou inválido: limpa e manda para o login
+                    localStorage.removeItem(TOKEN_KEY);
+                    mostrarAviso("Sua sessão expirou. Redirecionando para o login...");
+                    setTimeout(() => { window.location.href = "Login.html"; }, 1500);
+                } else {
+                    mostrarAviso("Não foi possível carregar o histórico (erro " + res.status + ").");
+                }
+            } catch (e) {
+                console.error("Histórico indisponível:", e);
+                mostrarAviso("Servidor indisponível no momento. Tente novamente em instantes.");
+            }
+
+            // Tempo real
+            const consumer = createConsumer(
+                `${API.replace("https", "wss")}/cable?token=${encodeURIComponent(token)}`
+            );
+            let conectado = false;
+            let jaConectou = false;
+            let falhas = 0;
+            const canal = consumer.subscriptions.create("ChatChannel", {
+                connected() {
+                    conectado = true;
+                    jaConectou = true;
+                    falhas = 0;
+                    aviso.style.display = "none";
+                },
+                disconnected() {
+                    conectado = false;
+                    falhas++;
+                    mostrarAviso(!jaConectou && falhas >= 3
+                        ? "Não foi possível entrar no chat. Saia e entre novamente na sua conta."
+                        : "Conexão com o chat perdida. Tentando reconectar...");
+                },
+                received: addMessage // addMessage também trata o aviso { deleted: true }
+            });
+
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+                const content = input.value.trim();
+                if (!content) return;
+                if (!conectado) {
+                    mostrarAviso("Ainda sem conexão com o chat. Sua mensagem não foi enviada, tente de novo em instantes.");
+                    return;
+                }
+                canal.perform("speak", { content });
+                input.value = "";
+            });
+        }
+    </script>
+
+    <script>
+        let destinatarioAtual = null;
+        let livroAtual = null;
+
+        // Diz se há um usuário logado.
+        function estaLogado() {
+            return !!localStorage.getItem("usuario");
+        }
+
+        // Lê do localStorage os dados do usuário logado.
+        function getUsuario() {
+            try { return JSON.parse(localStorage.getItem("usuario")); } catch (e) { return null; }
+        }
+
+        // Devolve o nome do usuário logado para mostrar nas mensagens.
+        function nomeUsuario() {
+            const u = getUsuario();
+            return (u && (u.username || u.usuario || u.nome)) || localStorage.getItem("usuarioNome") || "Eu";
+        }
+
+        // Escapa caracteres especiais do texto antes de colocá-lo no HTML (evita injeção de código).
+        function esc(s) {
+            return String(s).replace(/[&<>"']/g, c => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[c]));
+        }
+
+        // Ao abrir o chat: prepara as abas e a lista de conversas privadas.
+        document.addEventListener("DOMContentLoaded", function () {
+            const menu = document.getElementById("menuNavegacao");
+            const fotoPerfil = localStorage.getItem("usuarioFoto") || "../imagens/perfil.jpg";
+
+            if (estaLogado()) {
+                menu.innerHTML = `
+                    <a href="Catalogo.html">Catálogo</a>
+                    <a href="ComprarTrocar.html">Comprar & Trocar</a>
+                    <a href="Novidades.html">Novidades</a>
+                    <a href="Chat.html" class="active">Chat & Comunidade</a>
+                    <a href="SobreNos.html">Sobre Nós</a>
+                    <a href="Estantes.html">Minhas Estantes</a>
+                    <a href="#" onclick="sair(event)" class="btn-sair">Sair</a>
+                    <a href="MeuPerfil.html" class="profile-nav-link" title="Meu Perfil">
+                        <img src="${fotoPerfil}" onerror="this.src='../imagens/perfil.jpg'" alt="Meu Perfil" class="profile-nav-avatar" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid #8c533e;">
+                    </a>
+                `;
+            } else {
+                menu.innerHTML = `
+                    <a href="Catalogo.html">Catálogo</a>
+                    <a href="ComprarTrocar.html">Comprar & Trocar</a>
+                    <a href="Novidades.html">Novidades</a>
+                    <a href="Chat.html" class="active">Chat & Comunidade</a>
+                    <a href="SobreNos.html">Sobre Nós</a>
+                    <a href="Login.html" class="login-button">Entrar</a>
+                    <a href="Cadastro.html" class="signup-button">Cadastrar</a>
+                `;
+            }
+
+            document.getElementById("listaConversas").addEventListener("click", function (e) {
+                const item = e.target.closest("[data-chave]");
+                if (!item) return;
+                const conversas = JSON.parse(localStorage.getItem("chatsPrivados")) || {};
+                const c = conversas[item.dataset.chave];
+                if (c) abrirChatPrivado(c.destinatario, c.livro);
+            });
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const msgAutomatica = urlParams.get('msg');
+            const livroParam = urlParams.get('livro');
+            const destinatarioParam = urlParams.get('destinatario');
+
+            if (livroParam && destinatarioParam) {
+                livroAtual = decodeURIComponent(livroParam);
+                destinatarioAtual = decodeURIComponent(destinatarioParam);
+
+                salvarConversaNoHistorico(destinatarioAtual, livroAtual, msgAutomatica);
+                trocarAba('privado');
+                abrirChatPrivado(destinatarioAtual, livroAtual);
+            }
+
+            carregarListaConversasPrivadas();
+        });
+
+        // Alterna entre o chat público e as conversas privadas.
+        function trocarAba(aba) {
+            document.getElementById('secaoGlobal').style.display = aba === 'global' ? 'block' : 'none';
+            document.getElementById('secaoPrivado').style.display = aba === 'privado' ? 'block' : 'none';
+            if (aba === 'privado') carregarListaConversasPrivadas();
+        }
+
+        // Registra a conversa privada na lista de conversas do navegador.
+        function salvarConversaNoHistorico(destinatario, livro, primeiraMsg) {
+            const meuNome = nomeUsuario();
+            let conversas = JSON.parse(localStorage.getItem("chatsPrivados")) || {};
+            let chaveChat = `${destinatario}_${livro}`;
+
+            if (!conversas[chaveChat]) {
+                conversas[chaveChat] = {
+                    destinatario: destinatario,
+                    livro: livro,
+                    mensagens: []
+                };
+                if (primeiraMsg) {
+                    conversas[chaveChat].mensagens.push({ remetente: meuNome, texto: primeiraMsg });
+                }
+                localStorage.setItem("chatsPrivados", JSON.stringify(conversas));
+            }
+        }
+
+        // Desenha a lista lateral de conversas privadas.
+        function carregarListaConversasPrivadas() {
+            const listaEl = document.getElementById("listaConversas");
+            let conversas = JSON.parse(localStorage.getItem("chatsPrivados")) || {};
+            let chaves = Object.keys(conversas);
+
+            if (chaves.length === 0) {
+                listaEl.innerHTML = "";
+                return;
+            }
+
+            listaEl.innerHTML = chaves.map(chave => {
+                let c = conversas[chave];
+                let estiloItem = (destinatarioAtual === c.destinatario && livroAtual === c.livro)
+                    ? 'background: #fff; padding: 12px 15px; border: 2px solid #8c533e; border-radius: 6px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;'
+                    : 'background: #fff; padding: 12px 15px; border: 1px solid #e0d7cd; border-radius: 6px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;';
+
+                return `
+                    <div style="${estiloItem}" data-chave="${esc(chave)}">
+                        <div>
+                            <strong style="color: #2d251e;">${esc(c.destinatario)}</strong><br>
+                            <small style="color: #666;">Livro: ${esc(c.livro)}</small>
+                        </div>
+                        <span style="font-size: 0.8rem; background: #8c533e; color: #fff; padding: 5px 10px; border-radius: 4px;">Conversar</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Abre a conversa privada com um usuário sobre um livro.
+        function abrirChatPrivado(destinatario, livro) {
+            destinatarioAtual = destinatario;
+            livroAtual = livro;
+
+            document.getElementById("semConversaAviso").style.display = "none";
+            document.getElementById("caixaChatPrivado").style.display = "block";
+            document.getElementById("tituloChatPrivado").innerText = `Negociação com ${destinatario} (Livro: ${livro})`;
+
+            const infoBox = document.getElementById("infoNegociacao");
+            const livroTituloEl = document.getElementById("livroNegociacaoTitulo");
+            livroTituloEl.innerText = `${livro} (Anunciante: ${destinatario})`;
+            infoBox.style.display = "block";
+
+            carregarMensagensPrivadas();
+            carregarListaConversasPrivadas();
+        }
+
+        // Mostra as mensagens da conversa privada aberta.
+        function carregarMensagensPrivadas() {
+            if (!destinatarioAtual || !livroAtual) return;
+
+            let conversas = JSON.parse(localStorage.getItem("chatsPrivados")) || {};
+            let chaveChat = `${destinatarioAtual}_${livroAtual}`;
+            let chat = conversas[chaveChat];
+
+            const container = document.getElementById("chatPrivadoMessages");
+            if (chat && chat.mensagens && chat.mensagens.length > 0) {
+                container.innerHTML = chat.mensagens.map(m => `
+                    <div class="msg"><strong>${esc(m.remetente)}:</strong> ${esc(m.texto)}</div>
+                `).join('');
+            } else {
+                container.innerHTML = '<div style="color: #999; text-align: center;">Inicie a conversa abaixo...</div>';
+            }
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Envia a mensagem digitada na conversa privada.
+        function enviarMensagemPrivada() {
+            if (!estaLogado()) {
+                alert("Você precisa estar logado para enviar mensagens!");
+                window.location.href = "Login.html";
+                return;
+            }
+
+            if (!destinatarioAtual || !livroAtual) {
+                alert("Selecione uma conversa antes de enviar.");
+                return;
+            }
+
+            const input = document.getElementById("chatPrivadoInput");
+            const texto = input.value.trim();
+
+            if (texto !== "") {
+                const meuNome = nomeUsuario();
+                let conversas = JSON.parse(localStorage.getItem("chatsPrivados")) || {};
+                let chaveChat = `${destinatarioAtual}_${livroAtual}`;
+
+                if (!conversas[chaveChat]) {
+                    conversas[chaveChat] = { destinatario: destinatarioAtual, livro: livroAtual, mensagens: [] };
+                }
+
+                conversas[chaveChat].mensagens.push({ remetente: meuNome, texto: texto });
+                localStorage.setItem("chatsPrivados", JSON.stringify(conversas));
+
+                input.value = "";
+                carregarMensagensPrivadas();
+            }
+        }
+
+        // Envia a mensagem privada ao apertar Enter.
+        function checarEnterPrivado(event) {
+            if (event.key === "Enter") enviarMensagemPrivada();
+        }
+
+        // Encerra a sessão e volta para o login.
+        function sair(event) {
+            if (event) event.preventDefault();
+            localStorage.removeItem("usuario");
+            localStorage.removeItem("token");
+            localStorage.removeItem("logado");
+            localStorage.removeItem("usuarioId");
+            localStorage.removeItem("usuarioNome");
+            localStorage.removeItem("usuarioEmail");
+            localStorage.removeItem("isAdmin");
+            localStorage.removeItem("usuarioFoto");
+            window.location.href = "../index.html";
+        }
+    </script>
+</body>
+
+</html>
